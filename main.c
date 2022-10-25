@@ -2,5 +2,6 @@
 
 int main(){
     printf("test");
+    printf("MASAOOOOOO");
     return 0;
 }
