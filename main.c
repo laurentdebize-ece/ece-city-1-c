@@ -1,6 +1,3 @@
-#include "main.h"
-
-int main(){
-    printf("Hehe");
+int main() {
     return 0;
 }
