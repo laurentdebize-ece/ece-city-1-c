@@ -1,3 +1,6 @@
+#ifndef ECE_CITY_1_C_MAIN_H
+#define ECE_CITY_1_C_MAIN_H
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,9 +13,6 @@
 #define NBLIGNE 35
 #define NBCOLONNE 45
 #define FLOUZDEPART 5000
-
-#ifndef ECE_CITY_1_C_MAIN_H
-#define ECE_CITY_1_C_MAIN_H
 
 typedef struct {
     int x,y;

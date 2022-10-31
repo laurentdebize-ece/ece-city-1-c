@@ -1,4 +1,3 @@
-
 #ifndef ECE_CITY_1_C_CREATION_H
 #define ECE_CITY_1_C_CREATION_H
 
