@@ -4,6 +4,7 @@
 #include "initialisation.h"
 
 int main() {
+
     EceCity *eceCity = creationEceCity();
     initialisationEceCity(eceCity);
     afficherPlateau(eceCity);
