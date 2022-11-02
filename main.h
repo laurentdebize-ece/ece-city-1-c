@@ -6,19 +6,17 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-
-
 #define NBLIGNE 35
 #define NBCOLONNE 45
 #define FLOUZDEPART 5000
 
 typedef struct {
     int x,y;
-}Coord;
+}Coo;
 
 typedef struct {
     int type;
-    Coord plateau;
+    Coo plateau;
 }Sol;
 
 typedef struct {
@@ -27,4 +25,3 @@ typedef struct {
 }EceCity;
 
 #endif //ECE_CITY_1_C_MAIN_H
-
