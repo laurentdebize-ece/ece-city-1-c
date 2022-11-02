@@ -1,11 +1,32 @@
+#ifndef ECE_CITY_1_C_MAIN_H
+#define ECE_CITY_1_C_MAIN_H
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <allegro5/allegro5.h>
 
-#ifndef ECE_CITY_1_C_MAIN_H
-#define ECE_CITY_1_C_MAIN_H
+#include "creation.h"
+#include "initialisation.h"
+#include "affichageConsole.h"
+
+#define NBLIGNE 35
+#define NBCOLONNE 45
+#define FLOUZDEPART 5000
+
+typedef struct {
+    int x,y;
+}Coo;
+
+typedef struct {
+    int type;
+    Coo plateau;
+}Sol;
+
+typedef struct {
+    int eceFlouz;
+    Sol** matricePlateau;
+}EceCity;
 
 #endif //ECE_CITY_1_C_MAIN_H
 
