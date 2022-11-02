@@ -6,9 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "creation.h"
-#include "initialisation.h"
-#include "affichageConsole.h"
+
 
 #define NBLIGNE 35
 #define NBCOLONNE 45
@@ -16,11 +14,11 @@
 
 typedef struct {
     int x,y;
-}Coo;
+}Coord;
 
 typedef struct {
     int type;
-    Coo plateau;
+    Coord plateau;
 }Sol;
 
 typedef struct {
