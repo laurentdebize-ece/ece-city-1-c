@@ -6,10 +6,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "creation.h"
-#include "initialisation.h"
-#include "affichageConsole.h"
-
 #define NBLIGNE 35
 #define NBCOLONNE 45
 #define FLOUZDEPART 5000
@@ -29,4 +25,3 @@ typedef struct {
 }EceCity;
 
 #endif //ECE_CITY_1_C_MAIN_H
-

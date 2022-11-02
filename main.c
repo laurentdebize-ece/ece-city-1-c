@@ -1,4 +1,7 @@
 #include "main.h"
+#include "affichageConsole.h"
+#include "creation.h"
+#include "initialisation.h"
 
 int main() {
     EceCity *eceCity = creationEceCity();
