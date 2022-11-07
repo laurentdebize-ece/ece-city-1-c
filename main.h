@@ -24,4 +24,12 @@ typedef struct {
     Sol** matricePlateau;
 }EceCity;
 
+//Structure du joueur
+typedef struct {
+    int compteur;
+    int monnaie;
+    int habitant;
+    int capaciteElec;
+    int capaciteEau;
+}Joueur;
 #endif //ECE_CITY_1_C_MAIN_H
