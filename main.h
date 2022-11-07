@@ -26,7 +26,6 @@ typedef struct {
 
 //Structure du joueur
 typedef struct {
-
     int compteur;
     int monnaie;
     int habitant;
