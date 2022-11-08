@@ -8,5 +8,6 @@ int main() {
     initialisationEceCity(eceCity);
     afficherPlateau(eceCity);
     printf("%d", TERRAINVAGUE);
+    printf("vvjv");
     return 0;
 }
