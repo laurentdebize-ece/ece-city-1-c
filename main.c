@@ -8,7 +8,7 @@ int main() {
     EceCity *eceCity = creationEceCity();
     initialisationEceCity(eceCity);
     afficherPlateau(eceCity);
-    printf("test\n");
+    printf("blabllvdkvrjgv\n");
 
     return 0;
 }
