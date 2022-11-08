@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <allegro5/allegro.h>
 
 #define NBLIGNE 35
 #define NBCOLONNE 45
