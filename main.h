@@ -48,6 +48,7 @@ typedef struct {
 typedef struct {
     int etat ;// peut être faire des enums ici
     // par ex terrainvague=0; ruine=1; cabane=2; maison=3; immeuble=4; gratteciel=5
+
     int nbrhabitant;
 
 }Construction;
