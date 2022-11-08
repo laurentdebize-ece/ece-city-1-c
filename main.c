@@ -7,7 +7,6 @@ int main() {
     EceCity *eceCity = creationEceCity();
     initialisationEceCity(eceCity);
     afficherPlateau(eceCity);
-    printf("test\n");
-
+    printf("%d", TERRAINVAGUE);
     return 0;
 }

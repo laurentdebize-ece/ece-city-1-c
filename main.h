@@ -11,19 +11,23 @@
 #define NBCOLONNE 45
 #define FLOUZDEPART 5000
 
+enum {
+    TERRAINVAGUE = 0, RUINE = 1, CABANE = 2, MAISON = 3, IMMEUBLE = 4, GRATTECIEL = 5
+};
+
 typedef struct {
-    int x,y;
-}Coord;
+    int x, y;
+} Coord;
 
 typedef struct {
     int type;
     Coord plateau;
-}Sol;
+} Sol;
 
 typedef struct {
     int eceFlouz;
-    Sol** matricePlateau;
-}EceCity;
+    Sol **matricePlateau;
+} EceCity;
 
 //Structure du joueur
 typedef struct {
@@ -32,27 +36,23 @@ typedef struct {
     int habitant;
     int capaciteElec;
     int capaciteEau;
-}Joueur;
+} Joueur;
 
 
 typedef struct {
-    Coord* position;
+    Coord *position;
     int capacite;
-}ChateauEau;
+} ChateauEau;
 
 typedef struct {
-    Coord* position;
+    Coord *position;
     int capacite;
-
-}Centrale;
+} Centrale;
 
 typedef struct {
-    int etat ;// peut être faire des enums ici
-    // par ex terrainvague=0; ruine=1; cabane=2; maison=3; immeuble=4; gratteciel=5
-
-    int nbrhabitant;
-
-}Construction;
+    int etat;
+    int nbHabitant;
+} Construction;
 
 
 #endif //ECE_CITY_1_C_MAIN_H
