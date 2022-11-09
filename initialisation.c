@@ -16,6 +16,9 @@ EceCity *creationEceCity() {
 
 void initialisationEceCity(EceCity *eceCity) {
     eceCity->eceFlouz = FLOUZDEPART;
+    eceCity->changementAffichage = false;
+    eceCity->end = false;
+    eceCity->phaseDeJeu = ACCEUIL
     for (int i = 0; i < NBLIGNE; ++i) {
         for (int j = 0; j < NBCOLONNE; ++j) {
             eceCity->matricePlateau[i][j].type = 0;

@@ -17,19 +17,21 @@
 #define FLOUZDEPART 5000
 
 enum {
-    TERRAINVAGUE = 0, RUINE = 1, CABANE = 2, MAISON = 3, IMMEUBLE = 4, GRATTECIEL = 5
+    TERRAINVAGUE, RUINE, CABANE, MAISON, IMMEUBLE, GRATTECIEL,
+    ACCEUIL, REGLES, JEU, PARAMETRES
 };
+
 
 typedef struct {
     int x, y;
 } Coord;
 
-typedef struct{
+typedef struct {
     int w;
     int h;
     int Dpi;
-    ALLEGRO_DISPLAY* window;
-}Window;
+    ALLEGRO_DISPLAY *window;
+} Window;
 
 typedef struct {
     int type;
@@ -38,10 +40,13 @@ typedef struct {
 
 typedef struct {
     int eceFlouz;
+    bool end;
+    bool changementAffichage;
+    int phaseDeJeu;
     Window display;
     ALLEGRO_EVENT event;
-    ALLEGRO_EVENT_QUEUE* queue;
-    ALLEGRO_TIMER* timer;
+    ALLEGRO_EVENT_QUEUE *queue;
+    ALLEGRO_TIMER *timer;
     Sol **matricePlateau;
 } EceCity;
 
