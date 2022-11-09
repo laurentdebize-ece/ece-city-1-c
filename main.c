@@ -1,12 +1,14 @@
 #include "main.h"
 #include "affichage.h"
-#include "creation.h"
+#include "jeu.h"
 #include "initialisation.h"
 
 int main() {
     EceCity *eceCity = creationEceCity();
-    initialisationEceCity(eceCity);
-    afficherPlateau(eceCity);
+
+    initialisationAll(eceCity);
+
+    BouclePrincipale(eceCity);
 
     return 0;
 }

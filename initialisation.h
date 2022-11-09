@@ -7,7 +7,12 @@
 
 #include "main.h"
 
+void initialisationAll(EceCity* eceCity);
+
+EceCity *creationEceCity();
+
 void initialisationEceCity(EceCity* eceCity);
 
+void initAllegro(EceCity *city);
 
 #endif //ECE_CITY_1_C_INITIALISATION_H

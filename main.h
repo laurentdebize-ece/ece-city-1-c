@@ -6,6 +6,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_image.h>
 
 #define NBLIGNE 35
 #define NBCOLONNE 45
@@ -19,6 +24,13 @@ typedef struct {
     int x, y;
 } Coord;
 
+typedef struct{
+    int w;
+    int h;
+    int Dpi;
+    ALLEGRO_DISPLAY* window;
+}Window;
+
 typedef struct {
     int type;
     Coord plateau;
@@ -26,6 +38,10 @@ typedef struct {
 
 typedef struct {
     int eceFlouz;
+    Window display;
+    ALLEGRO_EVENT event;
+    ALLEGRO_EVENT_QUEUE* queue;
+    ALLEGRO_TIMER* timer;
     Sol **matricePlateau;
 } EceCity;
 
