@@ -1,4 +1,4 @@
-#include "affichageConsole.h"
+#include "affichage.h"
 
 void afficherPlateau(EceCity* eceCity){
     for (int i = 0; i < NBLIGNE; ++i) {
