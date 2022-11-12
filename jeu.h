@@ -4,5 +4,8 @@
 #include "main.h"
 
 void BouclePrincipale(EceCity* eceCity);
+bool creerBatiment(Coord coord);
+
+
 
 #endif //ECE_CITY_1_C_JEU_H
