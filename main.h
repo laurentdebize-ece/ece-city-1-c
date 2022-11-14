@@ -19,7 +19,8 @@
 enum {
     VIDE, ARBRE,
     TERRAINVAGUE, RUINE, CABANE, MAISON, IMMEUBLE, GRATTECIEL,
-    ACCEUIL, REGLES, JEU, PARAMETRES
+    ACCEUIL, REGLES, JEU, PARAMETRES,
+    COMMUNISTE, CAPITALISTE
 };
 
 
@@ -39,17 +40,7 @@ typedef struct {
     Coord plateau;
 } Sol;
 
-typedef struct {
-    int eceFlouz;
-    bool end;
-    bool changementAffichage;
-    int phaseDeJeu;
-    Window display;
-    ALLEGRO_EVENT event;
-    ALLEGRO_EVENT_QUEUE *queue;
-    ALLEGRO_TIMER *timer;
-    Sol **matricePlateau;
-} EceCity;
+
 
 //Structure du joueur
 typedef struct {
@@ -76,5 +67,19 @@ typedef struct {
     int nbHabitant;
 } Construction;
 
+typedef struct {
+    int eceFlouz;
+    bool end;
+    bool changementAffichage;
+    int phaseDeJeu;
+    Window display;
+    ALLEGRO_EVENT event;
+    ALLEGRO_EVENT_QUEUE *queue;
+    ALLEGRO_TIMER *timer;
+    Sol **matricePlateau;
+    int mode; // regarder enum le moide correspond à soit communiste soit capitaliste
+
+
+} EceCity;
 
 #endif //ECE_CITY_1_C_MAIN_H

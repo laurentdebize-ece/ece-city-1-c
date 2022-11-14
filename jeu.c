@@ -1,37 +1,47 @@
 #include "jeu.h"
 
-void BouclePrincipale(EceCity* eceCity){
-    while (!eceCity->end){
+void BouclePrincipale(EceCity *eceCity) {
+    while (!eceCity->end) {
         switch (eceCity->phaseDeJeu) {
-            case ACCEUIL:{
+            case ACCEUIL: {
 
                 break;
             }
-            case JEU:{
+            case JEU: {
 
                 break;
             }
-            case PARAMETRES:{
+            case PARAMETRES: {
 
                 break;
             }
-            default:{
+            default: {
                 break;
             };
         }
     }
 }
 
-bool creerBatiment(Coord coord){
-    EceCity eceCity;
-    bool verifCasesVide=true;
-    for(int i=0 ; i<3 ;i++){
-        for(int j=0; j<3; j++){
-            if(eceCity.matricePlateau[coord.x-1+i][coord.x-1+j].type==VIDE || eceCity.matricePlateau[coord.x-1+i][coord.x-1+j].type==ARBRE){
-                verifCasesVide=false;
-                eceCity.matricePlateau[coord.x-1+i][coord.x-1+j].type=MAISON;
+void construireBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int tailleLargeur, int batiment) {
+    if (verifSiEspaceBatiment(eceCity, coord, tailleLongueur, tailleLargeur)) {
+        for (int i = 0; i < tailleLongueur; ++i) {
+            for (int j = 0; j < tailleLargeur; ++j) {
+                eceCity.matricePlateau[coord.x - 1 + i][coord.x - 1 + j].type = batiment;
             }
         }
-        return verifCasesVide;
     }
+}
+
+
+bool verifSiEspaceBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int tailleLargueur) {
+    bool verifCasesVide = true;
+    for (int i = 0; i < tailleLongueur; i++) {
+        for (int j = 0; j < tailleLargueur; j++) {
+            if (eceCity.matricePlateau[coord.x - 1 + i][coord.x - 1 + j].type != VIDE &&
+                eceCity.matricePlateau[coord.x - 1 + i][coord.x - 1 + j].type != ARBRE) {
+                verifCasesVide = false;
+            }
+        }
+    }
+    return verifCasesVide;
 }
