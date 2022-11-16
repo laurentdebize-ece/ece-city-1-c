@@ -3,7 +3,10 @@
 
 void affichageAcceuil(EceCity *eceCity) {
     affichageBitmapDeFond(eceCity, BITMAPACCEUIL);
-    affichageBouton(eceCity);
+    al_draw_text(eceCity->ecrire.simsCityPoliceGrand, al_map_rgb(30,144,255), eceCity->display.longueur / 2,
+                 (eceCity->display.hauteur * 5 / 12) -
+                 al_get_font_line_height(eceCity->ecrire.simsCityPoliceGrand), ALLEGRO_ALIGN_CENTER, "ECE CITY");
+    affichageBouton(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
 }
 
 void affichageChoixDuMode(EceCity *eceCity) {
@@ -16,14 +19,14 @@ void affichageRegles(EceCity *eceCity) {
 }
 
 void affichageJeu(EceCity *eceCity) {
-
+    al_clear_to_color(al_map_rgb(89, 166, 8));
 }
 
 void affichageParametres(EceCity *eceCity) {
 
 }
 
-void affichageBouton(EceCity *eceCity) {
+void affichageBouton(EceCity *eceCity, int taille) {
     int nbBouton;
     switch (eceCity->phaseDeJeu.actuelle) {
         case ACCEUIL: {
@@ -62,12 +65,12 @@ void affichageBouton(EceCity *eceCity) {
                           eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
                           eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur,
                           al_map_rgb(255, 255, 255), 10);
-        al_draw_text(eceCity->ecrire.simsCityPoliceGrand, eceCity->ecrire.couleurDuTexte,
+        al_draw_text(taille, eceCity->ecrire.couleurDuTexte,
                      eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x +
                      (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].longueur / 2),
                      eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
                      (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur / 2) -
-                     (al_get_font_line_height(eceCity->ecrire.simsCityPoliceGrand) / 2), ALLEGRO_ALIGN_CENTER,
+                     (al_get_font_line_height(taille)/2), ALLEGRO_ALIGN_CENTER,
                      eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].nom);
     }
 }

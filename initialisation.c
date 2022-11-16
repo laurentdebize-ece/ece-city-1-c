@@ -11,32 +11,32 @@ void initialisationAll(EceCity *eceCity) {
 }
 
 void initPolice(EceCity *eceCity) {
-    eceCity->ecrire.simsCityPolicePetite = al_load_font("../Fonts/AGAALER.TTF", 25, 0);
+    eceCity->ecrire.simsCityPolicePetite = al_load_font("../Fonts/Police.TTF", 25, 0);
     assert(eceCity->ecrire.simsCityPolicePetite);
-    eceCity->ecrire.simsCityPoliceMoyen = al_load_font("../Fonts/AGAALER.TTF", 50, 0);
+    eceCity->ecrire.simsCityPoliceMoyen = al_load_font("../Fonts/Police.TTF", 60, 0);
     assert(eceCity->ecrire.simsCityPoliceMoyen);
-    eceCity->ecrire.simsCityPoliceGrand = al_load_font("../Fonts/AGAALER.TTF", 100, 0);
+    eceCity->ecrire.simsCityPoliceGrand = al_load_font("../Fonts/Police.TTF", 200, 0);
     assert(eceCity->ecrire.simsCityPoliceGrand);
     eceCity->ecrire.couleurDuTexte = al_map_rgb(255, 255, 255);
 }
 
 void initTabBoutons(EceCity *eceCity) {
-    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].coord.x = 50;
-    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].coord.y = 225;
-    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].longueur = 800;
-    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].hauteur = 300;
-    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].nom = "NouvellePartie";
+    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].coord.x = 300;
+    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].coord.y = eceCity->display.hauteur / 2;
+    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].nom = "Nouvelle Partie";
+    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].longueur = 500;
+    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].hauteur = 150;
 
-    eceCity->tabBoutons[ACCEUIL][CHARGER].coord.x = 950;
-    eceCity->tabBoutons[ACCEUIL][CHARGER].coord.y = 225;
-    eceCity->tabBoutons[ACCEUIL][CHARGER].longueur = 800;
-    eceCity->tabBoutons[ACCEUIL][CHARGER].hauteur = 300;
+    eceCity->tabBoutons[ACCEUIL][CHARGER].coord.x = 1100;
+    eceCity->tabBoutons[ACCEUIL][CHARGER].coord.y = eceCity->display.hauteur / 2;
     eceCity->tabBoutons[ACCEUIL][CHARGER].nom = "Charger";
+    eceCity->tabBoutons[ACCEUIL][CHARGER].longueur = 500;
+    eceCity->tabBoutons[ACCEUIL][CHARGER].hauteur = 150;
 
-    eceCity->tabBoutons[ACCEUIL][QUITTER].coord.x = 500;
-    eceCity->tabBoutons[ACCEUIL][QUITTER].coord.y = 650;
-    eceCity->tabBoutons[ACCEUIL][QUITTER].longueur = 800;
-    eceCity->tabBoutons[ACCEUIL][QUITTER].hauteur = 300;
+    eceCity->tabBoutons[ACCEUIL][QUITTER].coord.x = 710;
+    eceCity->tabBoutons[ACCEUIL][QUITTER].coord.y = 810;
+    eceCity->tabBoutons[ACCEUIL][QUITTER].longueur = 500;
+    eceCity->tabBoutons[ACCEUIL][QUITTER].hauteur = 150;
     eceCity->tabBoutons[ACCEUIL][QUITTER].nom = "Quitter";
 }
 
