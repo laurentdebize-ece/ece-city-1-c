@@ -14,13 +14,40 @@
 
 #define NBLIGNE 35
 #define NBCOLONNE 45
-#define FLOUZDEPART 5000
+#define MONNAIEDEPART 5000
+#define HABITANTDEPART 100
+
 
 enum {
-    VIDE, ARBRE,
-    TERRAINVAGUE, RUINE, CABANE, MAISON, IMMEUBLE, GRATTECIEL,
-    ACCEUIL, REGLES, JEU, PARAMETRES,
-    COMMUNISTE, CAPITALISTE
+    VIDE, ARBRE, ROUTE, TERRAINVAGUE, RUINE, CABANE, MAISON, IMMEUBLE, GRATTECIEL, CHATEAUDEAU, CENTRALE
+};
+
+enum {
+    ACCEUIL, CHOIXDUMODE, REGLES, JEU, PARAMETRES, NBDEMENU
+};
+
+enum {
+    NOUVELLEPARTIE, CHARGER, QUITTER, NBDEBOUTONACCEUIL
+};
+
+enum {
+    COMMUNISTE, CAPITALISTE, NBDEBOUTONCHOIXDUMODE
+};
+
+enum {
+    NBDEBOUTONREGLES
+};
+
+enum {
+    NBDEBOUTONJEU
+};
+
+enum {
+    NBDEBOUTONPARAMETRES
+};
+
+enum {
+    BITMAPACCEUIL, BITMAPCHOIXDUMODE, NBDEBITMAP
 };
 
 
@@ -29,22 +56,20 @@ typedef struct {
 } Coord;
 
 typedef struct {
-    int w;
-    int h;
+    int longueur;
+    int hauteur;
     int Dpi;
     ALLEGRO_DISPLAY *window;
-} Window;
+} Display;
 
 typedef struct {
     int type;
+    bool elec;
+    bool eau;
     Coord plateau;
 } Sol;
 
-
-
-//Structure du joueur
 typedef struct {
-    int compteur;
     int monnaie;
     int habitant;
     int capaciteElec;
@@ -55,7 +80,7 @@ typedef struct {
 typedef struct {
     Coord *position;
     int capacite;
-} ChateauEau;
+} ChateauDeau;
 
 typedef struct {
     Coord *position;
@@ -63,23 +88,56 @@ typedef struct {
 } Centrale;
 
 typedef struct {
+    Coord *position;
     int etat;
     int nbHabitant;
-} Construction;
+    int compteur;
+} Batiment;
 
 typedef struct {
-    int eceFlouz;
+    int ancienne;
+    int actuelle;
+    int boutonDetecteActuel;
+    int boutonDetecteAncien;
+} Phase;
+
+typedef struct {
+    ALLEGRO_BITMAP *image;
+    int hauteur;
+    int longueur;
+    Coord coord;
+} Image;
+
+typedef struct {
+    Coord coord;
+    int longueur;
+    int hauteur;
+    char *nom;
+} Case;
+
+typedef struct {
+    ALLEGRO_FONT *simsCityPolicePetite;
+    ALLEGRO_FONT *simsCityPoliceMoyen;
+    ALLEGRO_FONT *simsCityPoliceGrand;
+    ALLEGRO_COLOR couleurDuTexte;
+} Ecrire;
+
+typedef struct {
     bool end;
     bool changementAffichage;
-    int phaseDeJeu;
-    Window display;
+    Ecrire ecrire;
+    Phase phaseDeJeu;
+    Display display;
     ALLEGRO_EVENT event;
     ALLEGRO_EVENT_QUEUE *queue;
     ALLEGRO_TIMER *timer;
     Sol **matricePlateau;
-    int mode; // regarder enum le moide correspond à soit communiste soit capitaliste
-
-
+    Joueur *joueur;
+    Batiment *tabBatiments;
+    Centrale *tabCentrales;
+    ChateauDeau *tabChateauEaux;
+    Image *tabImages;
+    Case **tabBoutons;
 } EceCity;
 
 #endif //ECE_CITY_1_C_MAIN_H

@@ -4,11 +4,15 @@
 #include "initialisation.h"
 
 int main() {
+    initBiblioAllegro();
+
     EceCity *eceCity = creationEceCity();
 
     initialisationAll(eceCity);
 
-    BouclePrincipale(eceCity);
+    bouclePrincipale(eceCity);
+
+    destroyAll(eceCity);
 
     return 0;
 }

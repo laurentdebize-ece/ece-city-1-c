@@ -1,26 +1,268 @@
 #include "jeu.h"
+#include "affichage.h"
 
-void BouclePrincipale(EceCity *eceCity) {
+void bouclePrincipale(EceCity *eceCity) {
     while (!eceCity->end) {
-        switch (eceCity->phaseDeJeu) {
+        al_wait_for_event(eceCity->queue, &eceCity->event);
+        switch (eceCity->phaseDeJeu.actuelle) {
             case ACCEUIL: {
-
+                menuAcceuil(eceCity);
+                break;
+            }
+            case CHOIXDUMODE: {
+                menuChoixDuMode(eceCity);
+            }
+            case REGLES: {
+                menuRegles(eceCity);
                 break;
             }
             case JEU: {
-
+                menuJeu(eceCity);
                 break;
             }
             case PARAMETRES: {
-
+                menuParametres(eceCity);
                 break;
             }
-            default: {
-                break;
-            };
         }
     }
 }
+
+void menuAcceuil(EceCity *eceCity) {
+    switch (eceCity->event.type) {
+        case ALLEGRO_EVENT_KEY_DOWN: {
+            switch (eceCity->event.keyboard.keycode) {
+                case ALLEGRO_KEY_ESCAPE: {
+                    eceCity->end = true;
+                    break;
+                }
+            }
+            break;
+        }
+        case ALLEGRO_EVENT_KEY_UP: {
+
+            break;
+        }
+        case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
+
+            break;
+        }
+        case ALLEGRO_EVENT_MOUSE_AXES: {
+            detectionSourisBouton(eceCity);
+            break;
+        }
+
+        case ALLEGRO_EVENT_TIMER: {
+            if (eceCity->changementAffichage) {
+                affichageAcceuil(eceCity);
+                al_flip_display();
+                eceCity->changementAffichage = false;
+            }
+            if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
+                faireClignoterBouton(eceCity);
+            }
+            break;
+        }
+    }
+}
+
+void menuChoixDuMode(EceCity *eceCity) {
+    switch (eceCity->event.type) {
+        case ALLEGRO_EVENT_KEY_DOWN: {
+            switch (eceCity->event.keyboard.keycode) {
+                case ALLEGRO_KEY_ESCAPE: {
+                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                    eceCity->phaseDeJeu.actuelle = REGLES;
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+            }
+            break;
+        }
+        case ALLEGRO_EVENT_KEY_UP: {
+
+            break;
+        }
+        case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
+
+            break;
+        }
+        case ALLEGRO_EVENT_MOUSE_AXES: {
+            detectionSourisBouton(eceCity);
+            break;
+        }
+
+        case ALLEGRO_EVENT_TIMER: {
+            if (eceCity->changementAffichage) {
+                affichageChoixDuMode(eceCity);
+                al_flip_display();
+                eceCity->changementAffichage = false;
+            }
+            if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
+                faireClignoterBouton(eceCity);
+            }
+        }
+    }
+}
+
+void menuRegles(EceCity *eceCity) {
+    switch (eceCity->event.type) {
+        case ALLEGRO_EVENT_KEY_DOWN: {
+            switch (eceCity->event.keyboard.keycode) {
+                case ALLEGRO_KEY_ESCAPE: {
+                    eceCity->phaseDeJeu.actuelle = eceCity->phaseDeJeu.ancienne;
+                    eceCity->phaseDeJeu.ancienne = REGLES;
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+            }
+            break;
+        }
+        case ALLEGRO_EVENT_KEY_UP: {
+
+            break;
+        }
+        case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
+
+            break;
+        }
+        case ALLEGRO_EVENT_MOUSE_AXES: {
+            detectionSourisBouton(eceCity);
+            break;
+        }
+
+        case ALLEGRO_EVENT_TIMER: {
+            if (eceCity->changementAffichage) {
+                affichageRegles(eceCity);
+                al_flip_display();
+                eceCity->changementAffichage = false;
+            }
+            if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
+                faireClignoterBouton(eceCity);
+            }
+        }
+    }
+}
+
+void menuJeu(EceCity *eceCity) {
+    switch (eceCity->event.type) {
+        case ALLEGRO_EVENT_KEY_DOWN: {
+            switch (eceCity->event.keyboard.keycode) {
+                case ALLEGRO_KEY_ESCAPE: {
+                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                    eceCity->phaseDeJeu.ancienne = PARAMETRES;
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+            }
+            break;
+        }
+        case ALLEGRO_EVENT_KEY_UP: {
+
+            break;
+        }
+        case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
+
+            break;
+        }
+        case ALLEGRO_EVENT_MOUSE_AXES: {
+            detectionSourisBouton(eceCity);
+            break;
+        }
+
+        case ALLEGRO_EVENT_TIMER: {
+            if (eceCity->changementAffichage) {
+                affichageJeu(eceCity);
+                al_flip_display();
+                eceCity->changementAffichage = false;
+            }
+            if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
+                faireClignoterBouton(eceCity);
+            }
+        }
+    }
+}
+
+void menuParametres(EceCity *eceCity) {
+    switch (eceCity->event.type) {
+        case ALLEGRO_EVENT_KEY_DOWN: {
+            switch (eceCity->event.keyboard.keycode) {
+                case ALLEGRO_KEY_ESCAPE: {
+                    eceCity->phaseDeJeu.actuelle = eceCity->phaseDeJeu.ancienne;
+                    eceCity->phaseDeJeu.ancienne = PARAMETRES;
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+            }
+            break;
+        }
+        case ALLEGRO_EVENT_KEY_UP: {
+
+            break;
+        }
+        case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
+
+            break;
+        }
+        case ALLEGRO_EVENT_MOUSE_AXES: {
+            detectionSourisBouton(eceCity);
+            break;
+        }
+
+        case ALLEGRO_EVENT_TIMER: {
+            if (eceCity->changementAffichage) {
+                affichageParametres(eceCity);
+                al_flip_display();
+                eceCity->changementAffichage = false;
+            }
+            if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
+                faireClignoterBouton(eceCity);
+            }
+        }
+    }
+}
+
+void detectionSourisBouton(EceCity *eceCity) {
+    eceCity->phaseDeJeu.boutonDetecteActuel = -1;
+    int nbBouton;
+    switch (eceCity->phaseDeJeu.actuelle) {
+        case ACCEUIL: {
+            nbBouton = NBDEBOUTONACCEUIL;
+            break;
+        }
+        case CHOIXDUMODE: {
+            nbBouton = NBDEBOUTONCHOIXDUMODE;
+            break;
+        }
+        case REGLES: {
+            nbBouton = NBDEBOUTONREGLES;
+            break;
+        }
+        case JEU: {
+            nbBouton = NBDEBOUTONJEU;
+            break;
+        }
+        case PARAMETRES: {
+            nbBouton = NBDEBOUTONPARAMETRES;
+            break;
+        }
+    }
+    for (int i = 0; i < nbBouton; ++i) {
+        if (eceCity->event.mouse.x >= eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x &&
+            eceCity->event.mouse.x <= eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x +
+                                      eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].longueur &&
+            eceCity->event.mouse.y >= eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y &&
+            eceCity->event.mouse.y <= eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
+                                      eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur) {
+            eceCity->phaseDeJeu.boutonDetecteActuel = i;
+            if (eceCity->phaseDeJeu.boutonDetecteActuel != eceCity->phaseDeJeu.boutonDetecteAncien) {
+                eceCity->changementAffichage = true;
+            }
+            eceCity->phaseDeJeu.boutonDetecteAncien = eceCity->phaseDeJeu.boutonDetecteActuel;
+        }
+    }
+}
+
 
 void construireBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int tailleLargeur, int batiment) {
     if (verifSiEspaceBatiment(eceCity, coord, tailleLongueur, tailleLargeur)) {

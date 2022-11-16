@@ -7,11 +7,25 @@
 
 #include "main.h"
 
-void initialisationAll(EceCity* eceCity);
+void initialisationAll(EceCity *eceCity);
+
+void get_desktop_resolution(int adapter, EceCity *eceCity);
+
+void destroyAll(EceCity *eceCity);
 
 EceCity *creationEceCity();
 
-void initialisationEceCity(EceCity* eceCity);
+void initJoueur(EceCity *eceCity);
+
+void initBitmaps(EceCity *eceCity);
+
+void initBiblioAllegro();
+
+void initTabBoutons(EceCity *eceCity);
+
+void initPolice(EceCity* eceCity);
+
+void initialisationEceCity(EceCity *eceCity);
 
 void initAllegro(EceCity *city);
 
