@@ -58,6 +58,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[ACCEUIL][QUITTER].hauteur = 150;
     eceCity->tabBoutons[ACCEUIL][QUITTER].nom = "Quitter";
 
+
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].coord.x = 300;
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].coord.y = eceCity->display.hauteur / 2;
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].nom = "Communiste";
