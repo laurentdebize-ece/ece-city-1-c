@@ -41,13 +41,13 @@ void initTabBoutons(EceCity *eceCity) {
 }
 
 void initBitmaps(EceCity *eceCity) {
-    eceCity->tabImages[BITMAPACCEUIL].image = al_load_bitmap("../Images/bitmapAcceuil.jpg");
+    eceCity->tabImages[BITMAPACCEUIL].image = al_load_bitmap("../Images/BitmapAcceuil.png");
     eceCity->tabImages[BITMAPACCEUIL].longueur = 1920;
     eceCity->tabImages[BITMAPACCEUIL].hauteur = 1080;
     eceCity->tabImages[BITMAPACCEUIL].coord.x = 0;
     eceCity->tabImages[BITMAPACCEUIL].coord.y = 200;
 
-    eceCity->tabImages[BITMAPCHOIXDUMODE].image = al_load_bitmap("../Images/BitmapAcceuil.png");
+    eceCity->tabImages[BITMAPCHOIXDUMODE].image = al_load_bitmap("../Images/bitmapAcceuil.jpg");
     eceCity->tabImages[BITMAPCHOIXDUMODE].longueur = 1920;
     eceCity->tabImages[BITMAPCHOIXDUMODE].hauteur = 1080;
     eceCity->tabImages[BITMAPCHOIXDUMODE].coord.x = 0;
