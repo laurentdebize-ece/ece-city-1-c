@@ -15,7 +15,7 @@ void affichageParametres(EceCity *eceCity);
 
 void faireClignoterBouton(EceCity *eceCity);
 
-void affichageBouton(EceCity* eceCity, int taille);
+void affichageBouton(EceCity* eceCity, ALLEGRO_FONT *police);
 
 void affichageBitmapDeFond(EceCity* eceCity, int numBitmap);
 
