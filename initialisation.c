@@ -38,6 +38,18 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[ACCEUIL][QUITTER].longueur = 500;
     eceCity->tabBoutons[ACCEUIL][QUITTER].hauteur = 150;
     eceCity->tabBoutons[ACCEUIL][QUITTER].nom = "Quitter";
+
+    eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].coord.x = 300;
+    eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].coord.y = eceCity->display.hauteur / 2;
+    eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].nom = "Communiste";
+    eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].longueur = 500;
+    eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].hauteur = 150;
+
+    eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].coord.x = 1100;
+    eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].coord.y = eceCity->display.hauteur / 2;
+    eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].nom = "Capitaliste";
+    eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].longueur = 500;
+    eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].hauteur = 150;
 }
 
 void initBitmaps(EceCity *eceCity) {
@@ -76,7 +88,6 @@ EceCity *creationEceCity() {
     NewEceCity->tabBoutons = (Case **) malloc(NBDEMENU * sizeof(Case *));
     NewEceCity->tabBoutons[ACCEUIL] = (Case *) malloc(NBDEBOUTONACCEUIL * sizeof(Case));
     NewEceCity->tabBoutons[CHOIXDUMODE] = (Case *) malloc(NBDEBOUTONCHOIXDUMODE * sizeof(Case));
-    NewEceCity->tabBoutons[REGLES] = (Case *) malloc(NBDEBOUTONREGLES * sizeof(Case));
     NewEceCity->tabBoutons[JEU] = (Case *) malloc(NBDEBOUTONJEU * sizeof(Case));
     NewEceCity->tabBoutons[PARAMETRES] = (Case *) malloc(NBDEBOUTONPARAMETRES * sizeof(Case));
 
