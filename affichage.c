@@ -7,6 +7,7 @@ void affichageAcceuil(EceCity *eceCity) {
 }
 
 void affichageChoixDuMode(EceCity *eceCity) {
+    affichageBitmapDeFond(eceCity, BITMAPCHOIXDUMODE);
 
 }
 
@@ -54,14 +55,20 @@ void affichageBouton(EceCity *eceCity) {
                                  eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
                                  eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur,
                                  al_map_rgb(0, 0, 0));
-        /*al_draw_textf(eceCity->ecrire.simsCityPoliceMoyen, eceCity->ecrire.couleurDuTexte,
-                      eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x -
-                      (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].longueur / 2) -
-                      (al_get_text_width(eceCity->ecrire.simsCityPoliceMoyen,
-                                         eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].nom) / 2),
-                      eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y -
-                      (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur / 2), 0, "%s",
-                      eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].nom);*/
+        al_draw_rectangle(eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x,
+                          eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y,
+                          eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x +
+                          eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].longueur,
+                          eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
+                          eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur,
+                          al_map_rgb(255, 255, 255), 10);
+        al_draw_text(eceCity->ecrire.simsCityPoliceGrand, eceCity->ecrire.couleurDuTexte,
+                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x +
+                     (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].longueur / 2),
+                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
+                     (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur / 2) -
+                     (al_get_font_line_height(eceCity->ecrire.simsCityPoliceGrand) / 2), ALLEGRO_ALIGN_CENTER,
+                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].nom);
     }
 }
 
@@ -80,7 +87,7 @@ void faireClignoterBouton(EceCity *eceCity) {
             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].longueur,
             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.y +
             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].hauteur,
-            al_map_rgb(3 * al_get_timer_count(eceCity->timer), 0, 0),
-            5);
+            al_map_rgb(4 * al_get_timer_count(eceCity->timer), 0, 0),
+            7);
     al_flip_display();
 }

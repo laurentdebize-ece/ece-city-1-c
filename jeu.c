@@ -44,7 +44,7 @@ void menuAcceuil(EceCity *eceCity) {
             break;
         }
         case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
-
+            boutonPresse(eceCity);
             break;
         }
         case ALLEGRO_EVENT_MOUSE_AXES: {
@@ -71,9 +71,7 @@ void menuChoixDuMode(EceCity *eceCity) {
         case ALLEGRO_EVENT_KEY_DOWN: {
             switch (eceCity->event.keyboard.keycode) {
                 case ALLEGRO_KEY_ESCAPE: {
-                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
-                    eceCity->phaseDeJeu.actuelle = REGLES;
-                    eceCity->changementAffichage = true;
+                    eceCity->end = true;
                     break;
                 }
             }
@@ -84,7 +82,7 @@ void menuChoixDuMode(EceCity *eceCity) {
             break;
         }
         case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
-
+            boutonPresse(eceCity);
             break;
         }
         case ALLEGRO_EVENT_MOUSE_AXES: {
@@ -123,7 +121,7 @@ void menuRegles(EceCity *eceCity) {
             break;
         }
         case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
-
+            boutonPresse(eceCity);
             break;
         }
         case ALLEGRO_EVENT_MOUSE_AXES: {
@@ -162,7 +160,7 @@ void menuJeu(EceCity *eceCity) {
             break;
         }
         case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
-
+            boutonPresse(eceCity);
             break;
         }
         case ALLEGRO_EVENT_MOUSE_AXES: {
@@ -201,7 +199,7 @@ void menuParametres(EceCity *eceCity) {
             break;
         }
         case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
-
+            boutonPresse(eceCity);
             break;
         }
         case ALLEGRO_EVENT_MOUSE_AXES: {
@@ -255,11 +253,11 @@ void detectionSourisBouton(EceCity *eceCity) {
             eceCity->event.mouse.y <= eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
                                       eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur) {
             eceCity->phaseDeJeu.boutonDetecteActuel = i;
-            if (eceCity->phaseDeJeu.boutonDetecteActuel != eceCity->phaseDeJeu.boutonDetecteAncien) {
-                eceCity->changementAffichage = true;
-            }
-            eceCity->phaseDeJeu.boutonDetecteAncien = eceCity->phaseDeJeu.boutonDetecteActuel;
         }
+        if (eceCity->phaseDeJeu.boutonDetecteActuel != eceCity->phaseDeJeu.boutonDetecteAncien) {
+            eceCity->changementAffichage = true;
+        }
+        eceCity->phaseDeJeu.boutonDetecteAncien = eceCity->phaseDeJeu.boutonDetecteActuel;
     }
 }
 
@@ -286,4 +284,46 @@ bool verifSiEspaceBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int
         }
     }
     return verifCasesVide;
+}
+
+void boutonPresse(EceCity* eceCity){
+    switch (eceCity->phaseDeJeu.actuelle) {
+        case ACCEUIL: {
+            switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
+                case NOUVELLEPARTIE:{
+                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                    eceCity->phaseDeJeu.actuelle = CHOIXDUMODE;
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+                case CHARGER:{
+                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                    eceCity->phaseDeJeu.actuelle = JEU;
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+                case QUITTER:{
+                    eceCity->end = true;
+                    break;
+                }
+            }
+            break;
+        }
+        case CHOIXDUMODE: {
+
+            break;
+        }
+        case REGLES: {
+
+            break;
+        }
+        case JEU: {
+
+            break;
+        }
+        case PARAMETRES: {
+
+            break;
+        }
+    }
 }

@@ -21,4 +21,6 @@ void construireBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int ta
 
 void detectionSourisBouton(EceCity *eceCity);
 
+void boutonPresse(EceCity *eceCity);
+
 #endif //ECE_CITY_1_C_JEU_H

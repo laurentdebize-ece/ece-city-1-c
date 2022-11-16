@@ -11,29 +11,47 @@ void initialisationAll(EceCity *eceCity) {
 }
 
 void initPolice(EceCity *eceCity) {
-    eceCity->ecrire.simsCityPolicePetite = al_load_font("../Fonts/AGAALER.ttf", 25, 0);
+    eceCity->ecrire.simsCityPolicePetite = al_load_font("../Fonts/AGAALER.TTF", 25, 0);
     assert(eceCity->ecrire.simsCityPolicePetite);
-    eceCity->ecrire.simsCityPoliceMoyen = al_load_font("../Fonts/AGAALER.ttf", 50, 0);
+    eceCity->ecrire.simsCityPoliceMoyen = al_load_font("../Fonts/AGAALER.TTF", 50, 0);
     assert(eceCity->ecrire.simsCityPoliceMoyen);
-    eceCity->ecrire.simsCityPoliceGrand = al_load_font("../Fonts/AGAALER.ttf", 100, 0);
+    eceCity->ecrire.simsCityPoliceGrand = al_load_font("../Fonts/AGAALER.TTF", 100, 0);
     assert(eceCity->ecrire.simsCityPoliceGrand);
     eceCity->ecrire.couleurDuTexte = al_map_rgb(255, 255, 255);
 }
 
 void initTabBoutons(EceCity *eceCity) {
-    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].coord.x = 30;
+    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].coord.x = 50;
     eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].coord.y = 225;
-    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].longueur = 717 - 30;
-    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].hauteur = 614 - 225;
-    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].nom = "Nouvelle Partie";
+    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].longueur = 800;
+    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].hauteur = 300;
+    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].nom = "NouvellePartie";
+
+    eceCity->tabBoutons[ACCEUIL][CHARGER].coord.x = 950;
+    eceCity->tabBoutons[ACCEUIL][CHARGER].coord.y = 225;
+    eceCity->tabBoutons[ACCEUIL][CHARGER].longueur = 800;
+    eceCity->tabBoutons[ACCEUIL][CHARGER].hauteur = 300;
+    eceCity->tabBoutons[ACCEUIL][CHARGER].nom = "Charger";
+
+    eceCity->tabBoutons[ACCEUIL][QUITTER].coord.x = 500;
+    eceCity->tabBoutons[ACCEUIL][QUITTER].coord.y = 650;
+    eceCity->tabBoutons[ACCEUIL][QUITTER].longueur = 800;
+    eceCity->tabBoutons[ACCEUIL][QUITTER].hauteur = 300;
+    eceCity->tabBoutons[ACCEUIL][QUITTER].nom = "Quitter";
 }
 
 void initBitmaps(EceCity *eceCity) {
-    eceCity->tabImages[BITMAPACCEUIL].image = al_load_bitmap("../Images/BitmapAcceuil.png");
+    eceCity->tabImages[BITMAPACCEUIL].image = al_load_bitmap("../Images/bitmapAcceuil.jpg");
     eceCity->tabImages[BITMAPACCEUIL].longueur = 1920;
     eceCity->tabImages[BITMAPACCEUIL].hauteur = 1080;
     eceCity->tabImages[BITMAPACCEUIL].coord.x = 0;
-    eceCity->tabImages[BITMAPACCEUIL].coord.y = 0;
+    eceCity->tabImages[BITMAPACCEUIL].coord.y = 200;
+
+    eceCity->tabImages[BITMAPCHOIXDUMODE].image = al_load_bitmap("../Images/BitmapAcceuil.png");
+    eceCity->tabImages[BITMAPCHOIXDUMODE].longueur = 1920;
+    eceCity->tabImages[BITMAPCHOIXDUMODE].hauteur = 1080;
+    eceCity->tabImages[BITMAPCHOIXDUMODE].coord.x = 0;
+    eceCity->tabImages[BITMAPCHOIXDUMODE].coord.y = 0;
 }
 
 EceCity *creationEceCity() {
@@ -68,6 +86,8 @@ void initialisationEceCity(EceCity *eceCity) {
     eceCity->changementAffichage = true;
     eceCity->end = false;
     eceCity->phaseDeJeu.actuelle = ACCEUIL;
+    eceCity->phaseDeJeu.boutonDetecteActuel = -1;
+    eceCity->phaseDeJeu.boutonDetecteAncien = -1;
 }
 
 void initJoueur(EceCity *eceCity) {
