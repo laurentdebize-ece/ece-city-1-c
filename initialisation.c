@@ -45,13 +45,14 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BITMAPACCEUIL].longueur = 1920;
     eceCity->tabImages[BITMAPACCEUIL].hauteur = 1080;
     eceCity->tabImages[BITMAPACCEUIL].coord.x = 0;
-    eceCity->tabImages[BITMAPACCEUIL].coord.y = 200;
+    eceCity->tabImages[BITMAPACCEUIL].coord.y = 0;
 
     eceCity->tabImages[BITMAPCHOIXDUMODE].image = al_load_bitmap("../Images/bitmapAcceuil.jpg");
     eceCity->tabImages[BITMAPCHOIXDUMODE].longueur = 1920;
     eceCity->tabImages[BITMAPCHOIXDUMODE].hauteur = 1080;
     eceCity->tabImages[BITMAPCHOIXDUMODE].coord.x = 0;
-    eceCity->tabImages[BITMAPCHOIXDUMODE].coord.y = 0;
+    eceCity->tabImages[BITMAPCHOIXDUMODE].coord.y = 200;
+
 }
 
 EceCity *creationEceCity() {
