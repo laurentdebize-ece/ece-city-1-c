@@ -12,10 +12,6 @@ void bouclePrincipale(EceCity *eceCity) {
             case CHOIXDUMODE: {
                 menuChoixDuMode(eceCity);
             }
-            case REGLES: {
-                menuRegles(eceCity);
-                break;
-            }
             case JEU: {
                 menuJeu(eceCity);
                 break;
@@ -109,7 +105,6 @@ void menuRegles(EceCity *eceCity) {
             switch (eceCity->event.keyboard.keycode) {
                 case ALLEGRO_KEY_ESCAPE: {
                     eceCity->phaseDeJeu.actuelle = eceCity->phaseDeJeu.ancienne;
-                    eceCity->phaseDeJeu.ancienne = REGLES;
                     eceCity->changementAffichage = true;
                     break;
                 }
@@ -232,10 +227,6 @@ void detectionSourisBouton(EceCity *eceCity) {
             nbBouton = NBDEBOUTONCHOIXDUMODE;
             break;
         }
-        case REGLES: {
-            nbBouton = NBDEBOUTONREGLES;
-            break;
-        }
         case JEU: {
             nbBouton = NBDEBOUTONJEU;
             break;
@@ -310,13 +301,26 @@ void boutonPresse(EceCity* eceCity){
             break;
         }
         case CHOIXDUMODE: {
+            switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
+                case COMMUNISTE: {
+                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                    eceCity->phaseDeJeu.actuelle = JEU;
+                    eceCity->changementAffichage = true;
+                    break;
+
+                }
+                case CAPITALISTE: {
+                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                    eceCity->phaseDeJeu.actuelle = JEU;
+                    eceCity->changementAffichage = true;
+                    break;
+
+                }
+            }
 
             break;
         }
-        case REGLES: {
 
-            break;
-        }
         case JEU: {
 
             break;
