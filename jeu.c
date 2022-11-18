@@ -55,7 +55,7 @@ void menuAcceuil(EceCity *eceCity) {
                 eceCity->changementAffichage = false;
             }
             if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
-                faireClignoterBouton(eceCity);
+                faireClignoterBoutonMenu(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
             }
             break;
         }
@@ -93,7 +93,7 @@ void menuChoixDuMode(EceCity *eceCity) {
                 eceCity->changementAffichage = false;
             }
             if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
-                faireClignoterBouton(eceCity);
+                faireClignoterBoutonMenu(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
             }
         }
     }
@@ -168,7 +168,7 @@ void menuJeu(EceCity *eceCity) {
                 eceCity->changementAffichage = false;
             }
             if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
-                faireClignoterBouton(eceCity);
+                faireClignoterBoutonMenu(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
             }
         }
     }
@@ -207,7 +207,7 @@ void menuParametres(EceCity *eceCity) {
                 eceCity->changementAffichage = false;
             }
             if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
-                faireClignoterBouton(eceCity);
+                faireClignoterBoutonMenu(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
             }
         }
     }

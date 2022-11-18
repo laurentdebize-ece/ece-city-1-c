@@ -11,7 +11,7 @@ void affichageJeu(EceCity *eceCity);
 
 void affichageParametres(EceCity *eceCity);
 
-void faireClignoterBouton(EceCity *eceCity);
+void faireClignoterBoutonMenu(EceCity *eceCity, ALLEGRO_FONT *police);
 
 void affichageBouton(EceCity* eceCity, ALLEGRO_FONT *police);
 
