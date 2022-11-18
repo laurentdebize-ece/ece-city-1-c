@@ -155,7 +155,7 @@ void affichageBitmapDeFond(EceCity *eceCity, int numBitmap) {
                           eceCity->display.hauteur, 0);
 }
 
-void faireClignoterBouton(EceCity *eceCity) {
+void faireClignoterBoutonMenu(EceCity *eceCity, ALLEGRO_FONT *police) {
     al_draw_rectangle(
             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.x,
             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.y,
@@ -165,5 +165,12 @@ void faireClignoterBouton(EceCity *eceCity) {
             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].hauteur,
             al_map_rgb(4 * al_get_timer_count(eceCity->timer), 0, 0),
             7);
+    al_draw_text(police, al_map_rgb(4 * al_get_timer_count(eceCity->timer), 0, 0),
+                 eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.x +
+                 (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].longueur / 2),
+                 eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.y +
+                 (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].hauteur / 2) -
+                 (al_get_font_line_height(police) / 2), ALLEGRO_ALIGN_CENTER,
+                 eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].nom);
     al_flip_display();
 }
