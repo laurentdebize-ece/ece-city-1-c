@@ -119,10 +119,6 @@ void affichageBouton(EceCity *eceCity, ALLEGRO_FONT *police) {
             nbBouton = NBDEBOUTONCHOIXDUMODE;
             break;
         }
-        case REGLES: {
-            nbBouton = NBDEBOUTONREGLES;
-            break;
-        }
         case JEU: {
             nbBouton = NBDEBOUTONJEU;
             break;
