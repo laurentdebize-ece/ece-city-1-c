@@ -8,6 +8,25 @@ void initialisationAll(EceCity *eceCity) {
     initBitmaps(eceCity);
     initTabBoutons(eceCity);
     initPolice(eceCity);
+    initPlateau(eceCity);
+    initTabTouches(eceCity);
+}
+
+void initTabTouches(EceCity *eceCity) {
+    for (int i = 0; i < NBT; ++i) {
+        eceCity->tabTouches[i] = false;
+    }
+}
+
+void initPlateau(EceCity *eceCity) {
+    for (int i = 0; i < NBLIGNE; ++i) {
+        for (int j = 0; j < NBCOLONNE; ++j) {
+            eceCity->matricePlateau[i][j].coord.x = XDEPART + j * LONGUEURCASE;
+            eceCity->matricePlateau[i][j].coord.y = YDEPART + i * HAUTEURCASE;
+            eceCity->matricePlateau[i][j].type = rand() % 2;
+            eceCity->matricePlateau[i][j].num = i + j;
+        }
+    }
 }
 
 void initPolice(EceCity *eceCity) {
@@ -79,6 +98,8 @@ EceCity *creationEceCity() {
     NewEceCity->tabBoutons[REGLES] = (Case *) malloc(NBDEBOUTONREGLES * sizeof(Case));
     NewEceCity->tabBoutons[JEU] = (Case *) malloc(NBDEBOUTONJEU * sizeof(Case));
     NewEceCity->tabBoutons[PARAMETRES] = (Case *) malloc(NBDEBOUTONPARAMETRES * sizeof(Case));
+
+    NewEceCity->tabTouches = (bool *) malloc(NBT * sizeof(bool));
 
     return NewEceCity;
 }

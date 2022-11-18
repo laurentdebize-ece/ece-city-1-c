@@ -14,8 +14,13 @@
 
 #define NBLIGNE 35
 #define NBCOLONNE 45
+#define XDEPART 30
+#define YDEPART 30
+#define LONGUEURCASE 50
+#define HAUTEURCASE 50
 #define MONNAIEDEPART 5000
 #define HABITANTDEPART 100
+#define VITESSE 10
 
 
 enum {
@@ -50,6 +55,10 @@ enum {
     BITMAPACCEUIL, BITMAPCHOIXDUMODE, BITMAPJEU, NBDEBITMAP
 };
 
+enum {
+    HAUT, BAS, GAUCHE, DROITE, NBT
+};
+
 
 typedef struct {
     int x, y;
@@ -64,9 +73,10 @@ typedef struct {
 
 typedef struct {
     int type;
+    int num;
     bool elec;
     bool eau;
-    Coord plateau;
+    Coord coord;
 } Sol;
 
 typedef struct {
@@ -138,6 +148,7 @@ typedef struct {
     ChateauDeau *tabChateauEaux;
     Image *tabImages;
     Case **tabBoutons;
+    bool *tabTouches;
 } EceCity;
 
 #endif //ECE_CITY_1_C_MAIN_H
