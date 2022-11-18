@@ -99,44 +99,6 @@ void menuChoixDuMode(EceCity *eceCity) {
     }
 }
 
-void menuRegles(EceCity *eceCity) {
-    switch (eceCity->event.type) {
-        case ALLEGRO_EVENT_KEY_DOWN: {
-            switch (eceCity->event.keyboard.keycode) {
-                case ALLEGRO_KEY_ESCAPE: {
-                    eceCity->phaseDeJeu.actuelle = eceCity->phaseDeJeu.ancienne;
-                    eceCity->changementAffichage = true;
-                    break;
-                }
-            }
-            break;
-        }
-        case ALLEGRO_EVENT_KEY_UP: {
-
-            break;
-        }
-        case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
-            boutonPresse(eceCity);
-            break;
-        }
-        case ALLEGRO_EVENT_MOUSE_AXES: {
-            detectionSourisBouton(eceCity);
-            break;
-        }
-
-        case ALLEGRO_EVENT_TIMER: {
-            if (eceCity->changementAffichage) {
-                affichageRegles(eceCity);
-                al_flip_display();
-                eceCity->changementAffichage = false;
-            }
-            if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
-                faireClignoterBouton(eceCity);
-            }
-        }
-    }
-}
-
 void menuJeu(EceCity *eceCity) {
     switch (eceCity->event.type) {
         case ALLEGRO_EVENT_KEY_DOWN: {

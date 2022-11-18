@@ -9,8 +9,6 @@ void menuAcceuil(EceCity *eceCity);
 
 void menuChoixDuMode(EceCity *eceCity);
 
-void menuRegles(EceCity *eceCity);
-
 void menuJeu(EceCity *eceCity);
 
 void menuParametres(EceCity *eceCity);

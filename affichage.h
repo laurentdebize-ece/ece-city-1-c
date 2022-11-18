@@ -7,8 +7,6 @@ void affichageAcceuil(EceCity *eceCity);
 
 void affichageChoixDuMode(EceCity *eceCity);
 
-void affichageRegles(EceCity *eceCity);
-
 void affichageJeu(EceCity *eceCity);
 
 void affichageParametres(EceCity *eceCity);
