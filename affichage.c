@@ -14,11 +14,6 @@ void affichageChoixDuMode(EceCity *eceCity) {
     affichageBouton(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
 }
 
-void affichageRegles(EceCity *eceCity) {
-    affichageBitmapDeFond(eceCity, BITMAPCHOIXDUMODE);
-    affichageBouton(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
-}
-
 void affichageJeu(EceCity *eceCity) {
     al_clear_to_color(al_map_rgb(0, 0, 0));
     dessinerGrille(eceCity);
