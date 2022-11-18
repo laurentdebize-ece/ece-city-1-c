@@ -17,6 +17,8 @@ void faireClignoterBouton(EceCity *eceCity);
 
 void affichageBouton(EceCity* eceCity, ALLEGRO_FONT *police);
 
+void dessinerGrille(EceCity* eceCity);
+
 void affichageBitmapDeFond(EceCity* eceCity, int numBitmap);
 
 #endif //ECE_CITY_1_C_AFFICHAGE_H

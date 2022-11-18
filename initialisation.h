@@ -23,7 +23,11 @@ void initBiblioAllegro();
 
 void initTabBoutons(EceCity *eceCity);
 
-void initPolice(EceCity* eceCity);
+void initPolice(EceCity *eceCity);
+
+void initPlateau(EceCity *eceCity);
+
+void initTabTouches(EceCity *eceCity);
 
 void initialisationEceCity(EceCity *eceCity);
 

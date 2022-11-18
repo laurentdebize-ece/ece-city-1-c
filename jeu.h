@@ -23,4 +23,6 @@ void detectionSourisBouton(EceCity *eceCity);
 
 void boutonPresse(EceCity *eceCity);
 
+void deplacerPlateau(EceCity *eceCity);
+
 #endif //ECE_CITY_1_C_JEU_H

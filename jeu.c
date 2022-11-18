@@ -150,13 +150,48 @@ void menuJeu(EceCity *eceCity) {
                     eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
                     eceCity->phaseDeJeu.ancienne = PARAMETRES;
                     eceCity->changementAffichage = true;
+                    ///tempo
+                    eceCity->end = true;
+                    break;
+                }
+                case ALLEGRO_KEY_S: {
+                    eceCity->tabTouches[BAS] = true;
+                    break;
+                }
+                case ALLEGRO_KEY_Z: {
+                    eceCity->tabTouches[HAUT] = true;
+                    break;
+                }
+                case ALLEGRO_KEY_Q: {
+                    eceCity->tabTouches[GAUCHE] = true;
+                    break;
+                }
+                case ALLEGRO_KEY_D: {
+                    eceCity->tabTouches[DROITE] = true;
                     break;
                 }
             }
             break;
         }
         case ALLEGRO_EVENT_KEY_UP: {
-
+            switch (eceCity->event.keyboard.keycode) {
+                case ALLEGRO_KEY_S: {
+                    eceCity->tabTouches[BAS] = false;
+                    break;
+                }
+                case ALLEGRO_KEY_Z: {
+                    eceCity->tabTouches[HAUT] = false;
+                    break;
+                }
+                case ALLEGRO_KEY_Q: {
+                    eceCity->tabTouches[GAUCHE] = false;
+                    break;
+                }
+                case ALLEGRO_KEY_D: {
+                    eceCity->tabTouches[DROITE] = false;
+                    break;
+                }
+            }
             break;
         }
         case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
@@ -169,6 +204,7 @@ void menuJeu(EceCity *eceCity) {
         }
 
         case ALLEGRO_EVENT_TIMER: {
+            deplacerPlateau(eceCity);
             if (eceCity->changementAffichage) {
                 affichageJeu(eceCity);
                 al_flip_display();
@@ -286,23 +322,23 @@ bool verifSiEspaceBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int
     return verifCasesVide;
 }
 
-void boutonPresse(EceCity* eceCity){
+void boutonPresse(EceCity *eceCity) {
     switch (eceCity->phaseDeJeu.actuelle) {
         case ACCEUIL: {
             switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
-                case NOUVELLEPARTIE:{
+                case NOUVELLEPARTIE: {
                     eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
                     eceCity->phaseDeJeu.actuelle = CHOIXDUMODE;
                     eceCity->changementAffichage = true;
                     break;
                 }
-                case CHARGER:{
+                case CHARGER: {
                     eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
                     eceCity->phaseDeJeu.actuelle = JEU;
                     eceCity->changementAffichage = true;
                     break;
                 }
-                case QUITTER:{
+                case QUITTER: {
                     eceCity->end = true;
                     break;
                 }
