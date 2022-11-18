@@ -14,10 +14,9 @@
 
 #define NBLIGNE 35
 #define NBCOLONNE 45
-#define XDEPART 30
-#define YDEPART 30
-#define LONGUEURCASE 50
-#define HAUTEURCASE 50
+#define XDEPART 50
+#define YDEPART 50
+#define COTECASE 50
 #define MONNAIEDEPART 5000
 #define HABITANTDEPART 100
 #define VITESSE 10

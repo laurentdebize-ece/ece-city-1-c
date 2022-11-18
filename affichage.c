@@ -21,7 +21,7 @@ void affichageJeu(EceCity *eceCity) {
 
 void deplacerPlateau(EceCity*eceCity){
     if (eceCity->tabTouches[BAS]){
-        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + (HAUTEURCASE * 2) >=
+        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + (COTECASE * 3) >=
             eceCity->display.hauteur) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
@@ -32,7 +32,7 @@ void deplacerPlateau(EceCity*eceCity){
         eceCity->changementAffichage = true;
     }
     if (eceCity->tabTouches[HAUT]){
-        if (eceCity->matricePlateau[0][0].coord.y - HAUTEURCASE/2 <= 0) {
+        if (eceCity->matricePlateau[0][0].coord.y - COTECASE <= 0) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
                     eceCity->matricePlateau[i][j].coord.y += VITESSE;
@@ -42,7 +42,7 @@ void deplacerPlateau(EceCity*eceCity){
         eceCity->changementAffichage = true;
     }
     if (eceCity->tabTouches[GAUCHE]){
-        if (eceCity->matricePlateau[0][0].coord.x - LONGUEURCASE/2 <= 0) {
+        if (eceCity->matricePlateau[0][0].coord.x - COTECASE <= 0) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
                     eceCity->matricePlateau[i][j].coord.x += VITESSE;
@@ -52,7 +52,7 @@ void deplacerPlateau(EceCity*eceCity){
         eceCity->changementAffichage = true;
     }
     if (eceCity->tabTouches[DROITE]){
-        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + (LONGUEURCASE * 2) >=
+        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + (COTECASE * 3) >=
             eceCity->display.longueur) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
@@ -71,16 +71,16 @@ void dessinerGrille(EceCity *eceCity) {
                 case VIDE: {
                     al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
                                              eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + LONGUEURCASE,
-                                             eceCity->matricePlateau[i][j].coord.y + HAUTEURCASE,
+                                             eceCity->matricePlateau[i][j].coord.x + COTECASE,
+                                             eceCity->matricePlateau[i][j].coord.y + COTECASE,
                                              al_map_rgb(89, 166, 8));
                     break;
                 }
                 case ARBRE: {
                     al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
                                              eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + LONGUEURCASE,
-                                             eceCity->matricePlateau[i][j].coord.y + HAUTEURCASE,
+                                             eceCity->matricePlateau[i][j].coord.x + COTECASE,
+                                             eceCity->matricePlateau[i][j].coord.y + COTECASE,
                                              al_map_rgb(128, 0, 0));
                     break;
                 }
@@ -88,13 +88,13 @@ void dessinerGrille(EceCity *eceCity) {
         }
     }
     for (int i = 0; i < NBLIGNE + 1; ++i) {
-        al_draw_line(eceCity->matricePlateau[0][0].coord.x, eceCity->matricePlateau[0][0].coord.y + i * HAUTEURCASE,
-                     eceCity->matricePlateau[0][0].coord.x + NBCOLONNE * LONGUEURCASE,
-                     eceCity->matricePlateau[0][0].coord.y + i * HAUTEURCASE, al_map_rgb(255, 255, 255), 2);
+        al_draw_line(eceCity->matricePlateau[0][0].coord.x, eceCity->matricePlateau[0][0].coord.y + i * COTECASE,
+                     eceCity->matricePlateau[0][0].coord.x + NBCOLONNE * COTECASE,
+                     eceCity->matricePlateau[0][0].coord.y + i * COTECASE, al_map_rgb(255, 255, 255), 2);
     }
     for (int i = 0; i < NBCOLONNE + 1; ++i) {
-        al_draw_line(eceCity->matricePlateau[0][0].coord.x + i * LONGUEURCASE, eceCity->matricePlateau[0][0].coord.y,
-                     eceCity->matricePlateau[0][0].coord.x + i * LONGUEURCASE, eceCity->matricePlateau[0][0].coord.y + NBLIGNE * HAUTEURCASE, al_map_rgb(255, 255, 255), 2);
+        al_draw_line(eceCity->matricePlateau[0][0].coord.x + i * COTECASE, eceCity->matricePlateau[0][0].coord.y,
+                     eceCity->matricePlateau[0][0].coord.x + i * COTECASE, eceCity->matricePlateau[0][0].coord.y + NBLIGNE * COTECASE, al_map_rgb(255, 255, 255), 2);
     }
 }
 

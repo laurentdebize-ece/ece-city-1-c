@@ -21,8 +21,8 @@ void initTabTouches(EceCity *eceCity) {
 void initPlateau(EceCity *eceCity) {
     for (int i = 0; i < NBLIGNE; ++i) {
         for (int j = 0; j < NBCOLONNE; ++j) {
-            eceCity->matricePlateau[i][j].coord.x = XDEPART + j * LONGUEURCASE;
-            eceCity->matricePlateau[i][j].coord.y = YDEPART + i * HAUTEURCASE;
+            eceCity->matricePlateau[i][j].coord.x = XDEPART + j * COTECASE;
+            eceCity->matricePlateau[i][j].coord.y = YDEPART + i * COTECASE;
             eceCity->matricePlateau[i][j].type = rand() % 2;
             eceCity->matricePlateau[i][j].num = i + j;
         }
