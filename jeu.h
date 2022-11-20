@@ -17,7 +17,7 @@ bool verifSiEspaceBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int
 
 void construireBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int tailleLargeur, int batiment);
 
-void detectionSourisBouton(EceCity *eceCity);
+void detectionSouris(EceCity *eceCity);
 
 void boutonPresse(EceCity *eceCity);
 

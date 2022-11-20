@@ -17,11 +17,28 @@ void affichageChoixDuMode(EceCity *eceCity) {
 void affichageJeu(EceCity *eceCity) {
     al_clear_to_color(al_map_rgb(0, 0, 0));
     dessinerGrille(eceCity);
+    affichageBarreDoutils(eceCity);
+    affichageBouton(eceCity, eceCity->ecrire.simsCityPolicePetite);
+    if (eceCity->phaseDeJeu.batimenAConstruire != -1) {
+        dessinerBatimentAConstruire(eceCity);
+    }
 }
 
-void deplacerPlateau(EceCity*eceCity){
-    if (eceCity->tabTouches[BAS]){
-        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + (COTECASE * 3) >=
+void dessinerBatimentAConstruire(EceCity *eceCity){
+
+}
+
+void affichageBarreDoutils(EceCity *eceCity) {
+    al_draw_filled_rectangle(0, eceCity->display.hauteur * 7 / 8 - 50, eceCity->display.longueur,
+                             eceCity->display.hauteur,
+                             al_map_rgba(0, 0, 0, 128));
+    al_draw_rectangle(0, eceCity->display.hauteur * 7 / 8 - 50, eceCity->display.longueur, eceCity->display.hauteur,
+                      al_map_rgb(255, 255, 255), 7);
+}
+
+void deplacerPlateau(EceCity *eceCity) {
+    if (eceCity->tabTouches[BAS]) {
+        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + (COTECASE * 2) >=
             eceCity->display.hauteur) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
@@ -31,7 +48,7 @@ void deplacerPlateau(EceCity*eceCity){
         }
         eceCity->changementAffichage = true;
     }
-    if (eceCity->tabTouches[HAUT]){
+    if (eceCity->tabTouches[HAUT]) {
         if (eceCity->matricePlateau[0][0].coord.y - COTECASE <= 0) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
@@ -41,7 +58,7 @@ void deplacerPlateau(EceCity*eceCity){
         }
         eceCity->changementAffichage = true;
     }
-    if (eceCity->tabTouches[GAUCHE]){
+    if (eceCity->tabTouches[GAUCHE]) {
         if (eceCity->matricePlateau[0][0].coord.x - COTECASE <= 0) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
@@ -51,8 +68,8 @@ void deplacerPlateau(EceCity*eceCity){
         }
         eceCity->changementAffichage = true;
     }
-    if (eceCity->tabTouches[DROITE]){
-        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + (COTECASE * 3) >=
+    if (eceCity->tabTouches[DROITE]) {
+        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + (COTECASE * 2) >=
             eceCity->display.longueur) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
@@ -65,25 +82,19 @@ void deplacerPlateau(EceCity*eceCity){
 }
 
 void dessinerGrille(EceCity *eceCity) {
+    al_draw_filled_rectangle(eceCity->matricePlateau[0][0].coord.x,
+                             eceCity->matricePlateau[0][0].coord.y,
+                             eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + COTECASE,
+                             eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + COTECASE,
+                             al_map_rgb(89, 166, 8));
     for (int i = 0; i < NBLIGNE; ++i) {
         for (int j = 0; j < NBCOLONNE; ++j) {
-            switch (eceCity->matricePlateau[i][j].type) {
-                case VIDE: {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE,
-                                             al_map_rgb(89, 166, 8));
-                    break;
-                }
-                case ARBRE: {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE,
-                                             al_map_rgb(128, 0, 0));
-                    break;
-                }
+            if (eceCity->matricePlateau[i][j].type == ARBRE) {
+                al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
+                                         eceCity->matricePlateau[i][j].coord.y,
+                                         eceCity->matricePlateau[i][j].coord.x + COTECASE,
+                                         eceCity->matricePlateau[i][j].coord.y + COTECASE,
+                                         al_map_rgb(128, 0, 0));
             }
         }
     }
@@ -94,7 +105,8 @@ void dessinerGrille(EceCity *eceCity) {
     }
     for (int i = 0; i < NBCOLONNE + 1; ++i) {
         al_draw_line(eceCity->matricePlateau[0][0].coord.x + i * COTECASE, eceCity->matricePlateau[0][0].coord.y,
-                     eceCity->matricePlateau[0][0].coord.x + i * COTECASE, eceCity->matricePlateau[0][0].coord.y + NBLIGNE * COTECASE, al_map_rgb(255, 255, 255), 2);
+                     eceCity->matricePlateau[0][0].coord.x + i * COTECASE,
+                     eceCity->matricePlateau[0][0].coord.y + NBLIGNE * COTECASE, al_map_rgb(255, 255, 255), 2);
     }
 }
 
@@ -156,21 +168,25 @@ void affichageBitmapDeFond(EceCity *eceCity, int numBitmap) {
 }
 
 void faireClignoterBoutonMenu(EceCity *eceCity, ALLEGRO_FONT *police) {
-    al_draw_rectangle(
-            eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.x,
-            eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.y,
-            eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.x +
-            eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].longueur,
-            eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.y +
-            eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].hauteur,
-            al_map_rgb(4 * al_get_timer_count(eceCity->timer), 0, 0),
-            7);
-    al_draw_text(police, al_map_rgb(4 * al_get_timer_count(eceCity->timer), 0, 0),
-                 eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.x +
-                 (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].longueur / 2),
-                 eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.y +
-                 (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].hauteur / 2) -
-                 (al_get_font_line_height(police) / 2), ALLEGRO_ALIGN_CENTER,
-                 eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].nom);
-    al_flip_display();
+    if (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].clignote) {
+        al_draw_rectangle(
+                eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.x,
+                eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.y,
+                eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.x +
+                eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].longueur,
+                eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.y +
+                eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].hauteur,
+                al_map_rgb(4 * al_get_timer_count(eceCity->timer), 0, 0),
+                7);
+        al_draw_text(police, al_map_rgb(4 * al_get_timer_count(eceCity->timer), 0, 0),
+                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.x +
+                     (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].longueur /
+                      2),
+                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].coord.y +
+                     (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].hauteur /
+                      2) -
+                     (al_get_font_line_height(police) / 2), ALLEGRO_ALIGN_CENTER,
+                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].nom);
+        al_flip_display();
+    }
 }
