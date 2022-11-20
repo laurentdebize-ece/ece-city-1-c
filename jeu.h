@@ -3,23 +3,23 @@
 
 #include "main.h"
 
-void bouclePrincipale(EceCity*eceCity);
+void bouclePrincipale(EceCity *eceCity);
 
-void menuAcceuil(EceCity*eceCity);
+void menuAcceuil(EceCity *eceCity);
 
-void menuChoixDuMode(EceCity* eceCity);
+void menuChoixDuMode(EceCity *eceCity);
 
-void menuJeu(EceCity*eceCity);
+void menuJeu(EceCity *eceCity);
 
-void menuParametres(EceCity* eceCity);
+void menuParametres(EceCity *eceCity);
 
-bool verifSiEspaceBatiment(EceCity* eceCity, int x, int y);
+bool verifSiEspaceBatiment(EceCity* eceCity);
 
 void construireBatiment(EceCity* eceCity);
 
-void detectionSouris(EceCity*eceCity);
+void detectionSouris(EceCity *eceCity);
 
-void boutonPresse(EceCity*eceCity);
+void boutonPresse(EceCity *eceCity);
 
 void deplacerPlateau(EceCity *eceCity);
 
