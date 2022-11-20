@@ -4,6 +4,8 @@
 #include "initialisation.h"
 
 int main() {
+    srand(time(NULL));
+
     initBiblioAllegro();
 
     EceCity *eceCity = creationEceCity();

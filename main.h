@@ -14,8 +14,11 @@
 
 #define NBLIGNE 35
 #define NBCOLONNE 45
+#define COTECASE 25
+#define XDEPART COTECASE
+#define YDEPART COTECASE
 #define MONNAIEDEPART 5000
-#define HABITANTDEPART 100
+#define VITESSE COTECASE/5
 
 
 enum {
@@ -35,11 +38,7 @@ enum {
 };
 
 enum {
-    NBDEBOUTONREGLES
-};
-
-enum {
-    NBDEBOUTONJEU
+    CONSTRUIREROUTE, CONSTRUIREBATIMENT, CONSTRUIRECHATEAUDEAU, CONSTRUIRECENTRALE, NBDEBOUTONJEU
 };
 
 enum {
@@ -48,6 +47,10 @@ enum {
 
 enum {
     BITMAPACCEUIL, BITMAPCHOIXDUMODE, BITMAPJEU, NBDEBITMAP
+};
+
+enum {
+    HAUT, BAS, GAUCHE, DROITE, NBT
 };
 
 
@@ -64,9 +67,10 @@ typedef struct {
 
 typedef struct {
     int type;
+    int num;
     bool elec;
     bool eau;
-    Coord plateau;
+    Coord coord;
 } Sol;
 
 typedef struct {
@@ -99,6 +103,9 @@ typedef struct {
     int actuelle;
     int boutonDetecteActuel;
     int boutonDetecteAncien;
+    int modeDeJeu;
+    int batimenAConstruire;
+    Coord caseDetecte;
 } Phase;
 
 typedef struct {
@@ -113,6 +120,7 @@ typedef struct {
     int longueur;
     int hauteur;
     char *nom;
+    bool clignote;
 } Case;
 
 typedef struct {
@@ -138,6 +146,7 @@ typedef struct {
     ChateauDeau *tabChateauEaux;
     Image *tabImages;
     Case **tabBoutons;
+    bool *tabTouches;
 } EceCity;
 
 #endif //ECE_CITY_1_C_MAIN_H

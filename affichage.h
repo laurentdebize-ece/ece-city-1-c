@@ -7,16 +7,20 @@ void affichageAcceuil(EceCity *eceCity);
 
 void affichageChoixDuMode(EceCity *eceCity);
 
-void affichageRegles(EceCity *eceCity);
-
 void affichageJeu(EceCity *eceCity);
 
 void affichageParametres(EceCity *eceCity);
 
-void faireClignoterBouton(EceCity *eceCity);
+void faireClignoterBoutonMenu(EceCity *eceCity, ALLEGRO_FONT *police);
 
-void affichageBouton(EceCity* eceCity, ALLEGRO_FONT *police);
+void affichageBarreDoutils(EceCity *eceCity);
 
-void affichageBitmapDeFond(EceCity* eceCity, int numBitmap);
+void dessinerBatimentAConstruire(EceCity *eceCity);
+
+void affichageBouton(EceCity *eceCity, ALLEGRO_FONT *police);
+
+void dessinerGrille(EceCity *eceCity);
+
+void affichageBitmapDeFond(EceCity *eceCity, int numBitmap);
 
 #endif //ECE_CITY_1_C_AFFICHAGE_H

@@ -44,7 +44,7 @@ void menuAcceuil(EceCity *eceCity) {
             break;
         }
         case ALLEGRO_EVENT_MOUSE_AXES: {
-            detectionSourisBouton(eceCity);
+            detectionSouris(eceCity);
             break;
         }
 
@@ -55,7 +55,7 @@ void menuAcceuil(EceCity *eceCity) {
                 eceCity->changementAffichage = false;
             }
             if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
-                faireClignoterBouton(eceCity);
+                faireClignoterBoutonMenu(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
             }
             break;
         }
@@ -82,7 +82,7 @@ void menuChoixDuMode(EceCity *eceCity) {
             break;
         }
         case ALLEGRO_EVENT_MOUSE_AXES: {
-            detectionSourisBouton(eceCity);
+            detectionSouris(eceCity);
             break;
         }
 
@@ -93,45 +93,7 @@ void menuChoixDuMode(EceCity *eceCity) {
                 eceCity->changementAffichage = false;
             }
             if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
-                faireClignoterBouton(eceCity);
-            }
-        }
-    }
-}
-
-void menuRegles(EceCity *eceCity) {
-    switch (eceCity->event.type) {
-        case ALLEGRO_EVENT_KEY_DOWN: {
-            switch (eceCity->event.keyboard.keycode) {
-                case ALLEGRO_KEY_ESCAPE: {
-                    eceCity->phaseDeJeu.actuelle = eceCity->phaseDeJeu.ancienne;
-                    eceCity->changementAffichage = true;
-                    break;
-                }
-            }
-            break;
-        }
-        case ALLEGRO_EVENT_KEY_UP: {
-
-            break;
-        }
-        case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
-            boutonPresse(eceCity);
-            break;
-        }
-        case ALLEGRO_EVENT_MOUSE_AXES: {
-            detectionSourisBouton(eceCity);
-            break;
-        }
-
-        case ALLEGRO_EVENT_TIMER: {
-            if (eceCity->changementAffichage) {
-                affichageRegles(eceCity);
-                al_flip_display();
-                eceCity->changementAffichage = false;
-            }
-            if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
-                faireClignoterBouton(eceCity);
+                faireClignoterBoutonMenu(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
             }
         }
     }
@@ -145,13 +107,48 @@ void menuJeu(EceCity *eceCity) {
                     eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
                     eceCity->phaseDeJeu.ancienne = PARAMETRES;
                     eceCity->changementAffichage = true;
+                    ///tempo
+                    eceCity->end = true;
+                    break;
+                }
+                case ALLEGRO_KEY_S: {
+                    eceCity->tabTouches[BAS] = true;
+                    break;
+                }
+                case ALLEGRO_KEY_Z: {
+                    eceCity->tabTouches[HAUT] = true;
+                    break;
+                }
+                case ALLEGRO_KEY_Q: {
+                    eceCity->tabTouches[GAUCHE] = true;
+                    break;
+                }
+                case ALLEGRO_KEY_D: {
+                    eceCity->tabTouches[DROITE] = true;
                     break;
                 }
             }
             break;
         }
         case ALLEGRO_EVENT_KEY_UP: {
-
+            switch (eceCity->event.keyboard.keycode) {
+                case ALLEGRO_KEY_S: {
+                    eceCity->tabTouches[BAS] = false;
+                    break;
+                }
+                case ALLEGRO_KEY_Z: {
+                    eceCity->tabTouches[HAUT] = false;
+                    break;
+                }
+                case ALLEGRO_KEY_Q: {
+                    eceCity->tabTouches[GAUCHE] = false;
+                    break;
+                }
+                case ALLEGRO_KEY_D: {
+                    eceCity->tabTouches[DROITE] = false;
+                    break;
+                }
+            }
             break;
         }
         case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
@@ -159,18 +156,19 @@ void menuJeu(EceCity *eceCity) {
             break;
         }
         case ALLEGRO_EVENT_MOUSE_AXES: {
-            detectionSourisBouton(eceCity);
+            detectionSouris(eceCity);
             break;
         }
 
         case ALLEGRO_EVENT_TIMER: {
-            if (eceCity->changementAffichage) {
+            deplacerPlateau(eceCity);
+            if (eceCity->changementAffichage || eceCity->phaseDeJeu.batimenAConstruire != -1) {
                 affichageJeu(eceCity);
                 al_flip_display();
                 eceCity->changementAffichage = false;
             }
             if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
-                faireClignoterBouton(eceCity);
+                faireClignoterBoutonMenu(eceCity, eceCity->ecrire.simsCityPolicePetite);
             }
         }
     }
@@ -198,7 +196,7 @@ void menuParametres(EceCity *eceCity) {
             break;
         }
         case ALLEGRO_EVENT_MOUSE_AXES: {
-            detectionSourisBouton(eceCity);
+            detectionSouris(eceCity);
             break;
         }
 
@@ -209,14 +207,16 @@ void menuParametres(EceCity *eceCity) {
                 eceCity->changementAffichage = false;
             }
             if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
-                faireClignoterBouton(eceCity);
+                faireClignoterBoutonMenu(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
             }
         }
     }
 }
 
-void detectionSourisBouton(EceCity *eceCity) {
+void detectionSouris(EceCity *eceCity) {
     eceCity->phaseDeJeu.boutonDetecteActuel = -1;
+    eceCity->phaseDeJeu.caseDetecte.x = -1;
+    eceCity->phaseDeJeu.caseDetecte.y = -1;
     int nbBouton;
     switch (eceCity->phaseDeJeu.actuelle) {
         case ACCEUIL: {
@@ -250,6 +250,20 @@ void detectionSourisBouton(EceCity *eceCity) {
         }
         eceCity->phaseDeJeu.boutonDetecteAncien = eceCity->phaseDeJeu.boutonDetecteActuel;
     }
+    if (eceCity->event.mouse.x >= eceCity->matricePlateau[0][0].coord.x &&
+        eceCity->event.mouse.x <= eceCity->matricePlateau[0][0].coord.x + COTECASE * NBCOLONNE &&
+        eceCity->event.mouse.y >= eceCity->matricePlateau[0][0].coord.y &&
+        eceCity->event.mouse.y <= eceCity->matricePlateau[0][0].coord.y + COTECASE * NBLIGNE) {
+        eceCity->phaseDeJeu.caseDetecte.x = eceCity->matricePlateau[0][0].coord.x;
+        eceCity->phaseDeJeu.caseDetecte.y = eceCity->matricePlateau[0][0].coord.y;
+        while (eceCity->event.mouse.x > eceCity->phaseDeJeu.caseDetecte.x + COTECASE) {
+            eceCity->phaseDeJeu.caseDetecte.x += COTECASE;
+        }
+        while (eceCity->event.mouse.y > eceCity->phaseDeJeu.caseDetecte.x + COTECASE) {
+            eceCity->phaseDeJeu.caseDetecte.x += COTECASE;
+        }
+        eceCity->changementAffichage = true;
+    }
 }
 
 
@@ -277,23 +291,23 @@ bool verifSiEspaceBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int
     return verifCasesVide;
 }
 
-void boutonPresse(EceCity* eceCity){
+void boutonPresse(EceCity *eceCity) {
     switch (eceCity->phaseDeJeu.actuelle) {
         case ACCEUIL: {
             switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
-                case NOUVELLEPARTIE:{
+                case NOUVELLEPARTIE: {
                     eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
                     eceCity->phaseDeJeu.actuelle = CHOIXDUMODE;
                     eceCity->changementAffichage = true;
                     break;
                 }
-                case CHARGER:{
+                case CHARGER: {
                     eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
                     eceCity->phaseDeJeu.actuelle = JEU;
                     eceCity->changementAffichage = true;
                     break;
                 }
-                case QUITTER:{
+                case QUITTER: {
                     eceCity->end = true;
                     break;
                 }
@@ -303,6 +317,7 @@ void boutonPresse(EceCity* eceCity){
         case CHOIXDUMODE: {
             switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
                 case COMMUNISTE: {
+                    eceCity->phaseDeJeu.modeDeJeu = COMMUNISTE;
                     eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
                     eceCity->phaseDeJeu.actuelle = JEU;
                     eceCity->changementAffichage = true;
@@ -310,6 +325,7 @@ void boutonPresse(EceCity* eceCity){
 
                 }
                 case CAPITALISTE: {
+                    eceCity->phaseDeJeu.modeDeJeu = CAPITALISTE;
                     eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
                     eceCity->phaseDeJeu.actuelle = JEU;
                     eceCity->changementAffichage = true;
@@ -317,12 +333,51 @@ void boutonPresse(EceCity* eceCity){
 
                 }
             }
-
             break;
         }
-
         case JEU: {
+            switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
+                case CONSTRUIREROUTE: {
+                    if (eceCity->phaseDeJeu.batimenAConstruire == ROUTE) {
+                        eceCity->phaseDeJeu.batimenAConstruire = -1;
+                    } else {
+                        eceCity->phaseDeJeu.batimenAConstruire = ROUTE;
 
+                    }
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+                case CONSTRUIREBATIMENT: {
+                    if (eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
+                        eceCity->phaseDeJeu.batimenAConstruire = -1;
+                    } else {
+                        eceCity->phaseDeJeu.batimenAConstruire = TERRAINVAGUE;
+
+                    }
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+                case CONSTRUIRECHATEAUDEAU: {
+                    if (eceCity->phaseDeJeu.batimenAConstruire == CHATEAUDEAU) {
+                        eceCity->phaseDeJeu.batimenAConstruire = -1;
+                    } else {
+                        eceCity->phaseDeJeu.batimenAConstruire = CHATEAUDEAU;
+
+                    }
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+                case CONSTRUIRECENTRALE: {
+                    if (eceCity->phaseDeJeu.batimenAConstruire == CENTRALE) {
+                        eceCity->phaseDeJeu.batimenAConstruire = -1;
+                    } else {
+                        eceCity->phaseDeJeu.batimenAConstruire = CENTRALE;
+
+                    }
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+            }
             break;
         }
         case PARAMETRES: {
