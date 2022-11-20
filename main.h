@@ -105,7 +105,7 @@ typedef struct {
     int boutonDetecteAncien;
     int modeDeJeu;
     int batimenAConstruire;
-    Coord caseDetecte;
+    Coord coordCaseDetecte;
 } Phase;
 
 typedef struct {

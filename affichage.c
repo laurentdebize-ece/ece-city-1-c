@@ -24,8 +24,21 @@ void affichageJeu(EceCity *eceCity) {
     }
 }
 
-void dessinerBatimentAConstruire(EceCity *eceCity){
-
+void dessinerBatimentAConstruire(EceCity *eceCity) {
+    switch (eceCity->phaseDeJeu.batimenAConstruire) {
+        case ROUTE: {
+            al_draw_filled_rectangle(eceCity->phaseDeJeu.coordCaseDetecte.x, eceCity->phaseDeJeu.coordCaseDetecte.y,
+                                     eceCity->phaseDeJeu.coordCaseDetecte.x + COTECASE,
+                                     eceCity->phaseDeJeu.coordCaseDetecte.y + COTECASE, al_map_rgba(0, 0, 255, 64));
+            break;
+        }
+        case TERRAINVAGUE: {
+            al_draw_filled_rectangle(eceCity->phaseDeJeu.coordCaseDetecte.x, eceCity->phaseDeJeu.coordCaseDetecte.y,
+                                     eceCity->phaseDeJeu.coordCaseDetecte.x + COTECASE * 3,
+                                     eceCity->phaseDeJeu.coordCaseDetecte.y + COTECASE * 3, al_map_rgba(255, 0, 0, 64));
+            break;
+        }
+    }
 }
 
 void affichageBarreDoutils(EceCity *eceCity) {
@@ -95,8 +108,19 @@ void dessinerGrille(EceCity *eceCity) {
                                          eceCity->matricePlateau[i][j].coord.x + COTECASE,
                                          eceCity->matricePlateau[i][j].coord.y + COTECASE,
                                          al_map_rgb(128, 0, 0));
+            } else if (eceCity->matricePlateau[i][j].type == ROUTE) {
+                al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
+                                         eceCity->matricePlateau[i][j].coord.y,
+                                         eceCity->matricePlateau[i][j].coord.x + COTECASE,
+                                         eceCity->matricePlateau[i][j].coord.y + COTECASE,
+                                         al_map_rgb(0, 0, 255));
             }
         }
+    }
+    if (eceCity->phaseDeJeu.coordCaseDetecte.x != -1) {
+        al_draw_filled_rectangle(eceCity->phaseDeJeu.coordCaseDetecte.x, eceCity->phaseDeJeu.coordCaseDetecte.y,
+                                 eceCity->phaseDeJeu.coordCaseDetecte.x + COTECASE,
+                                 eceCity->phaseDeJeu.coordCaseDetecte.y + COTECASE, al_map_rgba(0, 0, 0, 128));
     }
     for (int i = 0; i < NBLIGNE + 1; ++i) {
         al_draw_line(eceCity->matricePlateau[0][0].coord.x, eceCity->matricePlateau[0][0].coord.y + i * COTECASE,
