@@ -14,12 +14,11 @@
 
 #define NBLIGNE 35
 #define NBCOLONNE 45
-#define XDEPART 50
-#define YDEPART 50
-#define COTECASE 50
+#define COTECASE 25
+#define XDEPART COTECASE
+#define YDEPART COTECASE
 #define MONNAIEDEPART 5000
-#define HABITANTDEPART 100
-#define VITESSE 10
+#define VITESSE COTECASE/5
 
 
 enum {
@@ -39,11 +38,7 @@ enum {
 };
 
 enum {
-    NBDEBOUTONREGLES
-};
-
-enum {
-    NBDEBOUTONJEU
+    CONSTRUIREROUTE, CONSTRUIREBATIMENT, CONSTRUIRECHATEAUDEAU, CONSTRUIRECENTRALE, NBDEBOUTONJEU
 };
 
 enum {
@@ -108,6 +103,9 @@ typedef struct {
     int actuelle;
     int boutonDetecteActuel;
     int boutonDetecteAncien;
+    int modeDeJeu;
+    int batimenAConstruire;
+    Coord caseDetecte;
 } Phase;
 
 typedef struct {
@@ -122,6 +120,7 @@ typedef struct {
     int longueur;
     int hauteur;
     char *nom;
+    bool clignote;
 } Case;
 
 typedef struct {

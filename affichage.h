@@ -13,10 +13,14 @@ void affichageParametres(EceCity *eceCity);
 
 void faireClignoterBoutonMenu(EceCity *eceCity, ALLEGRO_FONT *police);
 
-void affichageBouton(EceCity* eceCity, ALLEGRO_FONT *police);
+void affichageBarreDoutils(EceCity *eceCity);
 
-void dessinerGrille(EceCity* eceCity);
+void dessinerBatimentAConstruire(EceCity *eceCity);
 
-void affichageBitmapDeFond(EceCity* eceCity, int numBitmap);
+void affichageBouton(EceCity *eceCity, ALLEGRO_FONT *police);
+
+void dessinerGrille(EceCity *eceCity);
+
+void affichageBitmapDeFond(EceCity *eceCity, int numBitmap);
 
 #endif //ECE_CITY_1_C_AFFICHAGE_H
