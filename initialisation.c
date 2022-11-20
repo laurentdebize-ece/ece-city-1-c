@@ -162,8 +162,8 @@ void initialisationEceCity(EceCity *eceCity) {
     eceCity->phaseDeJeu.boutonDetecteActuel = -1;
     eceCity->phaseDeJeu.boutonDetecteAncien = -1;
     eceCity->phaseDeJeu.batimenAConstruire = -1;
-    eceCity->phaseDeJeu.caseDetecte.x = -1;
-    eceCity->phaseDeJeu.caseDetecte.y = -1;
+    eceCity->phaseDeJeu.coordCaseDetecte.x = -1;
+    eceCity->phaseDeJeu.coordCaseDetecte.y = -1;
 }
 
 void initJoueur(EceCity *eceCity) {

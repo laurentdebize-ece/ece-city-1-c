@@ -153,6 +153,9 @@ void menuJeu(EceCity *eceCity) {
         }
         case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
             boutonPresse(eceCity);
+            if (eceCity->phaseDeJeu.batimenAConstruire != -1 && eceCity->phaseDeJeu.coordCaseDetecte.x!=-1) {
+                construireBatiment(eceCity);
+            }
             break;
         }
         case ALLEGRO_EVENT_MOUSE_AXES: {
@@ -215,8 +218,8 @@ void menuParametres(EceCity *eceCity) {
 
 void detectionSouris(EceCity *eceCity) {
     eceCity->phaseDeJeu.boutonDetecteActuel = -1;
-    eceCity->phaseDeJeu.caseDetecte.x = -1;
-    eceCity->phaseDeJeu.caseDetecte.y = -1;
+    eceCity->phaseDeJeu.coordCaseDetecte.x = -1;
+    eceCity->phaseDeJeu.coordCaseDetecte.y = -1;
     int nbBouton;
     switch (eceCity->phaseDeJeu.actuelle) {
         case ACCEUIL: {
@@ -251,39 +254,93 @@ void detectionSouris(EceCity *eceCity) {
         eceCity->phaseDeJeu.boutonDetecteAncien = eceCity->phaseDeJeu.boutonDetecteActuel;
     }
     if (eceCity->event.mouse.x >= eceCity->matricePlateau[0][0].coord.x &&
-        eceCity->event.mouse.x <= eceCity->matricePlateau[0][0].coord.x + COTECASE * NBCOLONNE &&
+        eceCity->event.mouse.x <= eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + COTECASE &&
         eceCity->event.mouse.y >= eceCity->matricePlateau[0][0].coord.y &&
-        eceCity->event.mouse.y <= eceCity->matricePlateau[0][0].coord.y + COTECASE * NBLIGNE) {
-        eceCity->phaseDeJeu.caseDetecte.x = eceCity->matricePlateau[0][0].coord.x;
-        eceCity->phaseDeJeu.caseDetecte.y = eceCity->matricePlateau[0][0].coord.y;
-        while (eceCity->event.mouse.x > eceCity->phaseDeJeu.caseDetecte.x + COTECASE) {
-            eceCity->phaseDeJeu.caseDetecte.x += COTECASE;
+        eceCity->event.mouse.y <=
+        eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + COTECASE - eceCity->display.hauteur / 8 + 50) {
+        eceCity->phaseDeJeu.coordCaseDetecte.x = eceCity->matricePlateau[0][0].coord.x;
+        eceCity->phaseDeJeu.coordCaseDetecte.y = eceCity->matricePlateau[0][0].coord.y;
+        while (eceCity->event.mouse.x > eceCity->phaseDeJeu.coordCaseDetecte.x + COTECASE) {
+            eceCity->phaseDeJeu.coordCaseDetecte.x += COTECASE;
         }
-        while (eceCity->event.mouse.y > eceCity->phaseDeJeu.caseDetecte.x + COTECASE) {
-            eceCity->phaseDeJeu.caseDetecte.x += COTECASE;
+        while (eceCity->event.mouse.y > eceCity->phaseDeJeu.coordCaseDetecte.y + COTECASE) {
+            eceCity->phaseDeJeu.coordCaseDetecte.y += COTECASE;
         }
         eceCity->changementAffichage = true;
     }
 }
 
 
-void construireBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int tailleLargeur, int batiment) {
-    if (verifSiEspaceBatiment(eceCity, coord, tailleLongueur, tailleLargeur)) {
-        for (int i = 0; i < tailleLongueur; ++i) {
-            for (int j = 0; j < tailleLargeur; ++j) {
-                eceCity.matricePlateau[coord.x - 1 + i][coord.x - 1 + j].type = batiment;
+void construireBatiment(EceCity *eceCity) {
+    int x = -1, y = -1;
+    for (int i = 0; i < NBLIGNE; ++i) {
+        if (eceCity->phaseDeJeu.coordCaseDetecte.x == eceCity->matricePlateau[i][0].coord.x) {
+            x = i;
+        }
+    }
+    for (int i = 0; i < NBCOLONNE; ++i) {
+        if (eceCity->phaseDeJeu.coordCaseDetecte.y == eceCity->matricePlateau[0][i].coord.y) {
+            y = i;
+        }
+    }
+    if (verifSiEspaceBatiment(eceCity, x, y)) {
+        int h, l;
+        switch (eceCity->phaseDeJeu.batimenAConstruire) {
+            case ROUTE: {
+                h = l = 1;
+                break;
+            }
+            case TERRAINVAGUE: {
+                h = l = 3;
+                break;
+            }
+            case CHATEAUDEAU: {
+                l = 6;
+                h = 4;
+                break;
+            }
+            case CENTRALE: {
+                l = 6;
+                h = 4;
+                break;
+            }
+        }
+        for (int i = x; i < x + l; i++) {
+            for (int j = y; j < y + h; j++) {
+                eceCity->matricePlateau[i][j].type = eceCity->phaseDeJeu.batimenAConstruire;
             }
         }
     }
 }
 
 
-bool verifSiEspaceBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int tailleLargueur) {
+bool verifSiEspaceBatiment(EceCity *eceCity, int x, int y) {
     bool verifCasesVide = true;
-    for (int i = 0; i < tailleLongueur; i++) {
-        for (int j = 0; j < tailleLargueur; j++) {
-            if (eceCity.matricePlateau[coord.x - 1 + i][coord.x - 1 + j].type != VIDE &&
-                eceCity.matricePlateau[coord.x - 1 + i][coord.x - 1 + j].type != ARBRE) {
+    int h, l;
+    switch (eceCity->phaseDeJeu.batimenAConstruire) {
+        case ROUTE: {
+            h = l = 1;
+            break;
+        }
+        case TERRAINVAGUE: {
+            h = l = 3;
+            break;
+        }
+        case CHATEAUDEAU: {
+            l = 6;
+            h = 4;
+            break;
+        }
+        case CENTRALE: {
+            l = 6;
+            h = 4;
+            break;
+        }
+    }
+    for (int i = x; i < x + l; i++) {
+        for (int j = y; j < y + h; j++) {
+            if (eceCity->matricePlateau[i][j].type != VIDE &&
+                eceCity->matricePlateau[i][j].type != ARBRE) {
                 verifCasesVide = false;
             }
         }
