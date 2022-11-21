@@ -13,9 +13,9 @@ void menuJeu(EceCity *eceCity);
 
 void menuParametres(EceCity *eceCity);
 
-bool verifSiEspaceBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int tailleLargeur);
+bool verifSiEspaceBatiment(EceCity* eceCity);
 
-void construireBatiment(EceCity eceCity, Coord coord, int tailleLongueur, int tailleLargeur, int batiment);
+void construireBatiment(EceCity* eceCity);
 
 void detectionSouris(EceCity *eceCity);
 

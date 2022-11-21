@@ -14,9 +14,9 @@
 
 #define NBLIGNE 35
 #define NBCOLONNE 45
-#define COTECASE 25
-#define XDEPART COTECASE
-#define YDEPART COTECASE
+#define COTECASE 50
+#define XDEPART COTECASE*4
+#define YDEPART COTECASE*3
 #define MONNAIEDEPART 5000
 #define VITESSE COTECASE/5
 
@@ -105,7 +105,7 @@ typedef struct {
     int boutonDetecteAncien;
     int modeDeJeu;
     int batimenAConstruire;
-    Coord caseDetecte;
+    Coord coordCaseDetecte;
 } Phase;
 
 typedef struct {
