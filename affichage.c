@@ -3,7 +3,7 @@
 
 void affichageAcceuil(EceCity *eceCity) {
     affichageBitmapDeFond(eceCity, BITMAPACCEUIL);
-    al_draw_text(eceCity->ecrire.simsCityPoliceGrand, al_map_rgb(0, 112, 255), eceCity->display.longueur / 2,
+    al_draw_text(eceCity->ecrire.simsCityPoliceGrand, al_map_rgb(0, 0, 0), eceCity->display.longueur / 2,
                  (eceCity->display.hauteur * 5 / 12) -
                  al_get_font_line_height(eceCity->ecrire.simsCityPoliceGrand), ALLEGRO_ALIGN_CENTER, "ECE CITY");
     affichageBouton(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
@@ -11,6 +11,9 @@ void affichageAcceuil(EceCity *eceCity) {
 
 void affichageChoixDuMode(EceCity *eceCity) {
     affichageBitmapDeFond(eceCity, BITMAPCHOIXDUMODE);
+    al_draw_text(eceCity->ecrire.simsCityPoliceGrand, al_map_rgb(0, 0, 0), eceCity->display.longueur / 2,
+                 (eceCity->display.hauteur * 5 / 12) -
+                 al_get_font_line_height(eceCity->ecrire.simsCityPoliceGrand), ALLEGRO_ALIGN_CENTER, "CHOIX DU MODE");
     affichageBouton(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
 }
 
