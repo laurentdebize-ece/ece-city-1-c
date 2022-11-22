@@ -173,6 +173,11 @@ void menuJeu(EceCity *eceCity) {
         }
 
         case ALLEGRO_EVENT_TIMER: {
+            eceCity->joueur->compteurTemps++;
+            if(eceCity->joueur->compteurTemps==60){
+                eceCity->joueur->temps++;
+                eceCity->joueur->compteurTemps=0;
+            }
             deplacerPlateau(eceCity);
             if (eceCity->changementAffichage || eceCity->phaseDeJeu.batimenAConstruire != -1) {
                 affichageJeu(eceCity);

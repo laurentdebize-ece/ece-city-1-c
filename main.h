@@ -78,6 +78,8 @@ typedef struct {
     int habitant;
     int capaciteElec;
     int capaciteEau;
+    int compteurTemps;
+    int temps;
 } Joueur;
 
 

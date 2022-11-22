@@ -180,6 +180,8 @@ void initJoueur(EceCity *eceCity) {
     eceCity->joueur->habitant = 0;
     eceCity->joueur->capaciteEau = 0;
     eceCity->joueur->capaciteElec = 0;
+    eceCity->joueur->compteurTemps=0;
+    eceCity->joueur->temps=0;
 }
 
 void initBiblioAllegro() {
