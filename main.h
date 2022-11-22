@@ -78,6 +78,8 @@ typedef struct {
     int habitant;
     int capaciteElec;
     int capaciteEau;
+    int compteurTemps;
+    int temps;
 } Joueur;
 
 
@@ -147,6 +149,9 @@ typedef struct {
     Image *tabImages;
     Case **tabBoutons;
     bool *tabTouches;
+    ALLEGRO_SAMPLE *sample;
+    ALLEGRO_SAMPLE_INSTANCE *song;
+
 } EceCity;
 
 #endif //ECE_CITY_1_C_MAIN_H

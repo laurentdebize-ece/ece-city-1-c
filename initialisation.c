@@ -5,6 +5,7 @@ void initialisationAll(EceCity *eceCity) {
     initialisationEceCity(eceCity);
     initAllegro(eceCity);
     initJoueur(eceCity);
+    initMusique(eceCity);
     initBitmaps(eceCity);
     initTabBoutons(eceCity);
     initPolice(eceCity);
@@ -34,7 +35,15 @@ void initPlateau(EceCity *eceCity) {
     }
     fclose(ifs);
 }
-
+void initMusique(EceCity *eceCity){
+    eceCity->sample= al_load_sample("../song.wav");
+    eceCity->song = al_create_sample_instance(eceCity->sample);
+    al_set_sample_instance_playmode(eceCity->song, ALLEGRO_PLAYMODE_LOOP);
+    al_attach_sample_instance_to_mixer(eceCity->song, al_get_default_mixer());
+    al_reserve_samples(10);
+    al_play_sample_instance( eceCity->song );
+    al_set_sample_instance_gain(eceCity->song, 1.0/4.5);
+}
 void initPolice(EceCity *eceCity) {
     eceCity->ecrire.simsCityPolicePetite = al_load_font("../Fonts/Police.TTF", 25, 0);
     assert(eceCity->ecrire.simsCityPolicePetite);
@@ -171,6 +180,8 @@ void initJoueur(EceCity *eceCity) {
     eceCity->joueur->habitant = 0;
     eceCity->joueur->capaciteEau = 0;
     eceCity->joueur->capaciteElec = 0;
+    eceCity->joueur->compteurTemps=0;
+    eceCity->joueur->temps=0;
 }
 
 void initBiblioAllegro() {
@@ -181,7 +192,11 @@ void initBiblioAllegro() {
     al_init_font_addon();
     al_init_ttf_addon();
     al_init_image_addon();
-    al_install_audio();
+    assert( al_install_audio());
+    assert(al_reserve_samples(1));
+
+
+
 }
 
 void initAllegro(EceCity *eceCity) {
@@ -224,5 +239,6 @@ void destroyAll(EceCity *eceCity) {
     al_destroy_timer(eceCity->timer);
     al_destroy_display(eceCity->display.window);
     al_destroy_event_queue(eceCity->queue);
+    al_destroy_sample_instance(eceCity->song);
     free(eceCity);
 }

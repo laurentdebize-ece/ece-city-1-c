@@ -1,7 +1,3 @@
-//
-// Created by masao on 31/10/2022.
-//
-
 #ifndef ECE_CITY_1_C_INITIALISATION_H
 #define ECE_CITY_1_C_INITIALISATION_H
 
@@ -26,6 +22,8 @@ void initTabBoutons(EceCity *eceCity);
 void initPolice(EceCity *eceCity);
 
 void initPlateau(EceCity *eceCity);
+
+void initMusique(EceCity *eceCity);
 
 void initTabTouches(EceCity *eceCity);
 
