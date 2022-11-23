@@ -1,4 +1,5 @@
 #include "initialisation.h"
+#include "main.h"
 
 void initialisationAll(EceCity *eceCity) {
     get_desktop_resolution(0, eceCity);
@@ -20,30 +21,39 @@ void initTabTouches(EceCity *eceCity) {
 }
 
 void initPlateau(EceCity *eceCity) {
+    int cpt = 0;
     for (int i = 0; i < NBLIGNE; ++i) {
         for (int j = 0; j < NBCOLONNE; ++j) {
             eceCity->matricePlateau[i][j].coord.x = XDEPART + j * COTECASE;
             eceCity->matricePlateau[i][j].coord.y = YDEPART + i * COTECASE;
-            eceCity->matricePlateau[i][j].num = i + j;
+            eceCity->matricePlateau[i][j].num = cpt;
+            cpt++;
         }
     }
     FILE *ifs = fopen("../FichiersTxt/matricePlateau.txt", "r");
     for (int i = 0; i < NBLIGNE; ++i) {
         for (int j = 0; j < NBCOLONNE; ++j) {
             fscanf(ifs, "%d", &eceCity->matricePlateau[i][j].type);
+            if (eceCity->matricePlateau[i][j].type != 0) {
+                eceCity->matricePlateau[i][j].construction = true;
+            } else {
+                eceCity->matricePlateau[i][j].construction = false;
+            }
         }
     }
     fclose(ifs);
 }
-void initMusique(EceCity *eceCity){
-    eceCity->sample= al_load_sample("../song.wav");
+
+void initMusique(EceCity *eceCity) {
+    eceCity->sample = al_load_sample("../song.wav");
     eceCity->song = al_create_sample_instance(eceCity->sample);
     al_set_sample_instance_playmode(eceCity->song, ALLEGRO_PLAYMODE_LOOP);
     al_attach_sample_instance_to_mixer(eceCity->song, al_get_default_mixer());
     al_reserve_samples(10);
-    al_play_sample_instance( eceCity->song );
-    al_set_sample_instance_gain(eceCity->song, 1.0/4.5);
+    al_play_sample_instance(eceCity->song);
+    al_set_sample_instance_gain(eceCity->song, 1.0 / 4.5);
 }
+
 void initPolice(EceCity *eceCity) {
     eceCity->ecrire.simsCityPolicePetite = al_load_font("../Fonts/Police.TTF", 25, 0);
     assert(eceCity->ecrire.simsCityPolicePetite);
@@ -61,6 +71,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].longueur = 500;
     eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].hauteur = 150;
     eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].clignote = true;
+    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].cliquable = true;
 
     eceCity->tabBoutons[ACCEUIL][CHARGER].coord.x = 1100;
     eceCity->tabBoutons[ACCEUIL][CHARGER].coord.y = eceCity->display.hauteur / 2;
@@ -68,6 +79,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[ACCEUIL][CHARGER].longueur = 500;
     eceCity->tabBoutons[ACCEUIL][CHARGER].hauteur = 150;
     eceCity->tabBoutons[ACCEUIL][CHARGER].clignote = true;
+    eceCity->tabBoutons[ACCEUIL][CHARGER].cliquable = true;
 
     eceCity->tabBoutons[ACCEUIL][QUITTER].coord.x = 710;
     eceCity->tabBoutons[ACCEUIL][QUITTER].coord.y = 810;
@@ -75,6 +87,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[ACCEUIL][QUITTER].hauteur = 150;
     eceCity->tabBoutons[ACCEUIL][QUITTER].nom = "Quitter";
     eceCity->tabBoutons[ACCEUIL][QUITTER].clignote = true;
+    eceCity->tabBoutons[ACCEUIL][QUITTER].cliquable = true;
 
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].coord.x = 300;
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].coord.y = eceCity->display.hauteur / 2;
@@ -82,6 +95,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].longueur = 500;
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].hauteur = 150;
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].clignote = true;
+    eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].cliquable = true;
 
     eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].coord.x = 1100;
     eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].coord.y = eceCity->display.hauteur / 2;
@@ -89,34 +103,55 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].longueur = 500;
     eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].hauteur = 150;
     eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].clignote = true;
+    eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].cliquable = true;
 
-    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].coord.x = 100;
-    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].coord.y = eceCity->display.hauteur * 7 / 8;
+    eceCity->tabBoutons[JEU][BARREDOUTILS].coord.x = 560;
+    eceCity->tabBoutons[JEU][BARREDOUTILS].coord.y = eceCity->display.hauteur * 8 / 9 - 25;
+    eceCity->tabBoutons[JEU][BARREDOUTILS].nom = NULL;
+    eceCity->tabBoutons[JEU][BARREDOUTILS].longueur = 900;
+    eceCity->tabBoutons[JEU][BARREDOUTILS].hauteur = eceCity->display.hauteur;
+    eceCity->tabBoutons[JEU][BARREDOUTILS].clignote = false;
+    eceCity->tabBoutons[JEU][BARREDOUTILS].cliquable = false;
+
+    eceCity->tabBoutons[JEU][BARREDINFOS].coord.y = 100;
+    eceCity->tabBoutons[JEU][BARREDINFOS].coord.x = eceCity->display.longueur * 8 / 9 - 25;
+    eceCity->tabBoutons[JEU][BARREDINFOS].nom = NULL;
+    eceCity->tabBoutons[JEU][BARREDINFOS].longueur = eceCity->display.longueur;
+    eceCity->tabBoutons[JEU][BARREDINFOS].hauteur = eceCity->display.hauteur - 400;
+    eceCity->tabBoutons[JEU][BARREDINFOS].clignote = false;
+    eceCity->tabBoutons[JEU][BARREDINFOS].cliquable = false;
+
+    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].coord.x = 760;
+    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].coord.y = eceCity->display.hauteur * 8 / 9;
     eceCity->tabBoutons[JEU][CONSTRUIREROUTE].nom = "Route";
-    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].longueur = 100;
-    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].hauteur = 100;
+    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].longueur = 80;
+    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIREROUTE].clignote = true;
+    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].cliquable = true;
 
-    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.x = 300;
-    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.y = eceCity->display.hauteur * 7 / 8;
+    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.x = 960;
+    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.y = eceCity->display.hauteur * 8 / 9;
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].nom = "Batiment";
-    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].longueur = 100;
-    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].hauteur = 100;
+    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].longueur = 80;
+    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].clignote = true;
+    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].cliquable = true;
 
-    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.x = 500;
-    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.y = eceCity->display.hauteur * 7 / 8;
+    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.x = 1160;
+    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.y = eceCity->display.hauteur * 8 / 9;
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].nom = "Centrale";
-    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].longueur = 100;
-    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].hauteur = 100;
+    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].longueur = 80;
+    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].clignote = true;
+    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].cliquable = true;
 
-    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.x = 700;
-    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.y = eceCity->display.hauteur * 7 / 8;
+    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.x = 1360;
+    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.y = eceCity->display.hauteur * 8 / 9;
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].nom = "Chateau d'eau";
-    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].longueur = 100;
-    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].hauteur = 100;
+    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].longueur = 80;
+    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].clignote = true;
+    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].cliquable = true;
 }
 
 void initBitmaps(EceCity *eceCity) {
@@ -132,6 +167,12 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BITMAPCHOIXDUMODE].coord.x = 0;
     eceCity->tabImages[BITMAPCHOIXDUMODE].coord.y = 0;
 
+    eceCity->tabImages[BITMAPHERBE].image = al_load_bitmap("../Images/grass.jpeg");
+    eceCity->tabImages[BITMAPHERBE].longueur = 1500;
+    eceCity->tabImages[BITMAPHERBE].hauteur = 1500;
+    eceCity->tabImages[BITMAPHERBE].coord.x = 0;
+    eceCity->tabImages[BITMAPHERBE].coord.y = 0;
+
 }
 
 EceCity *creationEceCity() {
@@ -144,11 +185,11 @@ EceCity *creationEceCity() {
 
     NewEceCity->joueur = (Joueur *) malloc(sizeof(Joueur));
 
-    NewEceCity->tabBatiments = (Batiment *) malloc(sizeof(Batiment));
+    NewEceCity->tabBatiments = (Batiment *) malloc(NBBATMAX * sizeof(Batiment));
 
-    NewEceCity->tabCentrales = (Centrale *) malloc(sizeof(Centrale));
+    NewEceCity->tabCentrales = (Centrale *) malloc(NBCENTRALEMAX * sizeof(Centrale));
 
-    NewEceCity->tabChateauEaux = (ChateauDeau *) malloc(sizeof(ChateauDeau));
+    NewEceCity->tabChateauEaux = (ChateauDeau *) malloc(NBCHATEAUDEAUMAX * sizeof(ChateauDeau));
 
     NewEceCity->tabImages = (Image *) malloc(NBDEBITMAP * sizeof(Image));
 
@@ -180,8 +221,11 @@ void initJoueur(EceCity *eceCity) {
     eceCity->joueur->habitant = 0;
     eceCity->joueur->capaciteEau = 0;
     eceCity->joueur->capaciteElec = 0;
-    eceCity->joueur->compteurTemps=0;
-    eceCity->joueur->temps=0;
+    eceCity->joueur->compteurTemps = 0;
+    eceCity->joueur->temps = 0;
+    eceCity->compteur.batiments = 0;
+    eceCity->compteur.centrales = 0;
+    eceCity->compteur.chateauxDeau = 0;
 }
 
 void initBiblioAllegro() {
@@ -192,9 +236,8 @@ void initBiblioAllegro() {
     al_init_font_addon();
     al_init_ttf_addon();
     al_init_image_addon();
-    assert( al_install_audio());
+    assert(al_install_audio());
     assert(al_reserve_samples(1));
-
 
 
 }
