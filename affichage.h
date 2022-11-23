@@ -13,9 +13,9 @@ void affichageParametres(EceCity *eceCity);
 
 void faireClignoterBoutonMenu(EceCity *eceCity, ALLEGRO_FONT *police);
 
-void affichageBarreDoutils(EceCity *eceCity);
-
 void dessinerBatimentAConstruire(EceCity *eceCity);
+
+void affichageInfos(EceCity *eceCity);
 
 void affichageBouton(EceCity *eceCity, ALLEGRO_FONT *police);
 

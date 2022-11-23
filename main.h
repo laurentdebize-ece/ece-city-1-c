@@ -19,10 +19,15 @@
 #define YDEPART COTECASE*3
 #define MONNAIEDEPART 5000
 #define VITESSE COTECASE/5
+#define NBBATMAX 165
+#define NBCENTRALEMAX 56
+#define NBCHATEAUDEAUMAX 56
+#define CYCLE 15
+#define FPS 60
 
 
 enum {
-    VIDE, ARBRE, ROUTE, TERRAINVAGUE, RUINE, CABANE, MAISON, IMMEUBLE, GRATTECIEL, CHATEAUDEAU, CENTRALE
+    VIDE, ARBRE, ROUTE, RUINE, TERRAINVAGUE, CABANE, MAISON, IMMEUBLE, GRATTECIEL, CHATEAUDEAU, CENTRALE
 };
 
 enum {
@@ -38,7 +43,13 @@ enum {
 };
 
 enum {
-    CONSTRUIREROUTE, CONSTRUIREBATIMENT, CONSTRUIRECHATEAUDEAU, CONSTRUIRECENTRALE, NBDEBOUTONJEU
+    BARREDOUTILS,
+    BARREDINFOS,
+    CONSTRUIREROUTE,
+    CONSTRUIREBATIMENT,
+    CONSTRUIRECHATEAUDEAU,
+    CONSTRUIRECENTRALE,
+    NBDEBOUTONJEU
 };
 
 enum {
@@ -46,11 +57,11 @@ enum {
 };
 
 enum {
-    BITMAPACCEUIL, BITMAPCHOIXDUMODE, BITMAPJEU, NBDEBITMAP
+    BITMAPACCEUIL, BITMAPCHOIXDUMODE, BITMAPJEU, BITMAPHERBE, NBDEBITMAP
 };
 
 enum {
-    HAUT, BAS, GAUCHE, DROITE, NBT
+    HAUT, BAS, GAUCHE, DROITE, CLICK, NBT
 };
 
 
@@ -68,6 +79,7 @@ typedef struct {
 typedef struct {
     int type;
     int num;
+    bool construction;
     bool elec;
     bool eau;
     Coord coord;
@@ -84,18 +96,23 @@ typedef struct {
 
 
 typedef struct {
-    Coord *position;
+    Coord position;
     int capacite;
+    int connexe;
 } ChateauDeau;
 
 typedef struct {
-    Coord *position;
+    Coord position;
     int capacite;
+    int connexe;
 } Centrale;
 
 typedef struct {
-    Coord *position;
-    int etat;
+    Coord position;
+    int type;
+    bool elec;
+    bool eau;
+    bool connexe;
     int nbHabitant;
     int compteur;
 } Batiment;
@@ -123,6 +140,7 @@ typedef struct {
     int hauteur;
     char *nom;
     bool clignote;
+    bool cliquable;
 } Case;
 
 typedef struct {
@@ -131,6 +149,12 @@ typedef struct {
     ALLEGRO_FONT *simsCityPoliceGrand;
     ALLEGRO_COLOR couleurDuTexte;
 } Ecrire;
+
+typedef struct {
+    int batiments;
+    int chateauxDeau;
+    int centrales;
+} Compteur;
 
 typedef struct {
     bool end;
@@ -146,12 +170,12 @@ typedef struct {
     Batiment *tabBatiments;
     Centrale *tabCentrales;
     ChateauDeau *tabChateauEaux;
+    Compteur compteur;
     Image *tabImages;
     Case **tabBoutons;
     bool *tabTouches;
     ALLEGRO_SAMPLE *sample;
     ALLEGRO_SAMPLE_INSTANCE *song;
-
 } EceCity;
 
 #endif //ECE_CITY_1_C_MAIN_H

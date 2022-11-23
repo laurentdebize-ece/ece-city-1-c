@@ -131,6 +131,26 @@ void menuJeu(EceCity *eceCity) {
                     eceCity->changementAffichage = true;
                     break;
                 }
+                case ALLEGRO_KEY_R: {
+                    eceCity->phaseDeJeu.batimenAConstruire = ROUTE;
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+                case ALLEGRO_KEY_B: {
+                    eceCity->phaseDeJeu.batimenAConstruire = TERRAINVAGUE;
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+                case ALLEGRO_KEY_O: {
+                    eceCity->phaseDeJeu.batimenAConstruire = CHATEAUDEAU;
+                    eceCity->changementAffichage = true;
+                    break;
+                }
+                case ALLEGRO_KEY_E: {
+                    eceCity->phaseDeJeu.batimenAConstruire = CENTRALE;
+                    eceCity->changementAffichage = true;
+                    break;
+                }
             }
             break;
         }
@@ -163,8 +183,12 @@ void menuJeu(EceCity *eceCity) {
             boutonPresse(eceCity);
             if (eceCity->phaseDeJeu.batimenAConstruire != -1 && eceCity->phaseDeJeu.coordCaseDetecte.x != -1 &&
                 eceCity->phaseDeJeu.coordCaseDetecte.y != -1) {
-                construireBatiment(eceCity);
+                eceCity->tabTouches[CLICK] = true;
             }
+            break;
+        }
+        case ALLEGRO_EVENT_MOUSE_BUTTON_UP: {
+            eceCity->tabTouches[CLICK] = false;
             break;
         }
         case ALLEGRO_EVENT_MOUSE_AXES: {
@@ -174,9 +198,11 @@ void menuJeu(EceCity *eceCity) {
 
         case ALLEGRO_EVENT_TIMER: {
             eceCity->joueur->compteurTemps++;
-            if(eceCity->joueur->compteurTemps==60){
+            if (eceCity->joueur->compteurTemps == FPS) {
                 eceCity->joueur->temps++;
-                eceCity->joueur->compteurTemps=0;
+                eceCity->joueur->compteurTemps = 0;
+                changerCompteurConstruction(eceCity);
+                eceCity->changementAffichage = true;
             }
             deplacerPlateau(eceCity);
             if (eceCity->changementAffichage || eceCity->phaseDeJeu.batimenAConstruire != -1) {
@@ -186,6 +212,11 @@ void menuJeu(EceCity *eceCity) {
             }
             if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
                 faireClignoterBoutonMenu(eceCity, eceCity->ecrire.simsCityPolicePetite);
+            }
+            if (eceCity->phaseDeJeu.batimenAConstruire != -1 && eceCity->phaseDeJeu.coordCaseDetecte.x != -1 &&
+                eceCity->phaseDeJeu.coordCaseDetecte.y != -1 && eceCity->tabTouches[CLICK]) {
+                construireBatiment(eceCity);
+                eceCity->changementAffichage = true;
             }
         }
     }
@@ -271,8 +302,8 @@ void detectionSouris(EceCity *eceCity) {
     if (eceCity->event.mouse.x >= eceCity->matricePlateau[0][0].coord.x &&
         eceCity->event.mouse.x <= eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + COTECASE &&
         eceCity->event.mouse.y >= eceCity->matricePlateau[0][0].coord.y &&
-        eceCity->event.mouse.y <=
-        eceCity->display.hauteur - (eceCity->display.hauteur / 8 + 50)) {
+        eceCity->event.mouse.y <= eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + COTECASE &&
+        eceCity->phaseDeJeu.boutonDetecteActuel == -1) {
         eceCity->phaseDeJeu.coordCaseDetecte.x = 0;
         eceCity->phaseDeJeu.coordCaseDetecte.y = 0;
         while (eceCity->event.mouse.x >
@@ -322,9 +353,12 @@ void construireBatiment(EceCity *eceCity) {
             for (int j = eceCity->phaseDeJeu.coordCaseDetecte.x;
                  j < eceCity->phaseDeJeu.coordCaseDetecte.x + longueur; j++) {
                 eceCity->matricePlateau[i][j].type = eceCity->phaseDeJeu.batimenAConstruire;
+                eceCity->matricePlateau[i][j].construction = false;
             }
         }
+        eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].construction = true;
         eceCity->changementAffichage = true;
+        ajouterBatimentTab(eceCity);
     }
 }
 
@@ -368,97 +402,189 @@ bool verifSiEspaceBatiment(EceCity *eceCity) {
 }
 
 void boutonPresse(EceCity *eceCity) {
-    switch (eceCity->phaseDeJeu.actuelle) {
-        case ACCEUIL: {
-            switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
-                case NOUVELLEPARTIE: {
-                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
-                    eceCity->phaseDeJeu.actuelle = CHOIXDUMODE;
-                    eceCity->changementAffichage = true;
-                    break;
+    if (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][eceCity->phaseDeJeu.boutonDetecteActuel].cliquable) {
+        switch (eceCity->phaseDeJeu.actuelle) {
+            case ACCEUIL: {
+                switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
+                    case NOUVELLEPARTIE: {
+                        eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                        eceCity->phaseDeJeu.actuelle = CHOIXDUMODE;
+                        eceCity->changementAffichage = true;
+                        break;
+                    }
+                    case CHARGER: {
+                        eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                        eceCity->phaseDeJeu.actuelle = JEU;
+                        eceCity->changementAffichage = true;
+                        break;
+                    }
+                    case QUITTER: {
+                        eceCity->end = true;
+                        break;
+                    }
                 }
-                case CHARGER: {
-                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
-                    eceCity->phaseDeJeu.actuelle = JEU;
-                    eceCity->changementAffichage = true;
-                    break;
+                break;
+            }
+            case CHOIXDUMODE: {
+                switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
+                    case COMMUNISTE: {
+                        eceCity->phaseDeJeu.modeDeJeu = COMMUNISTE;
+                        eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                        eceCity->phaseDeJeu.actuelle = JEU;
+                        eceCity->changementAffichage = true;
+                        break;
+
+                    }
+                    case CAPITALISTE: {
+                        eceCity->phaseDeJeu.modeDeJeu = CAPITALISTE;
+                        eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                        eceCity->phaseDeJeu.actuelle = JEU;
+                        eceCity->changementAffichage = true;
+                        break;
+
+                    }
                 }
-                case QUITTER: {
-                    eceCity->end = true;
-                    break;
+                break;
+            }
+            case JEU: {
+                switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
+                    case CONSTRUIREROUTE: {
+                        if (eceCity->phaseDeJeu.batimenAConstruire == ROUTE) {
+                            eceCity->phaseDeJeu.batimenAConstruire = -1;
+                        } else {
+                            eceCity->phaseDeJeu.batimenAConstruire = ROUTE;
+
+                        }
+                        eceCity->changementAffichage = true;
+                        break;
+                    }
+                    case CONSTRUIREBATIMENT: {
+                        if (eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
+                            eceCity->phaseDeJeu.batimenAConstruire = -1;
+                        } else {
+                            eceCity->phaseDeJeu.batimenAConstruire = TERRAINVAGUE;
+
+                        }
+                        eceCity->changementAffichage = true;
+                        break;
+                    }
+                    case CONSTRUIRECHATEAUDEAU: {
+                        if (eceCity->phaseDeJeu.batimenAConstruire == CHATEAUDEAU) {
+                            eceCity->phaseDeJeu.batimenAConstruire = -1;
+                        } else {
+                            eceCity->phaseDeJeu.batimenAConstruire = CHATEAUDEAU;
+
+                        }
+                        eceCity->changementAffichage = true;
+                        break;
+                    }
+                    case CONSTRUIRECENTRALE: {
+                        if (eceCity->phaseDeJeu.batimenAConstruire == CENTRALE) {
+                            eceCity->phaseDeJeu.batimenAConstruire = -1;
+                        } else {
+                            eceCity->phaseDeJeu.batimenAConstruire = CENTRALE;
+
+                        }
+                        eceCity->changementAffichage = true;
+                        break;
+                    }
+                }
+                break;
+            }
+            case PARAMETRES: {
+
+                break;
+            }
+        }
+    }
+}
+
+void deplacerPlateau(EceCity *eceCity) {
+    if (eceCity->tabTouches[BAS]) {
+        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + (COTECASE * 5) >=
+            eceCity->display.hauteur) {
+            for (int i = 0; i < NBLIGNE; ++i) {
+                for (int j = 0; j < NBCOLONNE; ++j) {
+                    eceCity->matricePlateau[i][j].coord.y -= VITESSE;
                 }
             }
-            break;
         }
-        case CHOIXDUMODE: {
-            switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
-                case COMMUNISTE: {
-                    eceCity->phaseDeJeu.modeDeJeu = COMMUNISTE;
-                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
-                    eceCity->phaseDeJeu.actuelle = JEU;
-                    eceCity->changementAffichage = true;
-                    break;
-
-                }
-                case CAPITALISTE: {
-                    eceCity->phaseDeJeu.modeDeJeu = CAPITALISTE;
-                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
-                    eceCity->phaseDeJeu.actuelle = JEU;
-                    eceCity->changementAffichage = true;
-                    break;
-
+        eceCity->changementAffichage = true;
+    }
+    if (eceCity->tabTouches[HAUT]) {
+        if (eceCity->matricePlateau[0][0].coord.y - COTECASE * 4 <= 0) {
+            for (int i = 0; i < NBLIGNE; ++i) {
+                for (int j = 0; j < NBCOLONNE; ++j) {
+                    eceCity->matricePlateau[i][j].coord.y += VITESSE;
                 }
             }
-            break;
         }
-        case JEU: {
-            switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
-                case CONSTRUIREROUTE: {
-                    if (eceCity->phaseDeJeu.batimenAConstruire == ROUTE) {
-                        eceCity->phaseDeJeu.batimenAConstruire = -1;
-                    } else {
-                        eceCity->phaseDeJeu.batimenAConstruire = ROUTE;
-
-                    }
-                    eceCity->changementAffichage = true;
-                    break;
-                }
-                case CONSTRUIREBATIMENT: {
-                    if (eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
-                        eceCity->phaseDeJeu.batimenAConstruire = -1;
-                    } else {
-                        eceCity->phaseDeJeu.batimenAConstruire = TERRAINVAGUE;
-
-                    }
-                    eceCity->changementAffichage = true;
-                    break;
-                }
-                case CONSTRUIRECHATEAUDEAU: {
-                    if (eceCity->phaseDeJeu.batimenAConstruire == CHATEAUDEAU) {
-                        eceCity->phaseDeJeu.batimenAConstruire = -1;
-                    } else {
-                        eceCity->phaseDeJeu.batimenAConstruire = CHATEAUDEAU;
-
-                    }
-                    eceCity->changementAffichage = true;
-                    break;
-                }
-                case CONSTRUIRECENTRALE: {
-                    if (eceCity->phaseDeJeu.batimenAConstruire == CENTRALE) {
-                        eceCity->phaseDeJeu.batimenAConstruire = -1;
-                    } else {
-                        eceCity->phaseDeJeu.batimenAConstruire = CENTRALE;
-
-                    }
-                    eceCity->changementAffichage = true;
-                    break;
+        eceCity->changementAffichage = true;
+    }
+    if (eceCity->tabTouches[GAUCHE]) {
+        if (eceCity->matricePlateau[0][0].coord.x - COTECASE * 4 <= 0) {
+            for (int i = 0; i < NBLIGNE; ++i) {
+                for (int j = 0; j < NBCOLONNE; ++j) {
+                    eceCity->matricePlateau[i][j].coord.x += VITESSE;
                 }
             }
+        }
+        eceCity->changementAffichage = true;
+    }
+    if (eceCity->tabTouches[DROITE]) {
+        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + (COTECASE * 5) >=
+            eceCity->display.longueur) {
+            for (int i = 0; i < NBLIGNE; ++i) {
+                for (int j = 0; j < NBCOLONNE; ++j) {
+                    eceCity->matricePlateau[i][j].coord.x -= VITESSE;
+                }
+            }
+        }
+        eceCity->changementAffichage = true;
+    }
+}
+
+void ajouterBatimentTab(EceCity *eceCity) {
+    switch (eceCity->phaseDeJeu.batimenAConstruire) {
+        case TERRAINVAGUE : {
+            eceCity->tabBatiments[eceCity->compteur.batiments].compteur = 0;
+            eceCity->tabBatiments[eceCity->compteur.batiments].type = TERRAINVAGUE;
+            eceCity->tabBatiments[eceCity->compteur.batiments].position.x = eceCity->phaseDeJeu.coordCaseDetecte.x;
+            eceCity->tabBatiments[eceCity->compteur.batiments].position.y = eceCity->phaseDeJeu.coordCaseDetecte.y;
+            eceCity->tabBatiments[eceCity->compteur.batiments].connexe = false;
+            eceCity->tabBatiments[eceCity->compteur.batiments].eau = false;
+            eceCity->tabBatiments[eceCity->compteur.batiments].elec = false;
+            eceCity->compteur.batiments++;
             break;
         }
-        case PARAMETRES: {
-
+        case CENTRALE: {
+            eceCity->tabCentrales[eceCity->compteur.centrales].capacite = 0;
+            eceCity->tabCentrales[eceCity->compteur.centrales].position.x = eceCity->phaseDeJeu.coordCaseDetecte.x;
+            eceCity->tabCentrales[eceCity->compteur.centrales].position.y = eceCity->phaseDeJeu.coordCaseDetecte.y;
+            eceCity->tabCentrales[eceCity->compteur.centrales].connexe = false;
+            eceCity->compteur.centrales++;
             break;
+        }
+        case CHATEAUDEAU: {
+            eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].capacite = 0;
+            eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].position.x = eceCity->phaseDeJeu.coordCaseDetecte.x;
+            eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].position.y = eceCity->phaseDeJeu.coordCaseDetecte.y;
+            eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].connexe = false;
+            eceCity->compteur.chateauxDeau++;
+            break;
+        }
+    }
+}
+
+void changerCompteurConstruction(EceCity *eceCity) {
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        if (eceCity->tabBatiments[i].type != GRATTECIEL) {
+            eceCity->tabBatiments[i].compteur++;
+            if (eceCity->tabBatiments[i].compteur == CYCLE) {
+                eceCity->tabBatiments[i].type++;
+                eceCity->tabBatiments[i].compteur = 0;
+                eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].type = eceCity->tabBatiments[i].type;
+            }
         }
     }
 }
