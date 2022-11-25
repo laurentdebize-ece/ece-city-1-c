@@ -172,36 +172,6 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BITMAPHERBE].coord.x = 0;
     eceCity->tabImages[BITMAPHERBE].coord.y = 0;
 
-    eceCity->tabImages[ROUTEdroite].image= al_load_bitmap("../Images/route droite.png");
-    eceCity->tabImages[ROUTEdroite].longueur = 76;
-    eceCity->tabImages[ROUTEdroite].hauteur = 52;
-    eceCity->tabImages[ROUTEdroite].coord.x = 0;
-    eceCity->tabImages[ROUTEdroite].coord.y = 0;
-
-    eceCity->tabImages[ROUTEcroisement3].image= al_load_bitmap("../Images/routeFois3.png");
-    eceCity->tabImages[ROUTEcroisement3].longueur = 80;
-    eceCity->tabImages[ROUTEcroisement3].hauteur = 83;
-    eceCity->tabImages[ROUTEcroisement3].coord.x = 0;
-    eceCity->tabImages[ROUTEcroisement3].coord.y = 0;
-
-    eceCity->tabImages[ROUTEcroisement4].image= al_load_bitmap("../Images/routeFois4.png");
-    eceCity->tabImages[ROUTEcroisement4].longueur = 72;
-    eceCity->tabImages[ROUTEcroisement4].hauteur = 93;
-    eceCity->tabImages[ROUTEcroisement4].coord.x = 0;
-    eceCity->tabImages[ROUTEcroisement4].coord.y = 0;
-
-    eceCity->tabImages[ROUTEvirageD].image= al_load_bitmap("../Images/routeVirageDroit.png");
-    eceCity->tabImages[ROUTEvirageD].longueur = 70;
-    eceCity->tabImages[ROUTEvirageD].hauteur = 94;
-    eceCity->tabImages[ROUTEvirageD].coord.x = 0;
-    eceCity->tabImages[ROUTEvirageD].coord.y = 0;
-
-    eceCity->tabImages[ROUTEvirageG].image= al_load_bitmap("../Images/routeVirageGauche.png");
-    eceCity->tabImages[ROUTEvirageG].longueur = 64;
-    eceCity->tabImages[ROUTEvirageG].hauteur = 95;
-    eceCity->tabImages[ROUTEvirageG].coord.x = 0;
-    eceCity->tabImages[ROUTEvirageG].coord.y = 0;
-
     eceCity->tabImages[RUINE].image= al_load_bitmap("../Images/ruine.png");
     eceCity->tabImages[RUINE].longueur = 82;
     eceCity->tabImages[RUINE].hauteur = 97;
@@ -294,7 +264,9 @@ void initJoueur(EceCity *eceCity) {
     eceCity->joueur->monnaie = MONNAIEDEPART;
     eceCity->joueur->habitant = 0;
     eceCity->joueur->capaciteEau = 0;
+    eceCity->joueur->utilisationEau = 0;
     eceCity->joueur->capaciteElec = 0;
+    eceCity->joueur->utilisationElec = 0;
     eceCity->joueur->compteurTemps = 0;
     eceCity->joueur->temps = 0;
     eceCity->compteur.batiments = 0;

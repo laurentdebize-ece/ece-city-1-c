@@ -53,6 +53,26 @@ void affichageInfos(EceCity *eceCity) {
                           0,312 ,
                           312, eceCity->display.longueur * 8 / 9 + 5, 365, 80,
                           80, ALLEGRO_ALIGN_CENTER);
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                  eceCity->display.longueur * 8 / 9 + 10,
+                  500,
+                  0,
+                  "Eau %d/%d",
+                  eceCity->joueur->utilisationEau, eceCity->joueur->capaciteEau);
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                  eceCity->display.longueur * 8 / 9 + 10,
+                  600,
+                  0,
+                  "Elec %d/%d",
+                  eceCity->joueur->utilisationElec, eceCity->joueur->capaciteElec);
+    if(eceCity->phaseDeJeu.batimenAConstruire != -1){
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 10,
+                      700,
+                      0,
+                      "%s",
+                      eceCity->phaseDeJeu.nomBatimenAConstruire);
+    }
 }
 
 void dessinerBatimentAConstruire(EceCity *eceCity) {
