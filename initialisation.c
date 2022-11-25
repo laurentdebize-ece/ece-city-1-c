@@ -210,11 +210,28 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BITMAPCOMPTEUR].coord.y = 0;
 
     eceCity->tabImages[BITMAPMONNAIE].image = al_load_bitmap("../Images/simcash2.png");
-    assert(eceCity->tabImages[BITMAPMONNAIE].image);
     eceCity->tabImages[BITMAPMONNAIE].longueur = 312;
     eceCity->tabImages[BITMAPMONNAIE].hauteur = 312;
     eceCity->tabImages[BITMAPMONNAIE].coord.x = 0;
     eceCity->tabImages[BITMAPMONNAIE].coord.y = 0;
+
+    eceCity->tabImages[BITMAPHAB].image = al_load_bitmap("../Images/currency_population.png");
+    eceCity->tabImages[BITMAPHAB].longueur = 208;
+    eceCity->tabImages[BITMAPHAB].hauteur = 208;
+    eceCity->tabImages[BITMAPHAB].coord.x = 0;
+    eceCity->tabImages[BITMAPHAB].coord.y = 0;
+
+    eceCity->tabImages[BITMAPEAU].image = al_load_bitmap("../Images/services_02.png");
+    eceCity->tabImages[BITMAPEAU].longueur = 208;
+    eceCity->tabImages[BITMAPEAU].hauteur = 208;
+    eceCity->tabImages[BITMAPEAU].coord.x = 0;
+    eceCity->tabImages[BITMAPEAU].coord.y = 0;
+
+    eceCity->tabImages[BITMAPELEC].image = al_load_bitmap("../Images/services_01.png");
+    eceCity->tabImages[BITMAPELEC].longueur = 208;
+    eceCity->tabImages[BITMAPELEC].hauteur = 208;
+    eceCity->tabImages[BITMAPELEC].coord.x = 0;
+    eceCity->tabImages[BITMAPELEC].coord.y = 0;
 
 }
 

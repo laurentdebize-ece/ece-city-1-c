@@ -29,42 +29,63 @@ void affichageJeu(EceCity *eceCity) {
 }
 
 void affichageInfos(EceCity *eceCity) {
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 0), eceCity->display.longueur * 8 / 9 + 100,
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255), eceCity->display.longueur * 8 / 9 + 80,
                   200,
                   0,
                   " %d",
                   eceCity->joueur->temps);
     al_draw_scaled_bitmap(eceCity->tabImages[BITMAPCOMPTEUR].image, 0,
                           0,208 ,
-                          208, eceCity->display.longueur * 8 / 9 + 5, 200, 80,
-                          80, ALLEGRO_ALIGN_CENTER);
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 0), eceCity->display.longueur * 8 / 9 + 10,
+                          208, eceCity->display.longueur * 8 / 9 + 5, 190, 50,
+                          50, ALLEGRO_ALIGN_CENTER);
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255 , 255), eceCity->display.longueur * 8 / 9 + 80,
                   300,
                   0,
-                  "Hab %d",
+                  " %d",
                   eceCity->joueur->habitant);
-    // FONCTION FEUILLE MAZ
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 0), eceCity->display.longueur * 8 / 9 + 100,
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPHAB].image, 0,
+                          0,208 ,
+                          208, eceCity->display.longueur * 8 / 9 + 5, 290, 50,
+                          50, ALLEGRO_ALIGN_CENTER);
+    float monnaieAffichage= eceCity->joueur->monnaie;
+    if(monnaieAffichage< 1000){
+        printf("%0.f", monnaieAffichage);
+    }
+    if(monnaieAffichage< 1000000 && monnaieAffichage > 1000){
+        printf("%0.f k", monnaieAffichage);
+    }
+    if(monnaieAffichage> 1000000 ){
+        printf("%0.f M", monnaieAffichage);
+    }
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255), eceCity->display.longueur * 8 / 9 + 80,
                   400,
                   0,
-                  "%d ",
+                  "%d f",
                   eceCity->joueur->monnaie);
     al_draw_scaled_bitmap(eceCity->tabImages[BITMAPMONNAIE].image, 0,
                           0,312 ,
-                          312, eceCity->display.longueur * 8 / 9 + 5, 365, 80,
+                          312, eceCity->display.longueur * 8 / 9 + 1, 365, 80,
                           80, ALLEGRO_ALIGN_CENTER);
     al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
-                  eceCity->display.longueur * 8 / 9 + 10,
+                  eceCity->display.longueur * 8 / 9 + 80,
                   500,
                   0,
-                  "Eau %d/%d",
+                  " %d/%d",
                   eceCity->joueur->utilisationEau, eceCity->joueur->capaciteEau);
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPEAU].image, 0,
+                          0,208 ,
+                          208, eceCity->display.longueur * 8 / 9 + 5, 490, 50,
+                          50, ALLEGRO_ALIGN_CENTER);
     al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
-                  eceCity->display.longueur * 8 / 9 + 10,
+                  eceCity->display.longueur * 8 / 9 + 80,
                   600,
                   0,
-                  "Elec %d/%d",
+                  " %d/%d",
                   eceCity->joueur->utilisationElec, eceCity->joueur->capaciteElec);
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPELEC].image, 0,
+                          0,208 ,
+                          208, eceCity->display.longueur * 8 / 9 + 5, 590, 50,
+                          50, ALLEGRO_ALIGN_CENTER);
     if(eceCity->phaseDeJeu.batimenAConstruire != -1){
         al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
                       eceCity->display.longueur * 8 / 9 + 10,
