@@ -29,7 +29,7 @@
 
 
 enum {
-    VIDE, ARBRE, ROUTE, RUINE, TERRAINVAGUE, CABANE, MAISON, IMMEUBLE, GRATTECIEL, CHATEAUDEAU, CENTRALE
+    VIDE, GRASS, ROUTE, RUINE, TERRAINVAGUE, CABANE, MAISON, IMMEUBLE, GRATTECIEL, CHATEAUDEAU, CENTRALE
 };
 
 enum {
@@ -51,6 +51,7 @@ enum {
     CONSTRUIREBATIMENT,
     CONSTRUIRECHATEAUDEAU,
     CONSTRUIRECENTRALE,
+    OUTIL,
     NBDEBOUTONJEU
 };
 
@@ -64,6 +65,7 @@ enum {
     BITMAPHERBE,
     BITMAPCOMPTEUR,
     BITMAPMONNAIE,
+    BITMAPOUTIL,
     BITMAPHAB,
     BITMAPEAU,
     BITMAPELEC,
@@ -160,6 +162,7 @@ typedef struct {
     char *nom;
     bool clignote;
     bool cliquable;
+    bool etatParticulier;
 } Case;
 
 typedef struct {
