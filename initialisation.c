@@ -45,7 +45,6 @@ void initPlateau(EceCity *eceCity) {
 }
 
 void initMusique(EceCity *eceCity) {
-    al_init_acodec_addon();
     eceCity->sample = al_load_sample("../Sons/song.wav");
     eceCity->song = al_create_sample_instance(eceCity->sample);
     al_set_sample_instance_playmode(eceCity->song, ALLEGRO_PLAYMODE_LOOP);
@@ -172,36 +171,35 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BITMAPHERBE].coord.x = 0;
     eceCity->tabImages[BITMAPHERBE].coord.y = 0;
 
-    eceCity->tabImages[RUINE].image= al_load_bitmap("../Images/ruine.png");
-    eceCity->tabImages[RUINE].longueur = 82;
-    eceCity->tabImages[RUINE].hauteur = 97;
-    eceCity->tabImages[RUINE].coord.x = 0;
-    eceCity->tabImages[RUINE].coord.y = 0;
+    eceCity->tabImages[BITMAPRUINE].image = al_load_bitmap("../Images/ruine.png");
+    eceCity->tabImages[BITMAPRUINE].longueur = 82;
+    eceCity->tabImages[BITMAPRUINE].hauteur = 97;
+    eceCity->tabImages[BITMAPRUINE].coord.x = 0;
+    eceCity->tabImages[BITMAPRUINE].coord.y = 0;
 
-    eceCity->tabImages[CABANE].image= al_load_bitmap("../Images/cabane 0.png");
-    eceCity->tabImages[CABANE].longueur = 81;
-    eceCity->tabImages[CABANE].hauteur = 90;
-    eceCity->tabImages[CABANE].coord.x = 0;
-    eceCity->tabImages[CABANE].coord.y = 0;
+    eceCity->tabImages[BITMAPCABANE].image = al_load_bitmap("../Images/cabane 0.png");
+    eceCity->tabImages[BITMAPCABANE].longueur = 81;
+    eceCity->tabImages[BITMAPCABANE].hauteur = 90;
+    eceCity->tabImages[BITMAPCABANE].coord.x = 0;
+    eceCity->tabImages[BITMAPCABANE].coord.y = 0;
 
-    eceCity->tabImages[ARBRE].image= al_load_bitmap("../Images/arbre0.png");
-    eceCity->tabImages[ARBRE].longueur = 94;
-    eceCity->tabImages[ARBRE].hauteur = 80;
-    eceCity->tabImages[ARBRE].coord.x = 0;
-    eceCity->tabImages[ARBRE].coord.y = 0;
+    eceCity->tabImages[BITMAPARBRE].image = al_load_bitmap("../Images/arbre0.png");
+    eceCity->tabImages[BITMAPARBRE].longueur = 94;
+    eceCity->tabImages[BITMAPARBRE].hauteur = 80;
+    eceCity->tabImages[BITMAPARBRE].coord.x = 0;
+    eceCity->tabImages[BITMAPARBRE].coord.y = 0;
 
-    eceCity->tabImages[IMMEUBLE].image= al_load_bitmap("../Images/immeuble0.png");
-    eceCity->tabImages[IMMEUBLE].longueur = 94;
-    eceCity->tabImages[IMMEUBLE].hauteur = 118;
-    eceCity->tabImages[IMMEUBLE].coord.x = 0;
-    eceCity->tabImages[IMMEUBLE].coord.y = 0;
+    eceCity->tabImages[BITMAPIMMEUBLE].image = al_load_bitmap("../Images/immeuble0.png");
+    eceCity->tabImages[BITMAPIMMEUBLE].longueur = 94;
+    eceCity->tabImages[BITMAPIMMEUBLE].hauteur = 118;
+    eceCity->tabImages[BITMAPIMMEUBLE].coord.x = 0;
+    eceCity->tabImages[BITMAPIMMEUBLE].coord.y = 0;
 
-    eceCity->tabImages[GRATTECIEL].image= al_load_bitmap("../Images/GratteCiel0.png");
-    eceCity->tabImages[GRATTECIEL].longueur = 118;
-    eceCity->tabImages[GRATTECIEL].hauteur = 217;
-    eceCity->tabImages[GRATTECIEL].coord.x = 0;
-    eceCity->tabImages[GRATTECIEL].coord.y = 0;
-
+    eceCity->tabImages[BITMAPGRATTECIEL].image = al_load_bitmap("../Images/GratteCiel0.png");
+    eceCity->tabImages[BITMAPGRATTECIEL].longueur = 118;
+    eceCity->tabImages[BITMAPGRATTECIEL].hauteur = 217;
+    eceCity->tabImages[BITMAPGRATTECIEL].coord.x = 0;
+    eceCity->tabImages[BITMAPGRATTECIEL].coord.y = 0;
 
     eceCity->tabImages[BITMAPCOMPTEUR].image = al_load_bitmap("../Images/currency_time.png");
     eceCity->tabImages[BITMAPCOMPTEUR].longueur = 208;
@@ -232,6 +230,18 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BITMAPELEC].hauteur = 208;
     eceCity->tabImages[BITMAPELEC].coord.x = 0;
     eceCity->tabImages[BITMAPELEC].coord.y = 0;
+
+    eceCity->tabImages[BITMAPCONSTROUTE].image = al_load_bitmap("../Images/hud_roads.png");
+    eceCity->tabImages[BITMAPCONSTROUTE].longueur = 208;
+    eceCity->tabImages[BITMAPCONSTROUTE].hauteur = 208;
+    eceCity->tabImages[BITMAPCONSTROUTE].coord.x = 0;
+    eceCity->tabImages[BITMAPCONSTROUTE].coord.y = 0;
+
+    eceCity->tabImages[BITMAPCONSTMAISON].image = al_load_bitmap("../Images/hud_residential.png");
+    eceCity->tabImages[BITMAPCONSTMAISON].longueur = 212;
+    eceCity->tabImages[BITMAPCONSTMAISON].hauteur = 212;
+    eceCity->tabImages[BITMAPCONSTMAISON].coord.x = 0;
+    eceCity->tabImages[BITMAPCONSTMAISON].coord.y = 0;
 
 }
 
@@ -293,6 +303,7 @@ void initJoueur(EceCity *eceCity) {
 
 void initBiblioAllegro() {
     al_init();
+    assert(al_init_acodec_addon());
     assert(al_install_keyboard());
     assert(al_install_mouse());
     assert(al_init_primitives_addon());
@@ -327,25 +338,27 @@ void get_desktop_resolution(int adapter, EceCity *eceCity) {
 }
 
 void destroyAll(EceCity *eceCity) {
-    free(eceCity->joueur);
     free(eceCity->tabChateauEaux);
     free(eceCity->tabCentrales);
     free(eceCity->tabBatiments);
-    for (int i = 0; i < NBDEMENU; ++i) {
-        free(eceCity->tabBoutons[i]);
-    }
     free(eceCity->tabBoutons);
+    free(eceCity->matricePlateau);
     for (int i = 0; i < NBLIGNE; ++i) {
         free(eceCity->matricePlateau[i]);
     }
     free(eceCity->matricePlateau);
     al_destroy_font(eceCity->ecrire.simsCityPolicePetite);
-    al_destroy_bitmap(eceCity->tabImages);
     al_destroy_font(eceCity->ecrire.simsCityPoliceMoyen);
     al_destroy_font(eceCity->ecrire.simsCityPoliceGrand);
     al_destroy_timer(eceCity->timer);
     al_destroy_display(eceCity->display.window);
     al_destroy_event_queue(eceCity->queue);
     al_destroy_sample_instance(eceCity->song);
+    al_destroy_sample(eceCity->sample);
+    free(eceCity->joueur);
+    for (int i = 0; i < NBDEBITMAP; ++i) {
+        al_destroy_bitmap(eceCity->tabImages[i].image);
+    }
+    free(eceCity->tabImages);
     free(eceCity);
 }

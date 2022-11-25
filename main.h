@@ -12,7 +12,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 
-#define DPI 1.23
+#define DPI 1
 #define NBLIGNE 35
 #define NBCOLONNE 45
 #define COTECASE 50
@@ -59,7 +59,24 @@ enum {
 };
 
 enum {
-    BITMAPACCEUIL, BITMAPCHOIXDUMODE, BITMAPHERBE, BITMAPCOMPTEUR, BITMAPMONNAIE, BITMAPHAB, BITMAPEAU, BITMAPELEC, NBDEBITMAP
+    BITMAPACCEUIL,
+    BITMAPCHOIXDUMODE,
+    BITMAPHERBE,
+    BITMAPCOMPTEUR,
+    BITMAPMONNAIE,
+    BITMAPHAB,
+    BITMAPEAU,
+    BITMAPELEC,
+    BITMAPCONSTROUTE,
+    BITMAPCONSTMAISON,
+    BITMAPCONSTCENTRALE,
+    BITMAPCONSTCHATEAUDEAU,
+    BITMAPRUINE,
+    BITMAPCABANE,
+    BITMAPARBRE,
+    BITMAPIMMEUBLE,
+    BITMAPGRATTECIEL,
+    NBDEBITMAP
 };
 
 enum {
@@ -86,8 +103,8 @@ typedef struct {
 } Sol;
 
 typedef struct {
-    int monnaie;
-    int habitant;
+    float monnaie;
+    float habitant;
     int capaciteElec;
     int utilisationElec;
     int capaciteEau;
@@ -125,7 +142,7 @@ typedef struct {
     int boutonDetecteAncien;
     int modeDeJeu;
     int batimenAConstruire;
-    char* nomBatimenAConstruire;
+    char *nomBatimenAConstruire;
     Coord coordCaseDetecte;
 } Phase;
 

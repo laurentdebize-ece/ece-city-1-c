@@ -18,7 +18,7 @@ void affichageChoixDuMode(EceCity *eceCity) {
 }
 
 void affichageJeu(EceCity *eceCity) {
-    al_clear_to_color(al_map_rgb(200, 200, 200));
+    al_clear_to_color(al_map_rgb(102, 102, 102));
     dessinerGrille(eceCity);
     affichageBouton(eceCity, eceCity->ecrire.simsCityPolicePetite);
     if (eceCity->phaseDeJeu.batimenAConstruire != -1 && eceCity->phaseDeJeu.coordCaseDetecte.x != -1 &&
@@ -29,43 +29,74 @@ void affichageJeu(EceCity *eceCity) {
 }
 
 void affichageInfos(EceCity *eceCity) {
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255), eceCity->display.longueur * 8 / 9 + 80,
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                  eceCity->display.longueur * 8 / 9 + 80,
                   200,
                   0,
                   " %d",
                   eceCity->joueur->temps);
     al_draw_scaled_bitmap(eceCity->tabImages[BITMAPCOMPTEUR].image, 0,
-                          0,208 ,
+                          0, 208,
                           208, eceCity->display.longueur * 8 / 9 + 5, 190, 50,
                           50, ALLEGRO_ALIGN_CENTER);
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255 , 255), eceCity->display.longueur * 8 / 9 + 80,
-                  300,
-                  0,
-                  " %d",
-                  eceCity->joueur->habitant);
+    float habitantAffichage = eceCity->joueur->habitant;
+    if (habitantAffichage < 1000) {
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 80,
+                      300,
+                      0,
+                      "%.0f",
+                      habitantAffichage);
+    } else if (habitantAffichage < 1000000) {
+        habitantAffichage /= 1000;
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 80,
+                      300,
+                      0,
+                      "%.1f k",
+                      habitantAffichage);
+    } else {
+        habitantAffichage /= 1000000;
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 80,
+                      300,
+                      0,
+                      "%.1f M",
+                      habitantAffichage);
+    }
     al_draw_scaled_bitmap(eceCity->tabImages[BITMAPHAB].image, 0,
-                          0,208 ,
+                          0, 208,
                           208, eceCity->display.longueur * 8 / 9 + 5, 290, 50,
                           50, ALLEGRO_ALIGN_CENTER);
-    float monnaieAffichage= eceCity->joueur->monnaie;
-    if(monnaieAffichage< 1000){
-        printf("%0.f", monnaieAffichage);
+    float monnaieAffichage = eceCity->joueur->monnaie;
+    if (monnaieAffichage < 1000) {
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 80,
+                      400,
+                      0,
+                      "%.0f",
+                      monnaieAffichage);
+    } else if (monnaieAffichage < 1000000 && monnaieAffichage > 1000) {
+        monnaieAffichage /= 1000;
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 80,
+                      400,
+                      0,
+                      "%.1f k",
+                      monnaieAffichage);
+    } else {
+        monnaieAffichage /= 1000000;
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 80,
+                      400,
+                      0,
+                      "%.1f M",
+                      monnaieAffichage);
     }
-    if(monnaieAffichage< 1000000 && monnaieAffichage > 1000){
-        printf("%0.f k", monnaieAffichage);
-    }
-    if(monnaieAffichage> 1000000 ){
-        printf("%0.f M", monnaieAffichage);
-    }
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255), eceCity->display.longueur * 8 / 9 + 80,
-                  400,
-                  0,
-                  "%d f",
-                  eceCity->joueur->monnaie);
     al_draw_scaled_bitmap(eceCity->tabImages[BITMAPMONNAIE].image, 0,
-                          0,312 ,
-                          312, eceCity->display.longueur * 8 / 9 + 1, 365, 80,
-                          80, ALLEGRO_ALIGN_CENTER);
+                          0, 312,
+                          312, eceCity->display.longueur * 8 / 9 - 20, 365, 100,
+                          100, ALLEGRO_ALIGN_CENTER);
     al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
                   eceCity->display.longueur * 8 / 9 + 80,
                   500,
@@ -73,7 +104,7 @@ void affichageInfos(EceCity *eceCity) {
                   " %d/%d",
                   eceCity->joueur->utilisationEau, eceCity->joueur->capaciteEau);
     al_draw_scaled_bitmap(eceCity->tabImages[BITMAPEAU].image, 0,
-                          0,208 ,
+                          0, 208,
                           208, eceCity->display.longueur * 8 / 9 + 5, 490, 50,
                           50, ALLEGRO_ALIGN_CENTER);
     al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
@@ -83,10 +114,10 @@ void affichageInfos(EceCity *eceCity) {
                   " %d/%d",
                   eceCity->joueur->utilisationElec, eceCity->joueur->capaciteElec);
     al_draw_scaled_bitmap(eceCity->tabImages[BITMAPELEC].image, 0,
-                          0,208 ,
+                          0, 208,
                           208, eceCity->display.longueur * 8 / 9 + 5, 590, 50,
                           50, ALLEGRO_ALIGN_CENTER);
-    if(eceCity->phaseDeJeu.batimenAConstruire != -1){
+    if (eceCity->phaseDeJeu.batimenAConstruire != -1) {
         al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
                       eceCity->display.longueur * 8 / 9 + 10,
                       700,
@@ -151,11 +182,21 @@ void dessinerBatimentAConstruire(EceCity *eceCity) {
 }
 
 void dessinerGrille(EceCity *eceCity) {
-    al_draw_filled_rectangle(eceCity->matricePlateau[0][0].coord.x,
-                             eceCity->matricePlateau[0][0].coord.y,
-                             eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + COTECASE,
-                             eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + COTECASE,
+    al_draw_filled_rectangle(eceCity->matricePlateau[0][0].coord.x - COTECASE * 2,
+                             eceCity->matricePlateau[0][0].coord.y - COTECASE * 2,
+                             eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + COTECASE * 3,
+                             eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + COTECASE * 3,
                              al_map_rgb(89, 166, 8));
+    for (int i = 0; i < NBLIGNE + 1; ++i) {
+        al_draw_line(eceCity->matricePlateau[0][0].coord.x, eceCity->matricePlateau[0][0].coord.y + i * COTECASE,
+                     eceCity->matricePlateau[0][0].coord.x + NBCOLONNE * COTECASE,
+                     eceCity->matricePlateau[0][0].coord.y + i * COTECASE, al_map_rgb(255, 255, 255), 1);
+    }
+    for (int i = 0; i < NBCOLONNE + 1; ++i) {
+        al_draw_line(eceCity->matricePlateau[0][0].coord.x + i * COTECASE, eceCity->matricePlateau[0][0].coord.y,
+                     eceCity->matricePlateau[0][0].coord.x + i * COTECASE,
+                     eceCity->matricePlateau[0][0].coord.y + NBLIGNE * COTECASE, al_map_rgb(255, 255, 255), 1);
+    }
     for (int i = 0; i < NBLIGNE; ++i) {
         for (int j = 0; j < NBCOLONNE; ++j) {
             if (eceCity->matricePlateau[i][j].construction) {
@@ -217,27 +258,7 @@ void dessinerGrille(EceCity *eceCity) {
             }
         }
     }
-    for (int i = 0; i < NBCOLONNE; ++i) {
-        al_draw_scaled_bitmap(eceCity->tabImages[ARBRE].image, eceCity->tabImages[ARBRE].coord.x,
-                              eceCity->tabImages[ARBRE].coord.y, eceCity->tabImages[ARBRE].longueur,
-                              eceCity->tabImages[ARBRE].hauteur, eceCity->matricePlateau[0][i].coord.x,
-                              eceCity->matricePlateau[0][i].coord.y - COTECASE, COTECASE, COTECASE, 0);
-        al_draw_scaled_bitmap(eceCity->tabImages[ARBRE].image, eceCity->tabImages[ARBRE].coord.x,
-                              eceCity->tabImages[ARBRE].coord.y, eceCity->tabImages[ARBRE].longueur,
-                              eceCity->tabImages[ARBRE].hauteur, eceCity->matricePlateau[NBLIGNE-1][i].coord.x,
-                              eceCity->matricePlateau[NBLIGNE-1][i].coord.y + COTECASE, COTECASE, COTECASE, 0);
-
-    }
-    for (int i = 0; i < NBLIGNE; ++i) {
-        al_draw_scaled_bitmap(eceCity->tabImages[ARBRE].image, eceCity->tabImages[ARBRE].coord.x,
-                              eceCity->tabImages[ARBRE].coord.y, eceCity->tabImages[ARBRE].longueur,
-                              eceCity->tabImages[ARBRE].hauteur, eceCity->matricePlateau[i][0].coord.x,
-                              eceCity->matricePlateau[i][0].coord.y - COTECASE, COTECASE, COTECASE, 0);
-        al_draw_scaled_bitmap(eceCity->tabImages[ARBRE].image, eceCity->tabImages[ARBRE].coord.x,
-                              eceCity->tabImages[ARBRE].coord.y, eceCity->tabImages[ARBRE].longueur,
-                              eceCity->tabImages[ARBRE].hauteur, eceCity->matricePlateau[i][NBCOLONNE-1].coord.x,
-                              eceCity->matricePlateau[i][NBCOLONNE-1].coord.y + COTECASE, COTECASE, COTECASE, 0);
-    }
+    dessinerBordureArbres(eceCity);
     if (eceCity->phaseDeJeu.coordCaseDetecte.x != -1 && eceCity->phaseDeJeu.coordCaseDetecte.y != -1 &&
         eceCity->tabTouches[BAS] == false &&
         eceCity->tabTouches[HAUT] == false && eceCity->tabTouches[DROITE] == false &&
@@ -253,16 +274,99 @@ void dessinerGrille(EceCity *eceCity) {
         eceCity->phaseDeJeu.coordCaseDetecte.x = -1;
         eceCity->phaseDeJeu.coordCaseDetecte.y = -1;
     }
-    for (int i = 0; i < NBLIGNE + 1; ++i) {
-        al_draw_line(eceCity->matricePlateau[0][0].coord.x, eceCity->matricePlateau[0][0].coord.y + i * COTECASE,
-                     eceCity->matricePlateau[0][0].coord.x + NBCOLONNE * COTECASE,
-                     eceCity->matricePlateau[0][0].coord.y + i * COTECASE, al_map_rgb(255, 255, 255), 2);
+}
+
+void dessinerBordureArbres(EceCity *eceCity) {
+    for (int k = 1; k < 3; ++k) {
+        for (int i = 0; i < NBCOLONNE; ++i) {
+            al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                                  eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                                  eceCity->tabImages[BITMAPARBRE].hauteur, eceCity->matricePlateau[0][i].coord.x,
+                                  eceCity->matricePlateau[0][i].coord.y - COTECASE * k, COTECASE, COTECASE, 0);
+            al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                                  eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                                  eceCity->tabImages[BITMAPARBRE].hauteur, eceCity->matricePlateau[NBLIGNE - 1][i].coord.x,
+                                  eceCity->matricePlateau[NBLIGNE - 1][i].coord.y + COTECASE * k, COTECASE, COTECASE,
+                                  0);
+
+        }
+        for (int i = 0; i < NBLIGNE; ++i) {
+            al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                                  eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                                  eceCity->tabImages[BITMAPARBRE].hauteur,
+                                  eceCity->matricePlateau[i][0].coord.x - COTECASE * k,
+                                  eceCity->matricePlateau[i][0].coord.y, COTECASE, COTECASE, 0);
+            al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                                  eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                                  eceCity->tabImages[BITMAPARBRE].hauteur,
+                                  eceCity->matricePlateau[i][NBCOLONNE - 1].coord.x + COTECASE * k,
+                                  eceCity->matricePlateau[i][NBCOLONNE - 1].coord.y, COTECASE, COTECASE, 0);
+
+        }
+        al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                              eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                              eceCity->tabImages[BITMAPARBRE].hauteur,
+                              eceCity->matricePlateau[0][0].coord.x - COTECASE * k,
+                              eceCity->matricePlateau[0][0].coord.y - COTECASE * k, COTECASE, COTECASE, 0);
+        al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                              eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                              eceCity->tabImages[BITMAPARBRE].hauteur,
+                              eceCity->matricePlateau[0][NBCOLONNE - 1].coord.x + COTECASE * k,
+                              eceCity->matricePlateau[0][NBCOLONNE - 1].coord.y - COTECASE * k, COTECASE, COTECASE, 0);
+        al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                              eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                              eceCity->tabImages[BITMAPARBRE].hauteur,
+                              eceCity->matricePlateau[NBLIGNE - 1][0].coord.x - COTECASE * k,
+                              eceCity->matricePlateau[NBLIGNE - 1][0].coord.y + COTECASE * k, COTECASE, COTECASE, 0);
+        al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                              eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                              eceCity->tabImages[BITMAPARBRE].hauteur,
+                              eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + COTECASE * k,
+                              eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + COTECASE * k, COTECASE,
+                              COTECASE, 0);
     }
-    for (int i = 0; i < NBCOLONNE + 1; ++i) {
-        al_draw_line(eceCity->matricePlateau[0][0].coord.x + i * COTECASE, eceCity->matricePlateau[0][0].coord.y,
-                     eceCity->matricePlateau[0][0].coord.x + i * COTECASE,
-                     eceCity->matricePlateau[0][0].coord.y + NBLIGNE * COTECASE, al_map_rgb(255, 255, 255), 2);
-    }
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                          eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                          eceCity->tabImages[BITMAPARBRE].hauteur,
+                          eceCity->matricePlateau[0][0].coord.x - COTECASE * 2,
+                          eceCity->matricePlateau[0][0].coord.y - COTECASE, COTECASE, COTECASE, 0);
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                          eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                          eceCity->tabImages[BITMAPARBRE].hauteur,
+                          eceCity->matricePlateau[0][NBCOLONNE - 1].coord.x + COTECASE * 2,
+                          eceCity->matricePlateau[0][NBCOLONNE - 1].coord.y - COTECASE, COTECASE, COTECASE, 0);
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                          eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                          eceCity->tabImages[BITMAPARBRE].hauteur,
+                          eceCity->matricePlateau[NBLIGNE - 1][0].coord.x - COTECASE * 2,
+                          eceCity->matricePlateau[NBLIGNE - 1][0].coord.y + COTECASE, COTECASE, COTECASE, 0);
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                          eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                          eceCity->tabImages[BITMAPARBRE].hauteur,
+                          eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + COTECASE * 2,
+                          eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + COTECASE, COTECASE, COTECASE,
+                          0);
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                          eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                          eceCity->tabImages[BITMAPARBRE].hauteur,
+                          eceCity->matricePlateau[0][0].coord.x - COTECASE,
+                          eceCity->matricePlateau[0][0].coord.y - COTECASE * 2, COTECASE, COTECASE, 0);
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                          eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                          eceCity->tabImages[BITMAPARBRE].hauteur,
+                          eceCity->matricePlateau[0][NBCOLONNE - 1].coord.x + COTECASE,
+                          eceCity->matricePlateau[0][NBCOLONNE - 1].coord.y - COTECASE * 2, COTECASE, COTECASE, 0);
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                          eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                          eceCity->tabImages[BITMAPARBRE].hauteur,
+                          eceCity->matricePlateau[NBLIGNE - 1][0].coord.x - COTECASE,
+                          eceCity->matricePlateau[NBLIGNE - 1][0].coord.y + COTECASE * 2, COTECASE, COTECASE, 0);
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPARBRE].image, eceCity->tabImages[BITMAPARBRE].coord.x,
+                          eceCity->tabImages[BITMAPARBRE].coord.y, eceCity->tabImages[BITMAPARBRE].longueur,
+                          eceCity->tabImages[BITMAPARBRE].hauteur,
+                          eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + COTECASE,
+                          eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + COTECASE * 2, COTECASE,
+                          COTECASE, 0);
 }
 
 void affichageParametres(EceCity *eceCity) {
