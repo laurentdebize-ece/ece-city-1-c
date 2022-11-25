@@ -45,13 +45,12 @@ void initPlateau(EceCity *eceCity) {
 }
 
 void initMusique(EceCity *eceCity) {
-    eceCity->sample = al_load_sample("../song.wav");
+    al_init_acodec_addon();
+    eceCity->sample = al_load_sample("../Sons/song.wav");
     eceCity->song = al_create_sample_instance(eceCity->sample);
     al_set_sample_instance_playmode(eceCity->song, ALLEGRO_PLAYMODE_LOOP);
     al_attach_sample_instance_to_mixer(eceCity->song, al_get_default_mixer());
-    al_reserve_samples(10);
     al_play_sample_instance(eceCity->song);
-    al_set_sample_instance_gain(eceCity->song, 1.0 / 4.5);
 }
 
 void initPolice(EceCity *eceCity) {
@@ -234,6 +233,19 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[GRATTECIEL].coord.y = 0;
 
 
+    eceCity->tabImages[BITMAPCOMPTEUR].image = al_load_bitmap("../Images/currency_time.png");
+    eceCity->tabImages[BITMAPCOMPTEUR].longueur = 208;
+    eceCity->tabImages[BITMAPCOMPTEUR].hauteur = 208;
+    eceCity->tabImages[BITMAPCOMPTEUR].coord.x = 0;
+    eceCity->tabImages[BITMAPCOMPTEUR].coord.y = 0;
+
+    eceCity->tabImages[BITMAPMONNAIE].image = al_load_bitmap("../Images/simcash2.png");
+    assert(eceCity->tabImages[BITMAPMONNAIE].image);
+    eceCity->tabImages[BITMAPMONNAIE].longueur = 312;
+    eceCity->tabImages[BITMAPMONNAIE].hauteur = 312;
+    eceCity->tabImages[BITMAPMONNAIE].coord.x = 0;
+    eceCity->tabImages[BITMAPMONNAIE].coord.y = 0;
+
 }
 
 EceCity *creationEceCity() {
@@ -255,6 +267,7 @@ EceCity *creationEceCity() {
     NewEceCity->tabImages = (Image *) malloc(NBDEBITMAP * sizeof(Image));
 
     NewEceCity->tabBoutons = (Case **) malloc(NBDEMENU * sizeof(Case *));
+
     NewEceCity->tabBoutons[ACCEUIL] = (Case *) malloc(NBDEBOUTONACCEUIL * sizeof(Case));
     NewEceCity->tabBoutons[CHOIXDUMODE] = (Case *) malloc(NBDEBOUTONCHOIXDUMODE * sizeof(Case));
     NewEceCity->tabBoutons[JEU] = (Case *) malloc(NBDEBOUTONJEU * sizeof(Case));

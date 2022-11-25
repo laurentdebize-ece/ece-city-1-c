@@ -29,21 +29,30 @@ void affichageJeu(EceCity *eceCity) {
 }
 
 void affichageInfos(EceCity *eceCity) {
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 0), eceCity->display.longueur * 8 / 9 + 10,
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 0), eceCity->display.longueur * 8 / 9 + 100,
                   200,
                   0,
-                  "time %d",
+                  " %d",
                   eceCity->joueur->temps);
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPCOMPTEUR].image, 0,
+                          0,208 ,
+                          208, eceCity->display.longueur * 8 / 9 + 5, 200, 80,
+                          80, ALLEGRO_ALIGN_CENTER);
     al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 0), eceCity->display.longueur * 8 / 9 + 10,
                   300,
                   0,
                   "Hab %d",
                   eceCity->joueur->habitant);
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 0), eceCity->display.longueur * 8 / 9 + 10,
+    // FONCTION FEUILLE MAZ
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 0), eceCity->display.longueur * 8 / 9 + 100,
                   400,
                   0,
-                  "Sous %d",
+                  "%d ",
                   eceCity->joueur->monnaie);
+    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPMONNAIE].image, 0,
+                          0,312 ,
+                          312, eceCity->display.longueur * 8 / 9 + 5, 365, 80,
+                          80, ALLEGRO_ALIGN_CENTER);
 }
 
 void dessinerBatimentAConstruire(EceCity *eceCity) {
