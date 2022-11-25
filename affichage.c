@@ -167,6 +167,27 @@ void dessinerGrille(EceCity *eceCity) {
             }
         }
     }
+    for (int i = 0; i < NBCOLONNE; ++i) {
+        al_draw_scaled_bitmap(eceCity->tabImages[ARBRE].image, eceCity->tabImages[ARBRE].coord.x,
+                              eceCity->tabImages[ARBRE].coord.y, eceCity->tabImages[ARBRE].longueur,
+                              eceCity->tabImages[ARBRE].hauteur, eceCity->matricePlateau[0][i].coord.x,
+                              eceCity->matricePlateau[0][i].coord.y - COTECASE, COTECASE, COTECASE, 0);
+        al_draw_scaled_bitmap(eceCity->tabImages[ARBRE].image, eceCity->tabImages[ARBRE].coord.x,
+                              eceCity->tabImages[ARBRE].coord.y, eceCity->tabImages[ARBRE].longueur,
+                              eceCity->tabImages[ARBRE].hauteur, eceCity->matricePlateau[NBLIGNE-1][i].coord.x,
+                              eceCity->matricePlateau[NBLIGNE-1][i].coord.y + COTECASE, COTECASE, COTECASE, 0);
+
+    }
+    for (int i = 0; i < NBLIGNE; ++i) {
+        al_draw_scaled_bitmap(eceCity->tabImages[ARBRE].image, eceCity->tabImages[ARBRE].coord.x,
+                              eceCity->tabImages[ARBRE].coord.y, eceCity->tabImages[ARBRE].longueur,
+                              eceCity->tabImages[ARBRE].hauteur, eceCity->matricePlateau[i][0].coord.x,
+                              eceCity->matricePlateau[i][0].coord.y - COTECASE, COTECASE, COTECASE, 0);
+        al_draw_scaled_bitmap(eceCity->tabImages[ARBRE].image, eceCity->tabImages[ARBRE].coord.x,
+                              eceCity->tabImages[ARBRE].coord.y, eceCity->tabImages[ARBRE].longueur,
+                              eceCity->tabImages[ARBRE].hauteur, eceCity->matricePlateau[i][NBCOLONNE-1].coord.x,
+                              eceCity->matricePlateau[i][NBCOLONNE-1].coord.y + COTECASE, COTECASE, COTECASE, 0);
+    }
     if (eceCity->phaseDeJeu.coordCaseDetecte.x != -1 && eceCity->phaseDeJeu.coordCaseDetecte.y != -1 &&
         eceCity->tabTouches[BAS] == false &&
         eceCity->tabTouches[HAUT] == false && eceCity->tabTouches[DROITE] == false &&
@@ -300,3 +321,5 @@ void faireClignoterBoutonMenu(EceCity *eceCity, ALLEGRO_FONT *police) {
         al_flip_display();
     }
 }
+
+//page qui sert à l'affichage de la map pour le jeu c'est à dire création d'immeuble, de maison, de buisson, de terrain et terrain vague, plus théorie des graphes//
