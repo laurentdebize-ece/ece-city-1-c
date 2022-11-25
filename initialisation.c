@@ -173,6 +173,67 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BITMAPHERBE].coord.x = 0;
     eceCity->tabImages[BITMAPHERBE].coord.y = 0;
 
+    eceCity->tabImages[ROUTEdroite].image= al_load_bitmap("../Images/route droite.png");
+    eceCity->tabImages[ROUTEdroite].longueur = 76;
+    eceCity->tabImages[ROUTEdroite].hauteur = 52;
+    eceCity->tabImages[ROUTEdroite].coord.x = 0;
+    eceCity->tabImages[ROUTEdroite].coord.y = 0;
+
+    eceCity->tabImages[ROUTEcroisement3].image= al_load_bitmap("../Images/routeFois3.png");
+    eceCity->tabImages[ROUTEcroisement3].longueur = 80;
+    eceCity->tabImages[ROUTEcroisement3].hauteur = 83;
+    eceCity->tabImages[ROUTEcroisement3].coord.x = 0;
+    eceCity->tabImages[ROUTEcroisement3].coord.y = 0;
+
+    eceCity->tabImages[ROUTEcroisement4].image= al_load_bitmap("../Images/routeFois4.png");
+    eceCity->tabImages[ROUTEcroisement4].longueur = 72;
+    eceCity->tabImages[ROUTEcroisement4].hauteur = 93;
+    eceCity->tabImages[ROUTEcroisement4].coord.x = 0;
+    eceCity->tabImages[ROUTEcroisement4].coord.y = 0;
+
+    eceCity->tabImages[ROUTEvirageD].image= al_load_bitmap("../Images/routeVirageDroit.png");
+    eceCity->tabImages[ROUTEvirageD].longueur = 70;
+    eceCity->tabImages[ROUTEvirageD].hauteur = 94;
+    eceCity->tabImages[ROUTEvirageD].coord.x = 0;
+    eceCity->tabImages[ROUTEvirageD].coord.y = 0;
+
+    eceCity->tabImages[ROUTEvirageG].image= al_load_bitmap("../Images/routeVirageGauche.png");
+    eceCity->tabImages[ROUTEvirageG].longueur = 64;
+    eceCity->tabImages[ROUTEvirageG].hauteur = 95;
+    eceCity->tabImages[ROUTEvirageG].coord.x = 0;
+    eceCity->tabImages[ROUTEvirageG].coord.y = 0;
+
+    eceCity->tabImages[RUINE].image= al_load_bitmap("../Images/ruine.png");
+    eceCity->tabImages[RUINE].longueur = 82;
+    eceCity->tabImages[RUINE].hauteur = 97;
+    eceCity->tabImages[RUINE].coord.x = 0;
+    eceCity->tabImages[RUINE].coord.y = 0;
+
+    eceCity->tabImages[CABANE].image= al_load_bitmap("../Images/cabane 0.png");
+    eceCity->tabImages[CABANE].longueur = 81;
+    eceCity->tabImages[CABANE].hauteur = 90;
+    eceCity->tabImages[CABANE].coord.x = 0;
+    eceCity->tabImages[CABANE].coord.y = 0;
+
+    eceCity->tabImages[ARBRE].image= al_load_bitmap("../Images/arbre0.png");
+    eceCity->tabImages[ARBRE].longueur = 94;
+    eceCity->tabImages[ARBRE].hauteur = 80;
+    eceCity->tabImages[ARBRE].coord.x = 0;
+    eceCity->tabImages[ARBRE].coord.y = 0;
+
+    eceCity->tabImages[IMMEUBLE].image= al_load_bitmap("../Images/immeuble0.png");
+    eceCity->tabImages[IMMEUBLE].longueur = 94;
+    eceCity->tabImages[IMMEUBLE].hauteur = 118;
+    eceCity->tabImages[IMMEUBLE].coord.x = 0;
+    eceCity->tabImages[IMMEUBLE].coord.y = 0;
+
+    eceCity->tabImages[GRATTECIEL].image= al_load_bitmap("../Images/GratteCiel0.png");
+    eceCity->tabImages[GRATTECIEL].longueur = 118;
+    eceCity->tabImages[GRATTECIEL].hauteur = 217;
+    eceCity->tabImages[GRATTECIEL].coord.x = 0;
+    eceCity->tabImages[GRATTECIEL].coord.y = 0;
+
+
 }
 
 EceCity *creationEceCity() {
@@ -277,6 +338,7 @@ void destroyAll(EceCity *eceCity) {
     }
     free(eceCity->matricePlateau);
     al_destroy_font(eceCity->ecrire.simsCityPolicePetite);
+    al_destroy_bitmap(eceCity->tabImages);
     al_destroy_font(eceCity->ecrire.simsCityPoliceMoyen);
     al_destroy_font(eceCity->ecrire.simsCityPoliceGrand);
     al_destroy_timer(eceCity->timer);
