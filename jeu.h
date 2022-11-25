@@ -17,7 +17,9 @@ bool verifSiEspaceBatiment(EceCity *eceCity);
 
 void construireBatiment(EceCity *eceCity);
 
-void changerCompteurConstruction(EceCity* eceCity);
+void changerCompteurConstruction(EceCity *eceCity);
+
+bool verifSiRouteACote(EceCity *eceCity);
 
 void detectionSouris(EceCity *eceCity);
 

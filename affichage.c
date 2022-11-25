@@ -29,21 +29,44 @@ void affichageJeu(EceCity *eceCity) {
 }
 
 void affichageInfos(EceCity *eceCity) {
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 0), eceCity->display.longueur * 8 / 9 + 10,
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                  eceCity->display.longueur * 8 / 9 + 10,
                   200,
                   0,
                   "time %d",
                   eceCity->joueur->temps);
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 0), eceCity->display.longueur * 8 / 9 + 10,
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                  eceCity->display.longueur * 8 / 9 + 10,
                   300,
                   0,
                   "Hab %d",
                   eceCity->joueur->habitant);
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 0), eceCity->display.longueur * 8 / 9 + 10,
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                  eceCity->display.longueur * 8 / 9 + 10,
                   400,
                   0,
                   "Sous %d",
                   eceCity->joueur->monnaie);
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                  eceCity->display.longueur * 8 / 9 + 10,
+                  500,
+                  0,
+                  "Eau %d/%d",
+                  eceCity->joueur->utilisationEau, eceCity->joueur->capaciteEau);
+    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                  eceCity->display.longueur * 8 / 9 + 10,
+                  600,
+                  0,
+                  "Elec %d/%d",
+                  eceCity->joueur->utilisationElec, eceCity->joueur->capaciteElec);
+    if(eceCity->phaseDeJeu.batimenAConstruire != -1){
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 10,
+                      700,
+                      0,
+                      "%s",
+                      eceCity->phaseDeJeu.nomBatimenAConstruire);
+    }
 }
 
 void dessinerBatimentAConstruire(EceCity *eceCity) {

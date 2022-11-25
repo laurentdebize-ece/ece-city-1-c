@@ -12,18 +12,20 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 
+#define DPI 1.23
 #define NBLIGNE 35
 #define NBCOLONNE 45
 #define COTECASE 50
 #define XDEPART COTECASE*4
 #define YDEPART COTECASE*3
-#define MONNAIEDEPART 5000
+#define MONNAIEDEPART 500000
 #define VITESSE COTECASE/5
 #define NBBATMAX 165
 #define NBCENTRALEMAX 56
 #define NBCHATEAUDEAUMAX 56
-#define CYCLE 15
+#define CYCLE 3
 #define FPS 60
+#define TAXE 10
 
 
 enum {
@@ -80,8 +82,6 @@ typedef struct {
     int type;
     int num;
     bool construction;
-    bool elec;
-    bool eau;
     Coord coord;
 } Sol;
 
@@ -89,7 +89,9 @@ typedef struct {
     int monnaie;
     int habitant;
     int capaciteElec;
+    int utilisationElec;
     int capaciteEau;
+    int utilisationEau;
     int compteurTemps;
     int temps;
 } Joueur;
@@ -98,13 +100,13 @@ typedef struct {
 typedef struct {
     Coord position;
     int capacite;
-    int connexe;
+    int utile;
 } ChateauDeau;
 
 typedef struct {
     Coord position;
     int capacite;
-    int connexe;
+    int utile;
 } Centrale;
 
 typedef struct {
@@ -112,7 +114,6 @@ typedef struct {
     int type;
     bool elec;
     bool eau;
-    bool connexe;
     int nbHabitant;
     int compteur;
 } Batiment;
@@ -124,6 +125,7 @@ typedef struct {
     int boutonDetecteAncien;
     int modeDeJeu;
     int batimenAConstruire;
+    char* nomBatimenAConstruire;
     Coord coordCaseDetecte;
 } Phase;
 
