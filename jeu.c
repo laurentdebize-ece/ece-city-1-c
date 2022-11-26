@@ -11,6 +11,7 @@ void bouclePrincipale(EceCity *eceCity) {
             }
             case CHOIXDUMODE: {
                 menuChoixDuMode(eceCity);
+                break;
             }
             case JEU: {
                 menuJeu(eceCity);
@@ -315,26 +316,26 @@ void detectionSouris(EceCity *eceCity) {
             }
             eceCity->phaseDeJeu.boutonDetecteAncien = eceCity->phaseDeJeu.boutonDetecteActuel;
         }
-        if (eceCity->phaseDeJeu.actuelle == JEU) {
-            if (eceCity->event.mouse.x * DPI >= eceCity->matricePlateau[0][0].coord.x &&
-                eceCity->event.mouse.x * DPI <=
-                eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + COTECASE &&
-                eceCity->event.mouse.y * DPI >= eceCity->matricePlateau[0][0].coord.y &&
-                eceCity->event.mouse.y * DPI <=
-                eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + COTECASE &&
-                eceCity->phaseDeJeu.boutonDetecteActuel == -1) {
-                eceCity->phaseDeJeu.coordCaseDetecte.x = 0;
-                eceCity->phaseDeJeu.coordCaseDetecte.y = 0;
-                while (eceCity->event.mouse.x * DPI >
-                       eceCity->matricePlateau[0][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.x + COTECASE) {
-                    eceCity->phaseDeJeu.coordCaseDetecte.x++;
-                }
-                while (eceCity->event.mouse.y * DPI >
-                       eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][0].coord.y + COTECASE) {
-                    eceCity->phaseDeJeu.coordCaseDetecte.y++;
-                }
-                eceCity->changementAffichage = true;
+    }
+    if (eceCity->phaseDeJeu.actuelle == JEU) {
+        if (eceCity->event.mouse.x * DPI >= eceCity->matricePlateau[0][0].coord.x &&
+            eceCity->event.mouse.x * DPI <=
+            eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + COTECASE &&
+            eceCity->event.mouse.y * DPI >= eceCity->matricePlateau[0][0].coord.y &&
+            eceCity->event.mouse.y * DPI <=
+            eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + COTECASE &&
+            eceCity->phaseDeJeu.boutonDetecteActuel == -1) {
+            eceCity->phaseDeJeu.coordCaseDetecte.x = 0;
+            eceCity->phaseDeJeu.coordCaseDetecte.y = 0;
+            while (eceCity->event.mouse.x * DPI >
+                   eceCity->matricePlateau[0][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.x + COTECASE) {
+                eceCity->phaseDeJeu.coordCaseDetecte.x++;
             }
+            while (eceCity->event.mouse.y * DPI >
+                   eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][0].coord.y + COTECASE) {
+                eceCity->phaseDeJeu.coordCaseDetecte.y++;
+            }
+            eceCity->changementAffichage = true;
         }
     }
 }
@@ -572,7 +573,7 @@ void boutonPresse(EceCity *eceCity) {
 
 void deplacerPlateau(EceCity *eceCity) {
     if (eceCity->tabTouches[BAS]) {
-        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + (COTECASE * 5) >=
+        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + (COTECASE * 6) >=
             eceCity->display.hauteur) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
@@ -583,7 +584,7 @@ void deplacerPlateau(EceCity *eceCity) {
         eceCity->changementAffichage = true;
     }
     if (eceCity->tabTouches[HAUT]) {
-        if (eceCity->matricePlateau[0][0].coord.y - COTECASE * 4 <= 0) {
+        if (eceCity->matricePlateau[0][0].coord.y - COTECASE * 5 <= 0) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
                     eceCity->matricePlateau[i][j].coord.y += VITESSE;
@@ -593,7 +594,7 @@ void deplacerPlateau(EceCity *eceCity) {
         eceCity->changementAffichage = true;
     }
     if (eceCity->tabTouches[GAUCHE]) {
-        if (eceCity->matricePlateau[0][0].coord.x - COTECASE * 4 <= 0) {
+        if (eceCity->matricePlateau[0][0].coord.x - COTECASE * 5 <= 0) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
                     eceCity->matricePlateau[i][j].coord.x += VITESSE;
@@ -603,7 +604,7 @@ void deplacerPlateau(EceCity *eceCity) {
         eceCity->changementAffichage = true;
     }
     if (eceCity->tabTouches[DROITE]) {
-        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + (COTECASE * 5) >=
+        if (eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + (COTECASE * 6) >=
             eceCity->display.longueur) {
             for (int i = 0; i < NBLIGNE; ++i) {
                 for (int j = 0; j < NBCOLONNE; ++j) {
