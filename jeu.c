@@ -95,6 +95,7 @@ void menuChoixDuMode(EceCity *eceCity) {
             if (eceCity->phaseDeJeu.boutonDetecteActuel != -1) {
                 faireClignoterBoutonMenu(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
             }
+            break;
         }
     }
 }

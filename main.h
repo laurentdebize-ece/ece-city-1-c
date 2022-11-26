@@ -27,7 +27,7 @@
 
 
 enum {
-    VIDE, ARBRE, ROUTE, RUINE, TERRAINVAGUE, CABANE, MAISON, IMMEUBLE, GRATTECIEL, CHATEAUDEAU, CENTRALE
+    VIDE, ARBRE, ROUTE,  RUINE, TERRAINVAGUE, CABANE, MAISON, IMMEUBLE, GRATTECIEL, CHATEAUDEAU, CENTRALE ,
 };
 
 enum {
@@ -57,7 +57,8 @@ enum {
 };
 
 enum {
-    BITMAPACCEUIL, BITMAPCHOIXDUMODE, BITMAPJEU, BITMAPHERBE, NBDEBITMAP
+    BITMAPACCEUIL, BITMAPCHOIXDUMODE, BITMAPJEU, BITMAPHERBE, BitmapROUTEdroite,BitmapROUTEcroisement3, BitmapROUTEcroisement4, BitmapROUTEvirageD, BitmapROUTEvirageG, BitmapArbre,
+    BitmapRuine, BitmapTerrainVague, BitmapMaison, BitmapImmeuble, BitmapGratteciel, BitmapChateauDeau, BitmapCentrale, BitmapCabane, NBDEBITMAP
 };
 
 enum {

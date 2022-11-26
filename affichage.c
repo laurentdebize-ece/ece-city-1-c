@@ -56,18 +56,32 @@ void dessinerBatimentAConstruire(EceCity *eceCity) {
                     COTECASE,
                     eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.y +
                     COTECASE, al_map_rgba(0, 0, 255, 64));
+            al_draw_scaled_bitmap(eceCity->tabImages[BitmapROUTEdroite].image, 0, 0, eceCity->tabImages[BitmapROUTEdroite].longueur,
+                                  eceCity->tabImages[BitmapROUTEdroite].hauteur,
+                                  eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.x,
+                                  eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.y,
+                                  eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.x +
+                                  COTECASE -
+                                  eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.x,
+                                  eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.y +
+                                  COTECASE -
+                                  eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.y,
+                                  0);
+
             break;
         }
         case TERRAINVAGUE: {
             if (eceCity->phaseDeJeu.coordCaseDetecte.x + 3 <= NBCOLONNE &&
                 eceCity->phaseDeJeu.coordCaseDetecte.y + 3 <= NBLIGNE) {
-                al_draw_filled_rectangle(
-                        eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.x,
-                        eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.y,
-                        eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.x +
-                        COTECASE * 3,
-                        eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.y +
-                        COTECASE * 3, al_map_rgba(255, 0, 0, 64));
+                al_draw_tinted_scaled_bitmap(eceCity->tabImages[BitmapRuine].image, al_map_rgba(0, 0, 0, 20), 0, 0,
+                                             eceCity->tabImages[BitmapRuine].longueur,
+                                             eceCity->tabImages[BitmapRuine].hauteur,
+                                             eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.x,
+                                             eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.y -
+                                             19,
+                                             COTECASE * 3,
+                                             COTECASE * 3 + 19,
+                                             0);
             }
             break;
         }
@@ -106,67 +120,6 @@ void dessinerGrille(EceCity *eceCity) {
                              eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.x + COTECASE,
                              eceCity->matricePlateau[NBLIGNE - 1][NBCOLONNE - 1].coord.y + COTECASE,
                              al_map_rgb(89, 166, 8));
-    for (int i = 0; i < NBLIGNE; ++i) {
-        for (int j = 0; j < NBCOLONNE; ++j) {
-            if (eceCity->matricePlateau[i][j].construction) {
-                if (eceCity->matricePlateau[i][j].type == ARBRE) {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE,
-                                             al_map_rgb(128, 0, 0));
-                } else if (eceCity->matricePlateau[i][j].type == ROUTE) {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE,
-                                             al_map_rgb(0, 0, 255));
-                } else if (eceCity->matricePlateau[i][j].type == TERRAINVAGUE) {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE * 3,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE * 3,
-                                             al_map_rgb(255, 0, 0));
-                } else if (eceCity->matricePlateau[i][j].type == CENTRALE) {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE * 6,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE * 4,
-                                             al_map_rgb(255, 255, 0));
-                } else if (eceCity->matricePlateau[i][j].type == CHATEAUDEAU) {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE * 6,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE * 4,
-                                             al_map_rgb(255, 0, 255));
-                } else if (eceCity->matricePlateau[i][j].type == CABANE) {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE * 3,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE * 3,
-                                             al_map_rgb(128, 255, 128));
-                } else if (eceCity->matricePlateau[i][j].type == MAISON) {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE * 3,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE * 3,
-                                             al_map_rgb(255, 255, 255));
-                } else if (eceCity->matricePlateau[i][j].type == IMMEUBLE) {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE * 3,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE * 3,
-                                             al_map_rgb(128, 128, 128));
-                } else if (eceCity->matricePlateau[i][j].type == GRATTECIEL) {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE * 3,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE * 3,
-                                             al_map_rgb(0, 0, 0));
-                }
-            }
-        }
-    }
     if (eceCity->phaseDeJeu.coordCaseDetecte.x != -1 && eceCity->phaseDeJeu.coordCaseDetecte.y != -1 &&
         eceCity->tabTouches[BAS] == false &&
         eceCity->tabTouches[HAUT] == false && eceCity->tabTouches[DROITE] == false &&
@@ -191,6 +144,93 @@ void dessinerGrille(EceCity *eceCity) {
         al_draw_line(eceCity->matricePlateau[0][0].coord.x + i * COTECASE, eceCity->matricePlateau[0][0].coord.y,
                      eceCity->matricePlateau[0][0].coord.x + i * COTECASE,
                      eceCity->matricePlateau[0][0].coord.y + NBLIGNE * COTECASE, al_map_rgb(255, 255, 255), 2);
+    }
+    for (int i = 0; i < NBLIGNE; ++i) {
+        for (int j = 0; j < NBCOLONNE; ++j) {
+            if (eceCity->matricePlateau[i][j].construction) {
+                if (eceCity->matricePlateau[i][j].type == ARBRE) {
+                    al_draw_scaled_bitmap(eceCity->tabImages[BitmapArbre].image, 0, 0, eceCity->tabImages[BitmapArbre].longueur,
+                                          eceCity->tabImages[BitmapArbre].hauteur,
+                                          eceCity->matricePlateau[i][j].coord.x -8,
+                                          eceCity->matricePlateau[i][j].coord.y -15,
+                                          COTECASE +15 ,
+                                          COTECASE+17 ,
+                                          0);
+                } else if (eceCity->matricePlateau[i][j].type == ROUTE) {
+                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
+                                             eceCity->matricePlateau[i][j].coord.y,
+                                             eceCity->matricePlateau[i][j].coord.x + COTECASE,
+                                             eceCity->matricePlateau[i][j].coord.y + COTECASE,
+                                             al_map_rgb(0, 0, 255));
+                } else if (eceCity->matricePlateau[i][j].type == TERRAINVAGUE) {
+                    al_draw_scaled_bitmap(eceCity->tabImages[BitmapRuine].image, 0, 0, eceCity->tabImages[BitmapRuine].longueur,
+                                          eceCity->tabImages[BitmapRuine].hauteur,
+                                          eceCity->matricePlateau[i][j].coord.x,
+                                          eceCity->matricePlateau[i][j].coord.y - 19,
+                                          COTECASE * 3,
+                                          COTECASE * 3 + 19,
+                                          0);
+                } else if (eceCity->matricePlateau[i][j].type == CENTRALE) {
+                    al_draw_scaled_bitmap(eceCity->tabImages[BitmapCentrale].image, 0, 0, eceCity->tabImages[BitmapCentrale].longueur,
+                                          eceCity->tabImages[BitmapCentrale].hauteur,
+                                          eceCity->matricePlateau[i][j].coord.x,
+                                          eceCity->matricePlateau[i][j].coord.y ,
+                                          COTECASE * 6,
+                                          COTECASE * 4 ,
+                                          0);
+                    /*al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
+                                             eceCity->matricePlateau[i][j].coord.y,
+                                             eceCity->matricePlateau[i][j].coord.x + COTECASE * 6,
+                                             eceCity->matricePlateau[i][j].coord.y + COTECASE * 4,
+                                             al_map_rgb(255, 255, 0));*/
+                } else if (eceCity->matricePlateau[i][j].type == CHATEAUDEAU) {
+                    al_draw_scaled_bitmap(eceCity->tabImages[BitmapChateauDeau].image, 0, 0, eceCity->tabImages[BitmapChateauDeau].longueur,
+                                          eceCity->tabImages[BitmapChateauDeau].hauteur,
+                                          eceCity->matricePlateau[i][j].coord.x,
+                                          eceCity->matricePlateau[i][j].coord.y ,
+                                          COTECASE * 6,
+                                          COTECASE * 4 ,
+                                          0);
+                    /*al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
+                                             eceCity->matricePlateau[i][j].coord.y,
+                                             eceCity->matricePlateau[i][j].coord.x + COTECASE * 6,
+                                             eceCity->matricePlateau[i][j].coord.y + COTECASE * 4,
+                                             al_map_rgb(255, 0, 255));*/
+                } else if (eceCity->matricePlateau[i][j].type == CABANE) {
+                    al_draw_scaled_bitmap(eceCity->tabImages[BitmapCabane].image, 0, 0, eceCity->tabImages[BitmapCabane].longueur,
+                                          eceCity->tabImages[BitmapCabane].hauteur,
+                                          eceCity->matricePlateau[i][j].coord.x,
+                                          eceCity->matricePlateau[i][j].coord.y,
+                                          COTECASE * 3,
+                                          COTECASE * 3 +35,
+                                          0);
+                } else if (eceCity->matricePlateau[i][j].type == MAISON) {
+                    al_draw_scaled_bitmap(eceCity->tabImages[BitmapMaison].image, 0, 0, eceCity->tabImages[BitmapMaison].longueur,
+                                          eceCity->tabImages[BitmapMaison].hauteur,
+                                          eceCity->matricePlateau[i][j].coord.x,
+                                          eceCity->matricePlateau[i][j].coord.y - 26 ,
+                                          COTECASE * 3,
+                                          COTECASE * 3 + 26 ,
+                                          0);
+                } else if (eceCity->matricePlateau[i][j].type == IMMEUBLE) {
+                    al_draw_scaled_bitmap(eceCity->tabImages[BitmapImmeuble].image, 0, 0, eceCity->tabImages[BitmapImmeuble].longueur,
+                                          eceCity->tabImages[BitmapImmeuble].hauteur,
+                                          eceCity->matricePlateau[i][j].coord.x,
+                                          eceCity->matricePlateau[i][j].coord.y -40 ,
+                                          COTECASE * 3,
+                                          COTECASE * 3 +40 ,
+                                          0);
+                } else if (eceCity->matricePlateau[i][j].type == GRATTECIEL) {
+                    al_draw_scaled_bitmap(eceCity->tabImages[BitmapGratteciel].image, 0, 0, eceCity->tabImages[BitmapGratteciel].longueur,
+                                          eceCity->tabImages[BitmapGratteciel].hauteur,
+                                          eceCity->matricePlateau[i][j].coord.x,
+                                          eceCity->matricePlateau[i][j].coord.y -129 ,
+                                          COTECASE * 3,
+                                          COTECASE * 3 +123 ,
+                                          0);
+                }
+            }
+        }
     }
 }
 
