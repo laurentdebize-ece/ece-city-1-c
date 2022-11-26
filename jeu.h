@@ -29,4 +29,8 @@ void deplacerPlateau(EceCity *eceCity);
 
 void ajouterBatimentTab(EceCity *eceCity);
 
+void parcourBFSCentrales(EceCity *eceCity);
+
+void remonterParPredEtCompterDistance(EceCity* eceCity);
+
 #endif //ECE_CITY_1_C_JEU_H

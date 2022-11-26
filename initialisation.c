@@ -115,7 +115,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[JEU][BARREDOUTILS].hauteur = eceCity->display.hauteur;
     eceCity->tabBoutons[JEU][BARREDOUTILS].clignote = false;
     eceCity->tabBoutons[JEU][BARREDOUTILS].cliquable = false;
-    eceCity->tabBoutons[JEU][BARREDOUTILS].etatParticulier = false;
+    eceCity->tabBoutons[JEU][BARREDOUTILS].etatParticulier = true;
 
     eceCity->tabBoutons[JEU][BARREDINFOS].coord.y = 100;
     eceCity->tabBoutons[JEU][BARREDINFOS].coord.x = eceCity->display.longueur * 8 / 9 - 25;
@@ -133,7 +133,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[JEU][CONSTRUIREROUTE].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIREROUTE].clignote = true;
     eceCity->tabBoutons[JEU][CONSTRUIREROUTE].cliquable = true;
-    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].etatParticulier = false;
+    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].etatParticulier = true;
 
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.x = 960;
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.y = eceCity->display.hauteur * 8 / 9;
@@ -142,7 +142,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].clignote = true;
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].cliquable = true;
-    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].etatParticulier = false;
+    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].etatParticulier = true;
 
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.x = 1160;
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.y = eceCity->display.hauteur * 8 / 9;
@@ -151,7 +151,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].clignote = true;
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].cliquable = true;
-    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].etatParticulier = false;
+    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].etatParticulier = true;
 
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.x = 1360;
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.y = eceCity->display.hauteur * 8 / 9;
@@ -160,7 +160,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].clignote = true;
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].cliquable = true;
-    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].etatParticulier = false;
+    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].etatParticulier = true;
 
     eceCity->tabBoutons[JEU][OUTIL].coord.x = 600;
     eceCity->tabBoutons[JEU][OUTIL].coord.y = eceCity->display.hauteur * 8 / 9;
@@ -169,7 +169,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[JEU][OUTIL].hauteur = 80;
     eceCity->tabBoutons[JEU][OUTIL].clignote = false;
     eceCity->tabBoutons[JEU][OUTIL].cliquable = true;
-    eceCity->tabBoutons[JEU][OUTIL].etatParticulier = true;
+    eceCity->tabBoutons[JEU][OUTIL].etatParticulier = false;
 }
 
 void initBitmaps(EceCity *eceCity) {

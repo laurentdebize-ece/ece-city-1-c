@@ -12,7 +12,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 
-#define DPI 1.23
+#define DPI 1
 #define NBLIGNE 35
 #define NBCOLONNE 45
 #define COTECASE 50
@@ -100,8 +100,11 @@ typedef struct {
 typedef struct {
     int type;
     int num;
+    bool firstMaison;
     bool construction;
+    bool verif;
     Coord coord;
+    Coord pred;
 } Sol;
 
 typedef struct {
@@ -132,9 +135,11 @@ typedef struct {
     Coord position;
     int type;
     bool elec;
-    bool eau;
+    int utilisationEau;
     int nbHabitant;
     int compteur;
+    int dEau;
+    int dElec;
 } Batiment;
 
 typedef struct {

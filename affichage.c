@@ -426,44 +426,35 @@ void affichageBouton(EceCity *eceCity, ALLEGRO_FONT *police) {
                              eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].nom);
             }
         }
-        if (eceCity->phaseDeJeu.actuelle == JEU) {
-            if (eceCity->tabBoutons[JEU][OUTIL].etatParticulier) {
-                al_draw_scaled_bitmap(eceCity->tabImages[BITMAPCONSTROUTE].image,
-                                      eceCity->tabImages[BITMAPCONSTROUTE].coord.x,
-                                      eceCity->tabImages[BITMAPCONSTROUTE].coord.y,
-                                      eceCity->tabImages[BITMAPCONSTROUTE].longueur,
-                                      eceCity->tabImages[BITMAPCONSTROUTE].hauteur,
-                                      eceCity->tabBoutons[JEU][CONSTRUIREROUTE].coord.x,
-                                      eceCity->tabBoutons[JEU][CONSTRUIREROUTE].coord.y - 12,
-                                      eceCity->tabBoutons[JEU][CONSTRUIREROUTE].longueur - 2,
-                                      eceCity->tabBoutons[JEU][CONSTRUIREROUTE].hauteur, 0);
-                al_draw_scaled_bitmap(eceCity->tabImages[BITMAPCONSTMAISON].image,
-                                      eceCity->tabImages[BITMAPCONSTMAISON].coord.x,
-                                      eceCity->tabImages[BITMAPCONSTMAISON].coord.y,
-                                      eceCity->tabImages[BITMAPCONSTMAISON].longueur,
-                                      eceCity->tabImages[BITMAPCONSTMAISON].hauteur,
-                                      eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.x,
-                                      eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.y - 5,
-                                      eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].longueur,
-                                      eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].hauteur - 2, 0);
-            }
-            al_draw_scaled_bitmap(eceCity->tabImages[BITMAPOUTIL].image, eceCity->tabImages[BITMAPCONSTROUTE].coord.x,
-                                  eceCity->tabImages[BITMAPOUTIL].coord.y,
-                                  eceCity->tabImages[BITMAPOUTIL].longueur,
-                                  eceCity->tabImages[BITMAPOUTIL].hauteur,
-                                  eceCity->tabBoutons[JEU][OUTIL].coord.x,
-                                  eceCity->tabBoutons[JEU][OUTIL].coord.y,
-                                  eceCity->tabBoutons[JEU][OUTIL].longueur,
-                                  eceCity->tabBoutons[JEU][OUTIL].hauteur, 0);
-
+    }
+    if (eceCity->phaseDeJeu.actuelle == JEU) {
+        if (eceCity->tabBoutons[JEU][OUTIL].etatParticulier) {
+            al_draw_scaled_bitmap(eceCity->tabImages[BITMAPCONSTROUTE].image,
+                                  eceCity->tabImages[BITMAPCONSTROUTE].coord.x,
+                                  eceCity->tabImages[BITMAPCONSTROUTE].coord.y,
+                                  eceCity->tabImages[BITMAPCONSTROUTE].longueur,
+                                  eceCity->tabImages[BITMAPCONSTROUTE].hauteur,
+                                  eceCity->tabBoutons[JEU][CONSTRUIREROUTE].coord.x,
+                                  eceCity->tabBoutons[JEU][CONSTRUIREROUTE].coord.y - 12,
+                                  eceCity->tabBoutons[JEU][CONSTRUIREROUTE].longueur - 2,
+                                  eceCity->tabBoutons[JEU][CONSTRUIREROUTE].hauteur, 0);
+            al_draw_scaled_bitmap(eceCity->tabImages[BITMAPCONSTMAISON].image,
+                                  eceCity->tabImages[BITMAPCONSTMAISON].coord.x,
+                                  eceCity->tabImages[BITMAPCONSTMAISON].coord.y,
+                                  eceCity->tabImages[BITMAPCONSTMAISON].longueur,
+                                  eceCity->tabImages[BITMAPCONSTMAISON].hauteur,
+                                  eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.x,
+                                  eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.y - 5,
+                                  eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].longueur,
+                                  eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].hauteur - 2, 0);
             al_draw_scaled_bitmap(eceCity->tabImages[BITMAPCONSTCENTRALE].image,
                                   eceCity->tabImages[BITMAPCONSTCENTRALE].coord.x,
                                   eceCity->tabImages[BITMAPCONSTCENTRALE].coord.y,
                                   eceCity->tabImages[BITMAPCONSTCENTRALE].longueur,
                                   eceCity->tabImages[BITMAPCONSTCENTRALE].hauteur,
-                                  eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.x,
-                                  eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.y ,
-                                  eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].longueur ,
+                                  eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.x + 3,
+                                  eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.y,
+                                  eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].longueur - 8,
                                   eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].hauteur, 0);
 
             al_draw_scaled_bitmap(eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].image,
@@ -472,10 +463,18 @@ void affichageBouton(EceCity *eceCity, ALLEGRO_FONT *police) {
                                   eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].longueur,
                                   eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].hauteur,
                                   eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.x,
-                                  eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.y ,
-                                  eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].longueur ,
-                                  eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].hauteur, 0);
+                                  eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.y + 3,
+                                  eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].longueur,
+                                  eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].hauteur - 8, 0);
         }
+        al_draw_scaled_bitmap(eceCity->tabImages[BITMAPOUTIL].image, eceCity->tabImages[BITMAPCONSTROUTE].coord.x,
+                              eceCity->tabImages[BITMAPOUTIL].coord.y,
+                              eceCity->tabImages[BITMAPOUTIL].longueur,
+                              eceCity->tabImages[BITMAPOUTIL].hauteur,
+                              eceCity->tabBoutons[JEU][OUTIL].coord.x,
+                              eceCity->tabBoutons[JEU][OUTIL].coord.y,
+                              eceCity->tabBoutons[JEU][OUTIL].longueur,
+                              eceCity->tabBoutons[JEU][OUTIL].hauteur, 0);
     }
 }
 
@@ -530,5 +529,3 @@ void faireClignoterBoutonMenu(EceCity *eceCity, ALLEGRO_FONT *police) {
         al_flip_display();
     }
 }
-
-//page qui sert à l'affichage de la map pour le jeu c'est à dire création d'immeuble, de maison, de buisson, de terrain et terrain vague, plus théorie des graphes//
