@@ -269,6 +269,17 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BITMAPCONSTMAISON].coord.x = 0;
     eceCity->tabImages[BITMAPCONSTMAISON].coord.y = 0;
 
+    eceCity->tabImages[BITMAPCONSTCENTRALE].image = al_load_bitmap("../Images/centrale.png");
+    eceCity->tabImages[BITMAPCONSTCENTRALE].longueur = 512;
+    eceCity->tabImages[BITMAPCONSTCENTRALE].hauteur = 512;
+    eceCity->tabImages[BITMAPCONSTCENTRALE].coord.x = 0;
+    eceCity->tabImages[BITMAPCONSTCENTRALE].coord.y = 0;
+
+    eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].image = al_load_bitmap("../Images/eau.png");
+    eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].longueur = 512;
+    eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].hauteur = 512;
+    eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].coord.x = 0;
+    eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].coord.y = 0;
 }
 
 EceCity *creationEceCity() {

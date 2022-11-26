@@ -12,7 +12,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 
-#define DPI 1
+#define DPI 1.23
 #define NBLIGNE 35
 #define NBCOLONNE 45
 #define COTECASE 50
