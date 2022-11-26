@@ -14,7 +14,7 @@ int main() {
 
     bouclePrincipale(eceCity);
 
-    //destroyAll(eceCity);
+    destroyAll(eceCity);
 
     return 0;
 }

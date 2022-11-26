@@ -400,6 +400,33 @@ void affichageBouton(EceCity *eceCity, ALLEGRO_FONT *police) {
             break;
         }
     }
+    for (int i = 0; i < nbBouton; ++i) {
+        if (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].etatParticulier == false) {
+            al_draw_filled_rectangle(eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x,
+                                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y,
+                                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x +
+                                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].longueur,
+                                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
+                                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur,
+                                     al_map_rgba(0, 0, 0, 128));
+            al_draw_rectangle(eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x,
+                              eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y,
+                              eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x +
+                              eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].longueur,
+                              eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
+                              eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur,
+                              al_map_rgb(255, 255, 255), t);
+            if (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].nom != NULL) {
+                al_draw_text(police, eceCity->ecrire.couleurDuTexte,
+                             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x +
+                             (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].longueur / 2),
+                             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
+                             (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur / 2) -
+                             (al_get_font_line_height(police) / 2), ALLEGRO_ALIGN_CENTER,
+                             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].nom);
+            }
+        }
+    }
     if (eceCity->phaseDeJeu.actuelle == JEU) {
         if (eceCity->tabBoutons[JEU][OUTIL].etatParticulier) {
             al_draw_scaled_bitmap(eceCity->tabImages[BITMAPCONSTROUTE].image,
@@ -429,33 +456,6 @@ void affichageBouton(EceCity *eceCity, ALLEGRO_FONT *police) {
                               eceCity->tabBoutons[JEU][OUTIL].coord.y,
                               eceCity->tabBoutons[JEU][OUTIL].longueur,
                               eceCity->tabBoutons[JEU][OUTIL].hauteur, 0);
-    }
-    for (int i = 0; i < nbBouton; ++i) {
-        if (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].etatParticulier == false) {
-            al_draw_filled_rectangle(eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x,
-                                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y,
-                                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x +
-                                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].longueur,
-                                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
-                                     eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur,
-                                     al_map_rgba(0, 0, 0, 128));
-            al_draw_rectangle(eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x,
-                              eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y,
-                              eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x +
-                              eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].longueur,
-                              eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
-                              eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur,
-                              al_map_rgb(255, 255, 255), t);
-            if (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].nom != NULL) {
-                al_draw_text(police, eceCity->ecrire.couleurDuTexte,
-                             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.x +
-                             (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].longueur / 2),
-                             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].coord.y +
-                             (eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].hauteur / 2) -
-                             (al_get_font_line_height(police) / 2), ALLEGRO_ALIGN_CENTER,
-                             eceCity->tabBoutons[eceCity->phaseDeJeu.actuelle][i].nom);
-            }
-        }
     }
 }
 

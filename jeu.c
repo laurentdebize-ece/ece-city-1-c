@@ -462,6 +462,8 @@ void boutonPresse(EceCity *eceCity) {
                 switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
                     case NOUVELLEPARTIE: {
                         eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                        eceCity->phaseDeJeu.boutonDetecteActuel = -1;
+                        eceCity->phaseDeJeu.ancienne = -1;
                         eceCity->phaseDeJeu.actuelle = CHOIXDUMODE;
                         eceCity->changementAffichage = true;
                         break;
