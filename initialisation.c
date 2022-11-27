@@ -366,7 +366,7 @@ void initJoueur(EceCity *eceCity) {
 
 void initBiblioAllegro() {
     al_init();
-    assert(al_init_acodec_addon());
+    //assert(al_init_acodec_addon());
     assert(al_install_keyboard());
     assert(al_install_mouse());
     assert(al_init_primitives_addon());
