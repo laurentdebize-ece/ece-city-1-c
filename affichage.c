@@ -130,14 +130,15 @@ void affichageInfos(EceCity *eceCity) {
 void dessinerBatimentAConstruire(EceCity *eceCity) {
     switch (eceCity->phaseDeJeu.batimenAConstruire) {
         case ROUTE: {
-            al_draw_filled_rectangle(
-                    eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.x,
-                    eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.y,
-                    eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.x +
-                    COTECASE,
-                    eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.y +
-                    COTECASE,
-                    al_map_rgba(128, 128, 128, 100));
+            al_draw_tinted_scaled_bitmap(eceCity->tabImages[BitmapROUTEdroite].image, al_map_rgba(128, 128, 128, 100),
+                                         0, 0,
+                                         eceCity->tabImages[BitmapROUTEdroite].longueur,
+                                         eceCity->tabImages[BitmapROUTEdroite].hauteur,
+                                         eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.x,
+                                         eceCity->matricePlateau[eceCity->phaseDeJeu.coordCaseDetecte.y][eceCity->phaseDeJeu.coordCaseDetecte.x].coord.y,
+                                         COTECASE,
+                                         COTECASE,
+                                         0);
             break;
         }
         case TERRAINVAGUE: {
@@ -235,11 +236,14 @@ void dessinerGrille(EceCity *eceCity) {
                                           COTECASE + 17,
                                           0);
                 } else if (eceCity->matricePlateau[i][j].type == ROUTE) {
-                    al_draw_filled_rectangle(eceCity->matricePlateau[i][j].coord.x,
-                                             eceCity->matricePlateau[i][j].coord.y,
-                                             eceCity->matricePlateau[i][j].coord.x + COTECASE,
-                                             eceCity->matricePlateau[i][j].coord.y + COTECASE,
-                                             al_map_rgb(128, 128, 128));
+                    al_draw_scaled_bitmap(eceCity->tabImages[BitmapROUTEdroite].image, 0, 0,
+                                          eceCity->tabImages[BitmapROUTEdroite].longueur,
+                                          eceCity->tabImages[BitmapROUTEdroite].hauteur,
+                                          eceCity->matricePlateau[i][j].coord.x,
+                                          eceCity->matricePlateau[i][j].coord.y,
+                                          COTECASE,
+                                          COTECASE,
+                                          0);
                 } else if (eceCity->matricePlateau[i][j].type == TERRAINVAGUE) {
                     al_draw_scaled_bitmap(eceCity->tabImages[BITMAPTERRAINVAGUE].image, 0, 0,
                                           eceCity->tabImages[BITMAPTERRAINVAGUE].longueur,

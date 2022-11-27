@@ -79,7 +79,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[ACCEUIL][CHARGER].longueur = 500;
     eceCity->tabBoutons[ACCEUIL][CHARGER].hauteur = 150;
     eceCity->tabBoutons[ACCEUIL][CHARGER].clignote = true;
-    eceCity->tabBoutons[ACCEUIL][CHARGER].cliquable = true;
+    eceCity->tabBoutons[ACCEUIL][CHARGER].cliquable = false;
     eceCity->tabBoutons[ACCEUIL][CHARGER].etatParticulier = false;
 
     eceCity->tabBoutons[ACCEUIL][QUITTER].coord.x = 710;
@@ -198,9 +198,9 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BITMAPRUINE].coord.x = 0;
     eceCity->tabImages[BITMAPRUINE].coord.y = 0;
 
-    eceCity->tabImages[BitmapROUTEdroite].image= al_load_bitmap("../Images/route droite.png");
-    eceCity->tabImages[BitmapROUTEdroite].longueur = 76;
-    eceCity->tabImages[BitmapROUTEdroite].hauteur = 52;
+    eceCity->tabImages[BitmapROUTEdroite].image= al_load_bitmap("../Images/roadsTile.png");
+    eceCity->tabImages[BitmapROUTEdroite].longueur = 150;
+    eceCity->tabImages[BitmapROUTEdroite].hauteur = 150;
     eceCity->tabImages[BitmapROUTEdroite].coord.x = 0;
     eceCity->tabImages[BitmapROUTEdroite].coord.y = 0;
 
