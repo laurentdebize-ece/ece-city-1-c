@@ -166,6 +166,12 @@ void menuJeu(EceCity *eceCity) {
                     eceCity->changementAffichage = true;
                     break;
                 }
+                case ALLEGRO_KEY_V: {
+                    parcourBFSCentrales(eceCity);
+                    remonterParPredEtCompterDistance(eceCity);
+                    eceCity->changementAffichage = true;
+                    break;
+                }
             }
             break;
         }
@@ -385,7 +391,8 @@ bool verifSiRouteACote(EceCity *eceCity) {
 
 void construireBatiment(EceCity *eceCity) {
     if (verifSiEspaceBatiment(eceCity) && verifSiRouteACote(eceCity)) {
-        int hauteur, longueur, prix;
+        int hauteur, longueur;
+        float prix;
         switch (eceCity->phaseDeJeu.batimenAConstruire) {
             case ROUTE: {
                 hauteur = longueur = 1;
@@ -418,9 +425,6 @@ void construireBatiment(EceCity *eceCity) {
             eceCity->changementAffichage = true;
             eceCity->joueur->monnaie -= prix;
             ajouterBatimentTab(eceCity);
-            if (eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
-                parcourBFSCentrales(eceCity);
-            }
         }
     }
 }
@@ -699,14 +703,16 @@ void parcourBFSCentrales(EceCity *eceCity) {
         }
     }
     File f = fileVide();
-    Coord cootemp;
+    Coord cooTemp;
     Coord cooAEnfiler;
     if (eceCity->compteur.centrales != 0) {
         for (int k = 0; k < eceCity->compteur.centrales; ++k) {
+            printf("%d:%d\n\n", eceCity->tabCentrales[eceCity->compteur.centrales].position.x, eceCity->tabCentrales[eceCity->compteur.centrales].position.y);
             for (int i = eceCity->tabCentrales[eceCity->compteur.centrales].position.y - 1;
                  i < eceCity->tabCentrales[eceCity->compteur.centrales].position.y + 4 + 1; i += 4 + 1) {
                 for (int j = eceCity->tabCentrales[eceCity->compteur.centrales].position.x;
                      j < eceCity->tabCentrales[eceCity->compteur.centrales].position.x + 6; ++j) {
+                    printf("%d:%d\n", i, j);
                     if (i >= 0 && i < NBLIGNE && j >= 0 && j < NBCOLONNE) {
                         if (eceCity->matricePlateau[i][j].type == ROUTE) {
                             cooAEnfiler.x = j;
@@ -723,6 +729,7 @@ void parcourBFSCentrales(EceCity *eceCity) {
                  i < eceCity->tabCentrales[eceCity->compteur.centrales].position.x + 6 + 1; i += 6 + 1) {
                 for (int j = eceCity->tabCentrales[eceCity->compteur.centrales].position.y;
                      j < eceCity->tabCentrales[eceCity->compteur.centrales].position.y + 4; ++j) {
+                    printf("%d:%d\n", j, i);
                     if (i >= 0 && i < NBCOLONNE && j >= 0 && j < NBLIGNE) {
                         if (eceCity->matricePlateau[j][i].type == ROUTE) {
                             cooAEnfiler.x = i;
@@ -736,70 +743,90 @@ void parcourBFSCentrales(EceCity *eceCity) {
                 }
             }
             while (longueur(f) != 0) {
-                cootemp = defiler(f);
-                if (cootemp.x >= 0 && cootemp.x < NBCOLONNE && cootemp.y + 1 >= 0 && cootemp.y + 1 < NBLIGNE) {
-                    if (eceCity->matricePlateau[cootemp.y + 1][cootemp.x].type == ROUTE &&
-                        eceCity->matricePlateau[cootemp.y + 1][cootemp.x].verif == false) {
-                        cooAEnfiler.x = cootemp.x;
-                        cooAEnfiler.y = cootemp.y + 1;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cootemp.x;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cootemp.y + 1;
+                cooTemp = defiler(f);
+                if (cooTemp.x >= 0 && cooTemp.x < NBCOLONNE && cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == ROUTE &&
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].verif == false) {
+                        cooAEnfiler.x = cooTemp.x;
+                        cooAEnfiler.y = cooTemp.y + 1;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y + 1;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
                         enfiler(f, cooAEnfiler);
                     }
                 }
-                if (cootemp.x >= 0 && cootemp.x < NBCOLONNE && cootemp.y - 1 >= 0 && cootemp.y - 1 < NBLIGNE) {
-                    if (eceCity->matricePlateau[cootemp.y - 1][cootemp.x].type == ROUTE &&
-                        eceCity->matricePlateau[cootemp.y - 1][cootemp.x].verif == false) {
-                        cooAEnfiler.x = cootemp.x;
-                        cooAEnfiler.y = cootemp.y - 1;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cootemp.x;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cootemp.y - 1;
+                if (cooTemp.x >= 0 && cooTemp.x < NBCOLONNE && cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == ROUTE &&
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].verif == false) {
+                        cooAEnfiler.x = cooTemp.x;
+                        cooAEnfiler.y = cooTemp.y - 1;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y - 1;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
                         enfiler(f, cooAEnfiler);
                     }
                 }
-                if (cootemp.x + 1 >= 0 && cootemp.x + 1 < NBCOLONNE && cootemp.y >= 0 && cootemp.y < NBLIGNE) {
-                    if (eceCity->matricePlateau[cootemp.y][cootemp.x + 1].type == ROUTE &&
-                        eceCity->matricePlateau[cootemp.y][cootemp.x + 1].verif == false) {
-                        cooAEnfiler.x = cootemp.x + 1;
-                        cooAEnfiler.y = cootemp.y;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cootemp.x + 1;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cootemp.y;
+                if (cooTemp.x + 1 >= 0 && cooTemp.x + 1 < NBCOLONNE && cooTemp.y >= 0 && cooTemp.y < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == ROUTE &&
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].verif == false) {
+                        cooAEnfiler.x = cooTemp.x + 1;
+                        cooAEnfiler.y = cooTemp.y;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x + 1;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
                         enfiler(f, cooAEnfiler);
                     }
                 }
-                if (cootemp.x - 1 >= 0 && cootemp.x - 1 < NBCOLONNE && cootemp.y >= 0 && cootemp.y < NBLIGNE) {
-                    if (eceCity->matricePlateau[cootemp.y][cootemp.x - 1].type == ROUTE &&
-                        eceCity->matricePlateau[cootemp.y][cootemp.x - 1].verif == false) {
-                        cooAEnfiler.x = cootemp.x - 1;
-                        cooAEnfiler.y = cootemp.y;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cootemp.x - 1;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cootemp.y;
+                if (cooTemp.x - 1 >= 0 && cooTemp.x - 1 < NBCOLONNE && cooTemp.y >= 0 && cooTemp.y < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == ROUTE &&
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].verif == false) {
+                        cooAEnfiler.x = cooTemp.x - 1;
+                        cooAEnfiler.y = cooTemp.y;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x - 1;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
                         enfiler(f, cooAEnfiler);
                     }
                 }
 
-                if (cootemp.x >= 0 && cootemp.x < NBCOLONNE && cootemp.y + 1 >= 0 && cootemp.y + 1 < NBLIGNE) {
-                    if (eceCity->matricePlateau[cootemp.y + 1][cootemp.x].type == MAISON) {
-                        eceCity->matricePlateau[cootemp.y + 1][cootemp.x].firstMaison = true;
+                if (cooTemp.x >= 0 && cooTemp.x < NBCOLONNE && cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == TERRAINVAGUE ||
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == RUINE ||
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CABANE ||
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == IMMEUBLE ||
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == GRATTECIEL ||
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == MAISON) {
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].firstMaison = true;
                     }
                 }
-                if (cootemp.x >= 0 && cootemp.x < NBCOLONNE && cootemp.y - 1 >= 0 && cootemp.y - 1 < NBLIGNE) {
-                    if (eceCity->matricePlateau[cootemp.y - 1][cootemp.x].type == MAISON) {
-                        eceCity->matricePlateau[cootemp.y - 1][cootemp.x].firstMaison = true;
+                if (cooTemp.x >= 0 && cooTemp.x < NBCOLONNE && cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == TERRAINVAGUE ||
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == RUINE ||
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CABANE ||
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == IMMEUBLE ||
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == GRATTECIEL ||
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == MAISON) {
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].firstMaison = true;
                     }
                 }
-                if (cootemp.x + 1 >= 0 && cootemp.x + 1 < NBCOLONNE && cootemp.y >= 0 && cootemp.y < NBLIGNE) {
-                    if (eceCity->matricePlateau[cootemp.y][cootemp.x + 1].type == MAISON) {
-                        eceCity->matricePlateau[cootemp.y][cootemp.x + 1].firstMaison = true;
+                if (cooTemp.x + 1 >= 0 && cooTemp.x + 1 < NBCOLONNE && cooTemp.y >= 0 && cooTemp.y < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == TERRAINVAGUE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == RUINE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CABANE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == IMMEUBLE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == GRATTECIEL ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == MAISON) {
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].firstMaison = true;
                     }
                 }
-                if (cootemp.x - 1 >= 0 && cootemp.x - 1 < NBCOLONNE && cootemp.y >= 0 && cootemp.y < NBLIGNE) {
-                    if (eceCity->matricePlateau[cootemp.y][cootemp.x - 1].type == MAISON) {
-                        eceCity->matricePlateau[cootemp.y][cootemp.x - 1].firstMaison = true;
+                if (cooTemp.x - 1 >= 0 && cooTemp.x - 1 < NBCOLONNE && cooTemp.y >= 0 && cooTemp.y < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == TERRAINVAGUE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == RUINE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CABANE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == IMMEUBLE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == GRATTECIEL ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == MAISON) {
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].firstMaison = true;
                     }
                 }
             }
@@ -809,5 +836,53 @@ void parcourBFSCentrales(EceCity *eceCity) {
 }
 
 void remonterParPredEtCompterDistance(EceCity *eceCity) {
-
+    Coord cooTemp;
+    int dTemp;
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        eceCity->tabBatiments[i].dElec = 99999999;
+        for (int j = eceCity->tabBatiments[i].position.x; j < eceCity->tabBatiments[i].position.x + 3; ++j) {
+            for (int k = eceCity->tabBatiments[i].position.y; k < eceCity->tabBatiments[i].position.y + 3; ++k) {
+                if (eceCity->matricePlateau[k][j].firstMaison) {
+                    for (int l = 0; l < 2; ++l) {
+                        dTemp = 0;
+                        if (k + 1 - 2 * l > 0 && k + 1 - 2 * l < NBLIGNE && j > 0 && j < NBCOLONNE) {
+                            if (eceCity->matricePlateau[k + 1 - 2 * l][j].type == ROUTE &&
+                                eceCity->matricePlateau[k + 1 - 2 * l][j].pred.x != -1) {
+                                printf("found");
+                                cooTemp.x = j;
+                                cooTemp.y = k + 1 - 2 * l;
+                                dTemp++;
+                            }
+                            while (cooTemp.x != -9) {
+                                cooTemp = eceCity->matricePlateau[cooTemp.y][cooTemp.x].pred;
+                                dTemp++;
+                            }
+                            if (dTemp < eceCity->tabBatiments[i].dElec) {
+                                eceCity->tabBatiments[i].dElec = dTemp;
+                            }
+                        }
+                    }
+                    for (int l = 0; l < 2; ++l) {
+                        dTemp = 0;
+                        if (k > 0 && k < NBLIGNE && j + 1 - 2 * l > 0 && j + 1 - 2 * l < NBCOLONNE) {
+                            if (eceCity->matricePlateau[k][j + 1 - 2 * l].type == ROUTE &&
+                                eceCity->matricePlateau[k][j + 1 - 2 * l].pred.x != -1) {
+                                cooTemp.x = j + 1 - 2 * l;
+                                cooTemp.y = k;
+                                dTemp++;
+                                while (cooTemp.x != -9) {
+                                    cooTemp = eceCity->matricePlateau[cooTemp.y][cooTemp.x].pred;
+                                    dTemp++;
+                                }
+                                if (dTemp < eceCity->tabBatiments[i].dElec) {
+                                    eceCity->tabBatiments[i].dElec = dTemp;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        printf("%d\n", eceCity->tabBatiments[i].dElec);
+    }
 }
