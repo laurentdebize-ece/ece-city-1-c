@@ -27,7 +27,7 @@
 
 
 enum {
-    VIDE, ARBRE, ROUTE,  RUINE, TERRAINVAGUE, CABANE, MAISON, IMMEUBLE, GRATTECIEL, CHATEAUDEAU, CENTRALE ,
+    VIDE, ARBRE, ROUTE, RUINE, TERRAINVAGUE, CABANE, MAISON, IMMEUBLE, GRATTECIEL, CHATEAUDEAU, CENTRALE
 };
 
 enum {
@@ -49,6 +49,7 @@ enum {
     CONSTRUIREBATIMENT,
     CONSTRUIRECHATEAUDEAU,
     CONSTRUIRECENTRALE,
+    OUTIL,
     NBDEBOUTONJEU
 };
 
@@ -57,8 +58,39 @@ enum {
 };
 
 enum {
-    BITMAPACCEUIL, BITMAPCHOIXDUMODE, BITMAPJEU, BITMAPHERBE, BitmapROUTEdroite,BitmapROUTEcroisement3, BitmapROUTEcroisement4, BitmapROUTEvirageD, BitmapROUTEvirageG, BitmapArbre,
-    BitmapRuine, BitmapTerrainVague, BitmapMaison, BitmapImmeuble, BitmapGratteciel, BitmapChateauDeau, BitmapCentrale, BitmapCabane, NBDEBITMAP
+    BITMAPACCEUIL,
+    BITMAPCHOIXDUMODE,
+    BITMAPHERBE,
+    BITMAPCOMPTEUR,
+    BITMAPMONNAIE,
+    BITMAPOUTIL,
+    BITMAPHAB,
+    BITMAPEAU,
+    BITMAPELEC,
+    BitmapROUTEdroite,
+    BitmapROUTEcroisement4,
+    BitmapROUTEcroisement3,
+    BitmapROUTEvirageD,
+    BitmapROUTEvirageG,
+    BitmapRuine,
+    BitmapCabane,
+    BitmapArbre,
+    BitmapImmeuble,
+    BitmapGratteciel,
+    BitmapMaison,
+    BitmapCentrale,
+    BitmapTerrainVague,
+    BITMAPCONSTROUTE,
+    BitmapChateauDeau,
+    BITMAPCONSTMAISON,
+    BITMAPCONSTCENTRALE,
+    BITMAPCONSTCHATEAUDEAU,
+    BITMAPRUINE,
+    BITMAPCABANE,
+    BITMAPARBRE,
+    BITMAPIMMEUBLE,
+    BITMAPGRATTECIEL,
+    NBDEBITMAP
 };
 
 enum {
@@ -80,17 +112,20 @@ typedef struct {
 typedef struct {
     int type;
     int num;
+    bool firstMaison;
     bool construction;
-    bool elec;
-    bool eau;
+    bool verif;
     Coord coord;
+    Coord pred;
 } Sol;
 
 typedef struct {
-    int monnaie;
-    int habitant;
+    float monnaie;
+    float habitant;
     int capaciteElec;
+    int utilisationElec;
     int capaciteEau;
+    int utilisationEau;
     int compteurTemps;
     int temps;
 } Joueur;
@@ -99,23 +134,24 @@ typedef struct {
 typedef struct {
     Coord position;
     int capacite;
-    int connexe;
+    int utile;
 } ChateauDeau;
 
 typedef struct {
     Coord position;
     int capacite;
-    int connexe;
+    int utile;
 } Centrale;
 
 typedef struct {
     Coord position;
     int type;
     bool elec;
-    bool eau;
-    bool connexe;
+    int utilisationEau;
     int nbHabitant;
     int compteur;
+    int dEau;
+    int dElec;
 } Batiment;
 
 typedef struct {
@@ -125,6 +161,7 @@ typedef struct {
     int boutonDetecteAncien;
     int modeDeJeu;
     int batimenAConstruire;
+    char *nomBatimenAConstruire;
     Coord coordCaseDetecte;
 } Phase;
 
@@ -142,6 +179,7 @@ typedef struct {
     char *nom;
     bool clignote;
     bool cliquable;
+    bool etatParticulier;
 } Case;
 
 typedef struct {
