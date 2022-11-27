@@ -21,6 +21,8 @@ void changerCompteurConstruction(EceCity *eceCity);
 
 bool verifSiRouteACote(EceCity *eceCity);
 
+void gereDepEau(EceCity *eceCity);
+
 void detectionSouris(EceCity *eceCity);
 
 void boutonPresse(EceCity *eceCity);
@@ -31,6 +33,12 @@ void ajouterBatimentTab(EceCity *eceCity);
 
 void parcourBFSCentrales(EceCity *eceCity);
 
-void remonterParPredEtCompterDistance(EceCity* eceCity);
+void remonterParPredEtCompterDistanceElec(EceCity *eceCity);
+
+void parcourBFSChateauDeau(EceCity *eceCity);
+
+void gereDepElec(EceCity *eceCity);
+
+void remonterParPredEtCompterDistanceEau(EceCity *eceCity);
 
 #endif //ECE_CITY_1_C_JEU_H

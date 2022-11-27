@@ -12,18 +12,20 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 
+#define DPI 1
 #define NBLIGNE 35
 #define NBCOLONNE 45
 #define COTECASE 50
-#define XDEPART COTECASE*4
-#define YDEPART COTECASE*3
-#define MONNAIEDEPART 5000
+#define XDEPART COTECASE*5
+#define YDEPART COTECASE*5
+#define MONNAIEDEPART 500000
 #define VITESSE COTECASE/5
 #define NBBATMAX 165
 #define NBCENTRALEMAX 56
 #define NBCHATEAUDEAUMAX 56
 #define CYCLE 15
 #define FPS 60
+#define TAXE 10
 
 
 enum {
@@ -72,20 +74,15 @@ enum {
     BitmapROUTEcroisement3,
     BitmapROUTEvirageD,
     BitmapROUTEvirageG,
-    BitmapRuine,
-    BitmapCabane,
-    BitmapArbre,
-    BitmapImmeuble,
-    BitmapGratteciel,
-    BitmapMaison,
     BitmapCentrale,
-    BitmapTerrainVague,
-    BITMAPCONSTROUTE,
     BitmapChateauDeau,
+    BITMAPCONSTROUTE,
     BITMAPCONSTMAISON,
     BITMAPCONSTCENTRALE,
     BITMAPCONSTCHATEAUDEAU,
     BITMAPRUINE,
+    BITMAPTERRAINVAGUE,
+    BITMAPMAISON,
     BITMAPCABANE,
     BITMAPARBRE,
     BITMAPIMMEUBLE,
@@ -135,23 +132,28 @@ typedef struct {
     Coord position;
     int capacite;
     int utile;
+    int nbBatimentAlimente;
 } ChateauDeau;
 
 typedef struct {
     Coord position;
     int capacite;
     int utile;
+    int nbBatimentAlimente;
 } Centrale;
 
 typedef struct {
     Coord position;
     int type;
-    bool elec;
-    int utilisationEau;
     int nbHabitant;
     int compteur;
     int dEau;
     int dElec;
+    Coord elecDep;
+    Coord eauDep;
+    bool elec;
+    int utilisationEau;
+    bool high;
 } Batiment;
 
 typedef struct {

@@ -27,6 +27,7 @@ void initPlateau(EceCity *eceCity) {
             eceCity->matricePlateau[i][j].coord.x = XDEPART + j * COTECASE;
             eceCity->matricePlateau[i][j].coord.y = YDEPART + i * COTECASE;
             eceCity->matricePlateau[i][j].num = cpt;
+            eceCity->matricePlateau[i][j].firstMaison = false;
             cpt++;
         }
     }
@@ -45,13 +46,11 @@ void initPlateau(EceCity *eceCity) {
 }
 
 void initMusique(EceCity *eceCity) {
-    eceCity->sample = al_load_sample("../song.wav");
+    eceCity->sample = al_load_sample("../Sons/song.wav");
     eceCity->song = al_create_sample_instance(eceCity->sample);
     al_set_sample_instance_playmode(eceCity->song, ALLEGRO_PLAYMODE_LOOP);
     al_attach_sample_instance_to_mixer(eceCity->song, al_get_default_mixer());
-    al_reserve_samples(10);
     al_play_sample_instance(eceCity->song);
-    al_set_sample_instance_gain(eceCity->song, 1.0 / 4.5);
 }
 
 void initPolice(EceCity *eceCity) {
@@ -108,6 +107,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].hauteur = 150;
     eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].clignote = true;
     eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].cliquable = true;
+    eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].etatParticulier = false;
 
     eceCity->tabBoutons[JEU][BARREDOUTILS].coord.x = 560;
     eceCity->tabBoutons[JEU][BARREDOUTILS].coord.y = eceCity->display.hauteur * 8 / 9 - 25;
@@ -228,41 +228,35 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BitmapROUTEvirageG].coord.x = 0;
     eceCity->tabImages[BitmapROUTEvirageG].coord.y = 0;
 
-    eceCity->tabImages[BitmapRuine].image= al_load_bitmap("../Images/ruine.png");
-    eceCity->tabImages[BitmapRuine].longueur = 82;
-    eceCity->tabImages[BitmapRuine].hauteur = 97;
-    eceCity->tabImages[BitmapRuine].coord.x = 0;
-    eceCity->tabImages[BitmapRuine].coord.y = 0;
+    eceCity->tabImages[BITMAPCABANE].image = al_load_bitmap("../Images/cabane 0.png");
+    eceCity->tabImages[BITMAPCABANE].longueur = 81;
+    eceCity->tabImages[BITMAPCABANE].hauteur = 90;
+    eceCity->tabImages[BITMAPCABANE].coord.x = 0;
+    eceCity->tabImages[BITMAPCABANE].coord.y = 0;
 
-    eceCity->tabImages[BitmapCabane].image= al_load_bitmap("../Images/cabane 0.png");
-    eceCity->tabImages[BitmapCabane].longueur = 81;
-    eceCity->tabImages[BitmapCabane].hauteur = 90;
-    eceCity->tabImages[BitmapCabane].coord.x = 0;
-    eceCity->tabImages[BitmapCabane].coord.y = 0;
+    eceCity->tabImages[BITMAPARBRE].image = al_load_bitmap("../Images/arbre0.png");
+    eceCity->tabImages[BITMAPARBRE].longueur = 80;
+    eceCity->tabImages[BITMAPARBRE].hauteur = 80;
+    eceCity->tabImages[BITMAPARBRE].coord.x = 8;
+    eceCity->tabImages[BITMAPARBRE].coord.y = 1;
 
-    eceCity->tabImages[BitmapArbre].image= al_load_bitmap("../Images/arbre0.png");
-    eceCity->tabImages[BitmapArbre].longueur = 94;
-    eceCity->tabImages[BitmapArbre].hauteur = 80;
-    eceCity->tabImages[BitmapArbre].coord.x = 0;
-    eceCity->tabImages[BitmapArbre].coord.y = 0;
+    eceCity->tabImages[BITMAPMAISON].image= al_load_bitmap("../Images/Maison0.png");
+    eceCity->tabImages[BITMAPMAISON].longueur = 80;
+    eceCity->tabImages[BITMAPMAISON].hauteur = 106;
+    eceCity->tabImages[BITMAPMAISON].coord.x = 0;
+    eceCity->tabImages[BITMAPMAISON].coord.y = 0;
 
-    eceCity->tabImages[BitmapImmeuble].image= al_load_bitmap("../Images/immeuble0.png");
-    eceCity->tabImages[BitmapImmeuble].longueur = 94;
-    eceCity->tabImages[BitmapImmeuble].hauteur = 118;
-    eceCity->tabImages[BitmapImmeuble].coord.x = 0;
-    eceCity->tabImages[BitmapImmeuble].coord.y = 0;
+    eceCity->tabImages[BITMAPIMMEUBLE].image = al_load_bitmap("../Images/immeuble0.png");
+    eceCity->tabImages[BITMAPIMMEUBLE].longueur = 94;
+    eceCity->tabImages[BITMAPIMMEUBLE].hauteur = 118;
+    eceCity->tabImages[BITMAPIMMEUBLE].coord.x = 0;
+    eceCity->tabImages[BITMAPIMMEUBLE].coord.y = 0;
 
-    eceCity->tabImages[BitmapGratteciel].image= al_load_bitmap("../Images/GratteCiel0.png");
-    eceCity->tabImages[BitmapGratteciel].longueur = 118;
-    eceCity->tabImages[BitmapGratteciel].hauteur = 217;
-    eceCity->tabImages[BitmapGratteciel].coord.x = 0;
-    eceCity->tabImages[BitmapGratteciel].coord.y = 0;
-
-    eceCity->tabImages[BitmapMaison].image= al_load_bitmap("../Images/Maison0.png");
-    eceCity->tabImages[BitmapMaison].longueur = 80;
-    eceCity->tabImages[BitmapMaison].hauteur = 106;
-    eceCity->tabImages[BitmapMaison].coord.x = 0;
-    eceCity->tabImages[BitmapMaison].coord.y = 0;
+    eceCity->tabImages[BITMAPGRATTECIEL].image = al_load_bitmap("../Images/GratteCiel0.png");
+    eceCity->tabImages[BITMAPGRATTECIEL].longueur = 118;
+    eceCity->tabImages[BITMAPGRATTECIEL].hauteur = 217;
+    eceCity->tabImages[BITMAPGRATTECIEL].coord.x = 0;
+    eceCity->tabImages[BITMAPGRATTECIEL].coord.y = 0;
 
     eceCity->tabImages[BitmapChateauDeau].image= al_load_bitmap("../Images/chateau d'eau.png");
     eceCity->tabImages[BitmapChateauDeau].longueur = 309;
@@ -276,6 +270,47 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BitmapCentrale].coord.x = 0;
     eceCity->tabImages[BitmapCentrale].coord.y = 0;
 
+    eceCity->tabImages[BITMAPTERRAINVAGUE].image= al_load_bitmap("../Images/terrainVague.png");
+    eceCity->tabImages[BITMAPTERRAINVAGUE].longueur = 47;
+    eceCity->tabImages[BITMAPTERRAINVAGUE].hauteur = 46;
+    eceCity->tabImages[BITMAPTERRAINVAGUE].coord.x = 0;
+    eceCity->tabImages[BITMAPTERRAINVAGUE].coord.y = 0;
+
+    eceCity->tabImages[BITMAPCOMPTEUR].image = al_load_bitmap("../Images/currency_time.png");
+    eceCity->tabImages[BITMAPCOMPTEUR].longueur = 208;
+    eceCity->tabImages[BITMAPCOMPTEUR].hauteur = 208;
+    eceCity->tabImages[BITMAPCOMPTEUR].coord.x = 0;
+    eceCity->tabImages[BITMAPCOMPTEUR].coord.y = 0;
+
+    eceCity->tabImages[BITMAPMONNAIE].image = al_load_bitmap("../Images/simcash2.png");
+    eceCity->tabImages[BITMAPMONNAIE].longueur = 312;
+    eceCity->tabImages[BITMAPMONNAIE].hauteur = 312;
+    eceCity->tabImages[BITMAPMONNAIE].coord.x = 0;
+    eceCity->tabImages[BITMAPMONNAIE].coord.y = 0;
+
+    eceCity->tabImages[BITMAPOUTIL].image = al_load_bitmap("../Images/main_settings.png");
+    eceCity->tabImages[BITMAPOUTIL].longueur = 110;
+    eceCity->tabImages[BITMAPOUTIL].hauteur = 100;
+    eceCity->tabImages[BITMAPOUTIL].coord.x = 0;
+    eceCity->tabImages[BITMAPOUTIL].coord.y = 0;
+
+    eceCity->tabImages[BITMAPHAB].image = al_load_bitmap("../Images/currency_population.png");
+    eceCity->tabImages[BITMAPHAB].longueur = 208;
+    eceCity->tabImages[BITMAPHAB].hauteur = 208;
+    eceCity->tabImages[BITMAPHAB].coord.x = 0;
+    eceCity->tabImages[BITMAPHAB].coord.y = 0;
+
+    eceCity->tabImages[BITMAPEAU].image = al_load_bitmap("../Images/services_02.png");
+    eceCity->tabImages[BITMAPEAU].longueur = 208;
+    eceCity->tabImages[BITMAPEAU].hauteur = 208;
+    eceCity->tabImages[BITMAPEAU].coord.x = 0;
+    eceCity->tabImages[BITMAPEAU].coord.y = 0;
+
+    eceCity->tabImages[BITMAPELEC].image = al_load_bitmap("../Images/services_01.png");
+    eceCity->tabImages[BITMAPELEC].longueur = 208;
+    eceCity->tabImages[BITMAPELEC].hauteur = 208;
+    eceCity->tabImages[BITMAPELEC].coord.x = 0;
+    eceCity->tabImages[BITMAPELEC].coord.y = 0;
 
     eceCity->tabImages[BITMAPCONSTROUTE].image = al_load_bitmap("../Images/hud_roads.png");
     eceCity->tabImages[BITMAPCONSTROUTE].longueur = 208;
@@ -360,7 +395,7 @@ void initJoueur(EceCity *eceCity) {
 
 void initBiblioAllegro() {
     al_init();
-    //assert(al_init_acodec_addon());
+    assert(al_init_acodec_addon());
     assert(al_install_keyboard());
     assert(al_install_mouse());
     assert(al_init_primitives_addon());

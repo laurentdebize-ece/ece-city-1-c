@@ -166,12 +166,6 @@ void menuJeu(EceCity *eceCity) {
                     eceCity->changementAffichage = true;
                     break;
                 }
-                case ALLEGRO_KEY_V: {
-                    parcourBFSCentrales(eceCity);
-                    remonterParPredEtCompterDistance(eceCity);
-                    eceCity->changementAffichage = true;
-                    break;
-                }
             }
             break;
         }
@@ -425,6 +419,18 @@ void construireBatiment(EceCity *eceCity) {
             eceCity->changementAffichage = true;
             eceCity->joueur->monnaie -= prix;
             ajouterBatimentTab(eceCity);
+//            if (eceCity->phaseDeJeu.batimenAConstruire == CENTRALE ||
+//                eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
+//                parcourBFSCentrales(eceCity);
+//                remonterParPredEtCompterDistanceElec(eceCity);
+//                gereDepElec(eceCity);
+//            }
+//            if (eceCity->phaseDeJeu.batimenAConstruire == CHATEAUDEAU ||
+//                eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
+//                parcourBFSChateauDeau(eceCity);
+//                remonterParPredEtCompterDistanceEau(eceCity);
+//                gereDepEau(eceCity);
+//            }
         }
     }
 }
@@ -454,7 +460,7 @@ bool verifSiEspaceBatiment(EceCity *eceCity) {
         for (int i = eceCity->phaseDeJeu.coordCaseDetecte.x; i < eceCity->phaseDeJeu.coordCaseDetecte.x + l; i++) {
             for (int j = eceCity->phaseDeJeu.coordCaseDetecte.y; j < eceCity->phaseDeJeu.coordCaseDetecte.y + h; j++) {
                 if (eceCity->matricePlateau[j][i].type != VIDE &&
-                    eceCity->matricePlateau[j][i].type != GRASS) {
+                    eceCity->matricePlateau[j][i].type != ARBRE) {
                     verif = false;
                 }
             }
@@ -636,12 +642,18 @@ void ajouterBatimentTab(EceCity *eceCity) {
             eceCity->tabBatiments[eceCity->compteur.batiments].position.y = eceCity->phaseDeJeu.coordCaseDetecte.y;
             eceCity->tabBatiments[eceCity->compteur.batiments].utilisationEau = 0;
             eceCity->tabBatiments[eceCity->compteur.batiments].elec = false;
+            eceCity->tabBatiments[eceCity->compteur.batiments].utilisationEau = 0;
+            eceCity->tabBatiments[eceCity->compteur.batiments].dEau = -1;
+            eceCity->tabBatiments[eceCity->compteur.batiments].dElec = -1;
+            eceCity->tabBatiments[eceCity->compteur.batiments].high = false;
+            eceCity->tabBatiments[eceCity->compteur.batiments].nbHabitant = 0;
             eceCity->compteur.batiments++;
             break;
         }
         case CENTRALE: {
             eceCity->tabCentrales[eceCity->compteur.centrales].capacite = 5000;
             eceCity->tabCentrales[eceCity->compteur.centrales].utile = 0;
+            eceCity->tabCentrales[eceCity->compteur.centrales].nbBatimentAlimente = 0;
             eceCity->tabCentrales[eceCity->compteur.centrales].position.x = eceCity->phaseDeJeu.coordCaseDetecte.x;
             eceCity->tabCentrales[eceCity->compteur.centrales].position.y = eceCity->phaseDeJeu.coordCaseDetecte.y;
             eceCity->joueur->capaciteElec += eceCity->tabCentrales[eceCity->compteur.centrales].capacite;
@@ -651,6 +663,7 @@ void ajouterBatimentTab(EceCity *eceCity) {
         case CHATEAUDEAU: {
             eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].capacite = 5000;
             eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].utile = 0;
+            eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].nbBatimentAlimente = 0;
             eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].position.x = eceCity->phaseDeJeu.coordCaseDetecte.x;
             eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].position.y = eceCity->phaseDeJeu.coordCaseDetecte.y;
             eceCity->joueur->capaciteEau += eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].capacite;
@@ -665,27 +678,52 @@ void changerCompteurConstruction(EceCity *eceCity) {
     for (int i = 0; i < eceCity->compteur.batiments; ++i) {
         if (eceCity->tabBatiments[i].type != GRATTECIEL) {
             eceCity->tabBatiments[i].compteur++;
-            if (eceCity->tabBatiments[i].compteur == CYCLE) {
-                eceCity->tabBatiments[i].type++;
+            eceCity->tabBatiments[i].type++;
+            /*if (eceCity->tabBatiments[i].compteur == CYCLE) {
+                if (eceCity->phaseDeJeu.modeDeJeu == CAPITALISTE && eceCity->tabBatiments[i].elec == true &&
+                    eceCity->tabBatiments[i].utilisationEau == eceCity->tabBatiments[i].nbHabitant) {
+                    eceCity->tabBatiments[i].type++;
+                    if (eceCity->tabBatiments[i].type == GRATTECIEL) {
+                        eceCity->tabBatiments[i].high = true;
+                    }
+                    //gereDepElec(eceCity);
+                    //gereDepEau(eceCity);
+                } else if (eceCity->phaseDeJeu.modeDeJeu == COMMUNISTE && !eceCity->tabBatiments[i].high) {
+                    eceCity->tabBatiments[i].type++;
+                    if (eceCity->tabBatiments[i].type == GRATTECIEL) {
+                        eceCity->tabBatiments[i].high = true;
+                    }
+                    gereDepElec(eceCity);
+                    gereDepEau(eceCity);
+                } else if (eceCity->phaseDeJeu.modeDeJeu == COMMUNISTE && eceCity->tabBatiments[i].high) {
+                    if (eceCity->tabBatiments[i].elec != true &&
+                        eceCity->tabBatiments[i].utilisationEau != eceCity->tabBatiments[i].nbHabitant) {
+                        eceCity->tabBatiments[i].type--;
+                    }
+                }
                 eceCity->tabBatiments[i].compteur = 0;
                 eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].type = eceCity->tabBatiments[i].type;
-            }
+            }*/
         }
         switch (eceCity->tabBatiments[i].type) {
             case CABANE : {
                 nbHab += 10;
+                eceCity->tabBatiments[i].nbHabitant = 10;
                 break;
             }
             case MAISON : {
                 nbHab += 50;
+                eceCity->tabBatiments[i].nbHabitant = 50;
                 break;
             }
             case IMMEUBLE : {
                 nbHab += 100;
+                eceCity->tabBatiments[i].nbHabitant = 100;
                 break;
             }
             case GRATTECIEL : {
                 nbHab += 1000;
+                eceCity->tabBatiments[i].nbHabitant = 1000;
                 break;
             }
         }
@@ -707,12 +745,10 @@ void parcourBFSCentrales(EceCity *eceCity) {
     Coord cooAEnfiler;
     if (eceCity->compteur.centrales != 0) {
         for (int k = 0; k < eceCity->compteur.centrales; ++k) {
-            printf("%d:%d\n\n", eceCity->tabCentrales[eceCity->compteur.centrales].position.x, eceCity->tabCentrales[eceCity->compteur.centrales].position.y);
-            for (int i = eceCity->tabCentrales[eceCity->compteur.centrales].position.y - 1;
-                 i < eceCity->tabCentrales[eceCity->compteur.centrales].position.y + 4 + 1; i += 4 + 1) {
-                for (int j = eceCity->tabCentrales[eceCity->compteur.centrales].position.x;
-                     j < eceCity->tabCentrales[eceCity->compteur.centrales].position.x + 6; ++j) {
-                    printf("%d:%d\n", i, j);
+            for (int i = eceCity->tabCentrales[k].position.y - 1;
+                 i < eceCity->tabCentrales[k].position.y + 5; i += 5) {
+                for (int j = eceCity->tabCentrales[k].position.x;
+                     j < eceCity->tabCentrales[k].position.x + 6; ++j) {
                     if (i >= 0 && i < NBLIGNE && j >= 0 && j < NBCOLONNE) {
                         if (eceCity->matricePlateau[i][j].type == ROUTE) {
                             cooAEnfiler.x = j;
@@ -725,11 +761,10 @@ void parcourBFSCentrales(EceCity *eceCity) {
                     }
                 }
             }
-            for (int i = eceCity->tabCentrales[eceCity->compteur.centrales].position.x - 1;
-                 i < eceCity->tabCentrales[eceCity->compteur.centrales].position.x + 6 + 1; i += 6 + 1) {
-                for (int j = eceCity->tabCentrales[eceCity->compteur.centrales].position.y;
-                     j < eceCity->tabCentrales[eceCity->compteur.centrales].position.y + 4; ++j) {
-                    printf("%d:%d\n", j, i);
+            for (int i = eceCity->tabCentrales[k].position.x - 1;
+                 i < eceCity->tabCentrales[k].position.x + 7; i += 7) {
+                for (int j = eceCity->tabCentrales[k].position.y;
+                     j < eceCity->tabCentrales[k].position.y + 4; ++j) {
                     if (i >= 0 && i < NBCOLONNE && j >= 0 && j < NBLIGNE) {
                         if (eceCity->matricePlateau[j][i].type == ROUTE) {
                             cooAEnfiler.x = i;
@@ -750,7 +785,7 @@ void parcourBFSCentrales(EceCity *eceCity) {
                         cooAEnfiler.x = cooTemp.x;
                         cooAEnfiler.y = cooTemp.y + 1;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y + 1;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
                         enfiler(f, cooAEnfiler);
                     }
@@ -761,7 +796,7 @@ void parcourBFSCentrales(EceCity *eceCity) {
                         cooAEnfiler.x = cooTemp.x;
                         cooAEnfiler.y = cooTemp.y - 1;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y - 1;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
                         enfiler(f, cooAEnfiler);
                     }
@@ -771,7 +806,7 @@ void parcourBFSCentrales(EceCity *eceCity) {
                         eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].verif == false) {
                         cooAEnfiler.x = cooTemp.x + 1;
                         cooAEnfiler.y = cooTemp.y;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x + 1;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
                         enfiler(f, cooAEnfiler);
@@ -782,7 +817,7 @@ void parcourBFSCentrales(EceCity *eceCity) {
                         eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].verif == false) {
                         cooAEnfiler.x = cooTemp.x - 1;
                         cooAEnfiler.y = cooTemp.y;
-                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x - 1;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y;
                         eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
                         enfiler(f, cooAEnfiler);
@@ -835,54 +870,563 @@ void parcourBFSCentrales(EceCity *eceCity) {
     free(f);
 }
 
-void remonterParPredEtCompterDistance(EceCity *eceCity) {
+void remonterParPredEtCompterDistanceElec(EceCity *eceCity) {
     Coord cooTemp;
     int dTemp;
+    bool end = false;
     for (int i = 0; i < eceCity->compteur.batiments; ++i) {
         eceCity->tabBatiments[i].dElec = 99999999;
         for (int j = eceCity->tabBatiments[i].position.x; j < eceCity->tabBatiments[i].position.x + 3; ++j) {
             for (int k = eceCity->tabBatiments[i].position.y; k < eceCity->tabBatiments[i].position.y + 3; ++k) {
                 if (eceCity->matricePlateau[k][j].firstMaison) {
-                    for (int l = 0; l < 2; ++l) {
-                        dTemp = 0;
-                        if (k + 1 - 2 * l > 0 && k + 1 - 2 * l < NBLIGNE && j > 0 && j < NBCOLONNE) {
-                            if (eceCity->matricePlateau[k + 1 - 2 * l][j].type == ROUTE &&
-                                eceCity->matricePlateau[k + 1 - 2 * l][j].pred.x != -1) {
-                                printf("found");
-                                cooTemp.x = j;
-                                cooTemp.y = k + 1 - 2 * l;
-                                dTemp++;
-                            }
-                            while (cooTemp.x != -9) {
+                    if (k + 1 >= 0 && k + 1 < NBLIGNE && j >= 0 && j < NBCOLONNE) {
+                        if (eceCity->matricePlateau[k + 1][j].type == ROUTE &&
+                            eceCity->matricePlateau[k + 1][j].pred.x != -1) {
+                            cooTemp.x = j;
+                            cooTemp.y = k + 1;
+                            dTemp = 0;
+                            while (!end) {
+                                if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                    cooTemp.x < NBCOLONNE &&
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y + 1;
+                                } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                           cooTemp.x < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y - 1;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
+                                           cooTemp.x + 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x + 1;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
+                                           cooTemp.x - 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x - 1;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y;
+                                }
                                 cooTemp = eceCity->matricePlateau[cooTemp.y][cooTemp.x].pred;
                                 dTemp++;
                             }
                             if (dTemp < eceCity->tabBatiments[i].dElec) {
                                 eceCity->tabBatiments[i].dElec = dTemp;
                             }
+                            end = false;
                         }
                     }
-                    for (int l = 0; l < 2; ++l) {
-                        dTemp = 0;
-                        if (k > 0 && k < NBLIGNE && j + 1 - 2 * l > 0 && j + 1 - 2 * l < NBCOLONNE) {
-                            if (eceCity->matricePlateau[k][j + 1 - 2 * l].type == ROUTE &&
-                                eceCity->matricePlateau[k][j + 1 - 2 * l].pred.x != -1) {
-                                cooTemp.x = j + 1 - 2 * l;
-                                cooTemp.y = k;
-                                dTemp++;
-                                while (cooTemp.x != -9) {
-                                    cooTemp = eceCity->matricePlateau[cooTemp.y][cooTemp.x].pred;
-                                    dTemp++;
+                    if (k - 1 >= 0 && k - 1 < NBLIGNE && j >= 0 && j < NBCOLONNE) {
+                        if (eceCity->matricePlateau[k - 1][j].type == ROUTE &&
+                            eceCity->matricePlateau[k - 1][j].pred.x != -1) {
+                            cooTemp.x = j;
+                            cooTemp.y = k - 1;
+                            dTemp = 0;
+                            while (!end) {
+                                if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                    cooTemp.x < NBCOLONNE &&
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y + 1;
+                                } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                           cooTemp.x < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y - 1;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
+                                           cooTemp.x + 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x + 1;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
+                                           cooTemp.x - 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x - 1;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y;
                                 }
-                                if (dTemp < eceCity->tabBatiments[i].dElec) {
-                                    eceCity->tabBatiments[i].dElec = dTemp;
+                                cooTemp = eceCity->matricePlateau[cooTemp.y][cooTemp.x].pred;
+                                dTemp++;
+                            }
+                            if (dTemp < eceCity->tabBatiments[i].dElec) {
+                                eceCity->tabBatiments[i].dElec = dTemp;
+                            }
+                            end = false;
+                        }
+                    }
+                    if (k >= 0 && k < NBLIGNE && j + 1 >= 0 && j + 1 < NBCOLONNE) {
+                        if (eceCity->matricePlateau[k][j + 1].type == ROUTE &&
+                            eceCity->matricePlateau[k][j + 1].pred.x != -1) {
+                            cooTemp.x = j + 1;
+                            cooTemp.y = k;
+                            dTemp = 0;
+                            while (!end) {
+                                if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                    cooTemp.x < NBCOLONNE &&
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y + 1;
+                                } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                           cooTemp.x < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y - 1;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
+                                           cooTemp.x + 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x + 1;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
+                                           cooTemp.x - 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x - 1;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y;
+                                }
+                                cooTemp = eceCity->matricePlateau[cooTemp.y][cooTemp.x].pred;
+                                dTemp++;
+                            }
+                            if (dTemp < eceCity->tabBatiments[i].dElec) {
+                                eceCity->tabBatiments[i].dElec = dTemp;
+                            }
+                            end = false;
+                        }
+                    }
+                    if (k >= 0 && k < NBLIGNE && j - 1 >= 0 && j - 1 < NBCOLONNE) {
+                        if (eceCity->matricePlateau[k][j - 1].type == ROUTE &&
+                            eceCity->matricePlateau[k][j - 1].pred.x != -1) {
+                            cooTemp.x = j - 1;
+                            cooTemp.y = k;
+                            dTemp = 0;
+                            while (!end) {
+                                if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                    cooTemp.x < NBCOLONNE &&
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y + 1;
+                                } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                           cooTemp.x < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y - 1;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
+                                           cooTemp.x + 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x + 1;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
+                                           cooTemp.x - 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].elecDep.x = cooTemp.x - 1;
+                                    eceCity->tabBatiments[i].elecDep.y = cooTemp.y;
+                                }
+                                cooTemp = eceCity->matricePlateau[cooTemp.y][cooTemp.x].pred;
+                                dTemp++;
+                            }
+                            if (dTemp < eceCity->tabBatiments[i].dElec) {
+                                eceCity->tabBatiments[i].dElec = dTemp;
+                            }
+                            end = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void gereDepElec(EceCity *eceCity) {
+    int batimentPlusProche = -1;
+    int dBatimentPlusProche = 999999;
+    bool end = false;
+    for (int i = 0; i < eceCity->compteur.centrales; ++i) {
+        while (eceCity->tabCentrales[i].nbBatimentAlimente < 5 && !end) {
+            for (int j = 0; j < eceCity->compteur.batiments; ++j) {
+                for (int k = 0; k < 6; ++k) {
+                    for (int l = 0; l < 4; ++l) {
+                        if (k >= 0 && k < NBCOLONNE && l >= 0 && l < NBLIGNE) {
+                            if (eceCity->matricePlateau[l][k].coord.x == eceCity->tabBatiments[j].elecDep.x &&
+                                eceCity->matricePlateau[l][k].coord.y == eceCity->tabBatiments[j].elecDep.y) {
+                                if (eceCity->tabBatiments[j].dElec < dBatimentPlusProche) {
+                                    batimentPlusProche = j;
                                 }
                             }
                         }
                     }
                 }
             }
+            if (batimentPlusProche != -1) {
+                eceCity->tabCentrales[i].nbBatimentAlimente++;
+                eceCity->tabCentrales[i].utile += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
+                eceCity->tabBatiments[batimentPlusProche].elec = true;
+            } else {
+                end = true;
+            }
         }
-        printf("%d\n", eceCity->tabBatiments[i].dElec);
+        eceCity->joueur->utilisationElec += eceCity->tabCentrales[i].utile;
+    }
+}
+
+void parcourBFSChateauDeau(EceCity *eceCity) {
+    for (int i = 0; i < NBLIGNE; ++i) {
+        for (int j = 0; j < NBCOLONNE; ++j) {
+            eceCity->matricePlateau[i][j].verif = false;
+            eceCity->matricePlateau[i][j].firstMaison = false;
+            eceCity->matricePlateau[i][j].pred.x = -1;
+            eceCity->matricePlateau[i][j].pred.y = -1;
+        }
+    }
+    File f = fileVide();
+    Coord cooTemp;
+    Coord cooAEnfiler;
+    if (eceCity->compteur.chateauxDeau != 0) {
+        for (int k = 0; k < eceCity->compteur.chateauxDeau; ++k) {
+            for (int i = eceCity->tabChateauEaux[k].position.y - 1;
+                 i < eceCity->tabChateauEaux[k].position.y + 5; i += 5) {
+                for (int j = eceCity->tabChateauEaux[k].position.x;
+                     j < eceCity->tabChateauEaux[k].position.x + 6; ++j) {
+                    if (i >= 0 && i < NBLIGNE && j >= 0 && j < NBCOLONNE) {
+                        if (eceCity->matricePlateau[i][j].type == ROUTE) {
+                            cooAEnfiler.x = j;
+                            cooAEnfiler.y = i;
+                            eceCity->matricePlateau[i][j].pred.x = -9;
+                            eceCity->matricePlateau[i][j].pred.y = -9;
+                            eceCity->matricePlateau[i][j].verif = true;
+                            enfiler(f, cooAEnfiler);
+                        }
+                    }
+                }
+            }
+            for (int i = eceCity->tabChateauEaux[k].position.x - 1;
+                 i < eceCity->tabChateauEaux[k].position.x + 7; i += 7) {
+                for (int j = eceCity->tabChateauEaux[k].position.y;
+                     j < eceCity->tabChateauEaux[k].position.y + 4; ++j) {
+                    if (i >= 0 && i < NBCOLONNE && j >= 0 && j < NBLIGNE) {
+                        if (eceCity->matricePlateau[j][i].type == ROUTE) {
+                            cooAEnfiler.x = i;
+                            cooAEnfiler.y = j;
+                            eceCity->matricePlateau[j][i].pred.x = -9;
+                            eceCity->matricePlateau[j][i].pred.y = -9;
+                            eceCity->matricePlateau[j][i].verif = true;
+                            enfiler(f, cooAEnfiler);
+                        }
+                    }
+                }
+            }
+            while (longueur(f) != 0) {
+                cooTemp = defiler(f);
+                if (cooTemp.x >= 0 && cooTemp.x < NBCOLONNE && cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == ROUTE &&
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].verif == false) {
+                        cooAEnfiler.x = cooTemp.x;
+                        cooAEnfiler.y = cooTemp.y + 1;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
+                        enfiler(f, cooAEnfiler);
+                    }
+                }
+                if (cooTemp.x >= 0 && cooTemp.x < NBCOLONNE && cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == ROUTE &&
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].verif == false) {
+                        cooAEnfiler.x = cooTemp.x;
+                        cooAEnfiler.y = cooTemp.y - 1;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
+                        enfiler(f, cooAEnfiler);
+                    }
+                }
+                if (cooTemp.x + 1 >= 0 && cooTemp.x + 1 < NBCOLONNE && cooTemp.y >= 0 && cooTemp.y < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == ROUTE &&
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].verif == false) {
+                        cooAEnfiler.x = cooTemp.x + 1;
+                        cooAEnfiler.y = cooTemp.y;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
+                        enfiler(f, cooAEnfiler);
+                    }
+                }
+                if (cooTemp.x - 1 >= 0 && cooTemp.x - 1 < NBCOLONNE && cooTemp.y >= 0 && cooTemp.y < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == ROUTE &&
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].verif == false) {
+                        cooAEnfiler.x = cooTemp.x - 1;
+                        cooAEnfiler.y = cooTemp.y;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.x = cooTemp.x;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].pred.y = cooTemp.y;
+                        eceCity->matricePlateau[cooAEnfiler.y][cooAEnfiler.x].verif = true;
+                        enfiler(f, cooAEnfiler);
+                    }
+                }
+
+                if (cooTemp.x >= 0 && cooTemp.x < NBCOLONNE && cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == TERRAINVAGUE ||
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == RUINE ||
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CABANE ||
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == IMMEUBLE ||
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == GRATTECIEL ||
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == MAISON) {
+                        eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].firstMaison = true;
+                    }
+                }
+                if (cooTemp.x >= 0 && cooTemp.x < NBCOLONNE && cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == TERRAINVAGUE ||
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == RUINE ||
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CABANE ||
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == IMMEUBLE ||
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == GRATTECIEL ||
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == MAISON) {
+                        eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].firstMaison = true;
+                    }
+                }
+                if (cooTemp.x + 1 >= 0 && cooTemp.x + 1 < NBCOLONNE && cooTemp.y >= 0 && cooTemp.y < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == TERRAINVAGUE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == RUINE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CABANE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == IMMEUBLE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == GRATTECIEL ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == MAISON) {
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].firstMaison = true;
+                    }
+                }
+                if (cooTemp.x - 1 >= 0 && cooTemp.x - 1 < NBCOLONNE && cooTemp.y >= 0 && cooTemp.y < NBLIGNE) {
+                    if (eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == TERRAINVAGUE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == RUINE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CABANE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == IMMEUBLE ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == GRATTECIEL ||
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == MAISON) {
+                        eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].firstMaison = true;
+                    }
+                }
+            }
+        }
+    }
+    free(f);
+}
+
+void remonterParPredEtCompterDistanceEau(EceCity *eceCity) {
+    Coord cooTemp;
+    int dTemp;
+    bool end = false;
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        eceCity->tabBatiments[i].dEau = 99999999;
+        for (int j = eceCity->tabBatiments[i].position.x; j < eceCity->tabBatiments[i].position.x + 3; ++j) {
+            for (int k = eceCity->tabBatiments[i].position.y; k < eceCity->tabBatiments[i].position.y + 3; ++k) {
+                if (eceCity->matricePlateau[k][j].firstMaison) {
+                    if (k + 1 >= 0 && k + 1 < NBLIGNE && j >= 0 && j < NBCOLONNE) {
+                        if (eceCity->matricePlateau[k + 1][j].type == ROUTE &&
+                            eceCity->matricePlateau[k + 1][j].pred.x != -1) {
+                            cooTemp.x = j;
+                            cooTemp.y = k + 1;
+                            dTemp = 0;
+                            while (!end) {
+                                if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                    cooTemp.x < NBCOLONNE &&
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y + 1;
+                                } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                           cooTemp.x < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y - 1;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
+                                           cooTemp.x + 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x + 1;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
+                                           cooTemp.x - 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x - 1;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
+                                }
+                                cooTemp = eceCity->matricePlateau[cooTemp.y][cooTemp.x].pred;
+                                dTemp++;
+                            }
+                            if (dTemp < eceCity->tabBatiments[i].dEau) {
+                                eceCity->tabBatiments[i].dEau = dTemp;
+                            }
+                            end = false;
+                        }
+                    }
+                    if (k - 1 >= 0 && k - 1 < NBLIGNE && j >= 0 && j < NBCOLONNE) {
+                        if (eceCity->matricePlateau[k - 1][j].type == ROUTE &&
+                            eceCity->matricePlateau[k - 1][j].pred.x != -1) {
+                            cooTemp.x = j;
+                            cooTemp.y = k - 1;
+                            dTemp = 0;
+                            while (!end) {
+                                if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                    cooTemp.x < NBCOLONNE &&
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y + 1;
+                                } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                           cooTemp.x < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y - 1;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
+                                           cooTemp.x + 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x + 1;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
+                                           cooTemp.x - 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x - 1;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
+                                }
+                                cooTemp = eceCity->matricePlateau[cooTemp.y][cooTemp.x].pred;
+                                dTemp++;
+                            }
+                            if (dTemp < eceCity->tabBatiments[i].dEau) {
+                                eceCity->tabBatiments[i].dEau = dTemp;
+                            }
+                            end = false;
+                        }
+                    }
+                    if (k >= 0 && k < NBLIGNE && j + 1 >= 0 && j + 1 < NBCOLONNE) {
+                        if (eceCity->matricePlateau[k][j + 1].type == ROUTE &&
+                            eceCity->matricePlateau[k][j + 1].pred.x != -1) {
+                            cooTemp.x = j + 1;
+                            cooTemp.y = k;
+                            dTemp = 0;
+                            while (!end) {
+                                if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                    cooTemp.x < NBCOLONNE &&
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y + 1;
+                                } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                           cooTemp.x < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y - 1;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
+                                           cooTemp.x + 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x + 1;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
+                                           cooTemp.x - 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x - 1;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
+                                }
+                                cooTemp = eceCity->matricePlateau[cooTemp.y][cooTemp.x].pred;
+                                dTemp++;
+                            }
+                            if (dTemp < eceCity->tabBatiments[i].dEau) {
+                                eceCity->tabBatiments[i].dEau = dTemp;
+                            }
+                            end = false;
+                        }
+                    }
+                    if (k >= 0 && k < NBLIGNE && j - 1 >= 0 && j - 1 < NBCOLONNE) {
+                        if (eceCity->matricePlateau[k][j - 1].type == ROUTE &&
+                            eceCity->matricePlateau[k][j - 1].pred.x != -1) {
+                            cooTemp.x = j - 1;
+                            cooTemp.y = k;
+                            dTemp = 0;
+                            while (!end) {
+                                if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                    cooTemp.x < NBCOLONNE &&
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y + 1;
+                                } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
+                                           cooTemp.x < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y - 1;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
+                                           cooTemp.x + 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x + 1;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
+                                } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
+                                           cooTemp.x - 1 < NBCOLONNE &&
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                    end = true;
+                                    eceCity->tabBatiments[i].eauDep.x = cooTemp.x - 1;
+                                    eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
+                                }
+                                cooTemp = eceCity->matricePlateau[cooTemp.y][cooTemp.x].pred;
+                                dTemp++;
+                            }
+                            if (dTemp < eceCity->tabBatiments[i].dEau) {
+                                eceCity->tabBatiments[i].dEau = dTemp;
+                            }
+                            end = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void gereDepEau(EceCity *eceCity) {
+    int batimentPlusProche = -1;
+    int dBatimentPlusProche = 999999;
+    bool end = false;
+    for (int i = 0; i < eceCity->compteur.chateauxDeau; ++i) {
+        while (eceCity->tabChateauEaux[i].nbBatimentAlimente < 5 && !end) {
+            for (int j = 0; j < eceCity->compteur.batiments; ++j) {
+                for (int k = 0; k < 6; ++k) {
+                    for (int l = 0; l < 4; ++l) {
+                        if (k >= 0 && k < NBCOLONNE && l >= 0 && l < NBLIGNE) {
+                            if (eceCity->matricePlateau[l][k].coord.x == eceCity->tabBatiments[j].eauDep.x &&
+                                eceCity->matricePlateau[l][k].coord.y == eceCity->tabBatiments[j].eauDep.y) {
+                                if (eceCity->tabBatiments[j].dEau < dBatimentPlusProche) {
+                                    batimentPlusProche = j;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (batimentPlusProche != -1) {
+                eceCity->tabChateauEaux[i].nbBatimentAlimente++;
+                eceCity->tabChateauEaux[i].utile += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
+                eceCity->tabBatiments[batimentPlusProche].utilisationEau += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
+            } else {
+                end = true;
+            }
+        }
+        eceCity->joueur->utilisationEau += eceCity->tabChateauEaux[i].utile;
     }
 }
