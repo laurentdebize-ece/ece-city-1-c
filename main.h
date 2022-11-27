@@ -23,7 +23,7 @@
 #define NBBATMAX 165
 #define NBCENTRALEMAX 56
 #define NBCHATEAUDEAUMAX 56
-#define CYCLE 15
+#define CYCLE 3
 #define FPS 60
 #define TAXE 10
 

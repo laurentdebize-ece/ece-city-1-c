@@ -97,22 +97,48 @@ void affichageInfos(EceCity *eceCity) {
                           0, 312,
                           312, eceCity->display.longueur * 8 / 9 - 20, 365, 100,
                           100, ALLEGRO_ALIGN_CENTER);
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
-                  eceCity->display.longueur * 8 / 9 + 80,
-                  500,
-                  0,
-                  " %d/%d",
-                  eceCity->joueur->utilisationEau, eceCity->joueur->capaciteEau);
+    float capaEauAffichage = eceCity->joueur->capaciteEau;
+    float utiEauAffichage = eceCity->joueur->utilisationEau;
+    if (capaEauAffichage == 0 || utiEauAffichage < 1000) {
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 80,
+                      500,
+                      0,
+                      " %.0f/%.0f",
+                      utiEauAffichage, capaEauAffichage);
+    } else if (capaEauAffichage > 1000 && utiEauAffichage > 1000) {
+        capaEauAffichage /= 1000;
+        utiEauAffichage /= 1000;
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 80,
+                      500,
+                      0,
+                      " %.1fk/%.0fk",
+                      utiEauAffichage , capaEauAffichage);
+    }
     al_draw_scaled_bitmap(eceCity->tabImages[BITMAPEAU].image, 0,
                           0, 208,
                           208, eceCity->display.longueur * 8 / 9 + 5, 490, 50,
                           50, ALLEGRO_ALIGN_CENTER);
-    al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
-                  eceCity->display.longueur * 8 / 9 + 80,
-                  600,
-                  0,
-                  " %d/%d",
-                  eceCity->joueur->utilisationElec, eceCity->joueur->capaciteElec);
+    float capaElecAffichage = eceCity->joueur->capaciteElec;
+    float utiElecAffichage = eceCity->joueur->utilisationElec;
+    if (capaElecAffichage == 0 || utiElecAffichage < 1000) {
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 80,
+                      600,
+                      0,
+                      " %.0f/%.0f",
+                      utiElecAffichage, capaElecAffichage);
+    } else if (capaElecAffichage > 1000 && utiElecAffichage > 1000) {
+        capaElecAffichage /= 1000;
+        utiElecAffichage /= 1000;
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 255, 255),
+                      eceCity->display.longueur * 8 / 9 + 80,
+                      600,
+                      0,
+                      " %.1fk/%.0fk",
+                      utiElecAffichage, capaElecAffichage);
+    }
     al_draw_scaled_bitmap(eceCity->tabImages[BITMAPELEC].image, 0,
                           0, 208,
                           208, eceCity->display.longueur * 8 / 9 + 5, 590, 50,
@@ -333,6 +359,15 @@ void dessinerGrille(EceCity *eceCity) {
                                           COTECASE * 3,
                                           COTECASE * 3 + 123,
                                           0);
+                } else if (eceCity->matricePlateau[i][j].type == RUINE) {
+                    al_draw_scaled_bitmap(eceCity->tabImages[BITMAPRUINE].image, 0, 0,
+                                          eceCity->tabImages[BITMAPRUINE].longueur,
+                                          eceCity->tabImages[BITMAPRUINE].hauteur,
+                                          eceCity->matricePlateau[i][j].coord.x,
+                                          eceCity->matricePlateau[i][j].coord.y,
+                                          COTECASE * 3,
+                                          COTECASE * 3,
+                                          0);
                 }
             }
         }
@@ -351,36 +386,6 @@ void dessinerGrille(EceCity *eceCity) {
     } else {
         eceCity->phaseDeJeu.coordCaseDetecte.x = -1;
         eceCity->phaseDeJeu.coordCaseDetecte.y = -1;
-    }
-    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
-        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 0, 0),
-                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x,
-                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y,
-                      0, "%d", eceCity->tabBatiments[i].dElec);
-        if (eceCity->tabBatiments[i].elec) {
-            al_draw_text(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 0, 0),
-                         eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x -
-                         COTECASE,
-                         eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y -
-                         COTECASE,
-                         0, "elec");
-        }
-    }
-    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
-        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 255),
-                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x +
-                      COTECASE,
-                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y +
-                      COTECASE,
-                      0, "%d", eceCity->tabBatiments[i].dEau);
-        if (eceCity->tabBatiments[i].utilisationEau) {
-            al_draw_text(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 255),
-                         eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x +
-                         COTECASE,
-                         eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y -
-                         COTECASE,
-                         0, "eau");
-        }
     }
 }
 

@@ -675,13 +675,39 @@ void ajouterBatimentTab(EceCity *eceCity) {
 void changerCompteurConstruction(EceCity *eceCity) {
     int nbHab = 0;
     for (int i = 0; i < eceCity->compteur.batiments; ++i) {
-        if (eceCity->tabBatiments[i].type != GRATTECIEL) {
-            eceCity->tabBatiments[i].compteur++;
-            if (eceCity->tabBatiments[i].compteur == CYCLE) {
-                eceCity->tabBatiments[i].type++;
-                eceCity->tabBatiments[i].compteur = 0;
-                eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].type = eceCity->tabBatiments[i].type;
+        eceCity->tabBatiments[i].compteur++;
+        if (eceCity->tabBatiments[i].compteur == CYCLE) {
+            gereDepEau(eceCity);
+            gereDepElec(eceCity);
+            if (eceCity->phaseDeJeu.modeDeJeu == COMMUNISTE) {
+                if (!eceCity->tabBatiments[i].high) {
+                    if (eceCity->tabBatiments[i].type != GRATTECIEL) {
+                        eceCity->tabBatiments[i].type++;
+                        if (eceCity->tabBatiments[i].type == GRATTECIEL) {
+                            eceCity->tabBatiments[i].high = true;
+                        }
+                    }
+                } else {
+                    if (eceCity->tabBatiments[i].utilisationEau && eceCity->tabBatiments[i].elec) {
+                        if (eceCity->tabBatiments[i].type != GRATTECIEL) {
+                            eceCity->tabBatiments[i].type++;
+                        }
+                    }
+                    if (!eceCity->tabBatiments[i].utilisationEau || !eceCity->tabBatiments[i].elec) {
+                        if (eceCity->tabBatiments[i].type != RUINE) {
+                            eceCity->tabBatiments[i].type--;
+                        }
+                    }
+                }
+            } else {
+                if (eceCity->tabBatiments[i].utilisationEau && eceCity->tabBatiments[i].elec) {
+                    if (eceCity->tabBatiments[i].type != GRATTECIEL) {
+                        eceCity->tabBatiments[i].type++;
+                    }
+                }
             }
+            eceCity->tabBatiments[i].compteur = 0;
+            eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].type = eceCity->tabBatiments[i].type;
         }
         switch (eceCity->tabBatiments[i].type) {
             case CABANE : {
@@ -1068,7 +1094,10 @@ void gereDepElec(EceCity *eceCity) {
                 end = true;
             }
         }
-        eceCity->joueur->utilisationElec += eceCity->tabCentrales[i].utile;
+    }
+    eceCity->joueur->utilisationElec = 0;
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        eceCity->joueur->utilisationElec += eceCity->tabBatiments[i].nbHabitant;
     }
 }
 
@@ -1432,6 +1461,9 @@ void gereDepEau(EceCity *eceCity) {
                 end = true;
             }
         }
-        eceCity->joueur->utilisationEau += eceCity->tabCentrales[i].utile;
+    }
+    eceCity->joueur->utilisationEau = 0;
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        eceCity->joueur->utilisationEau += eceCity->tabBatiments[i].nbHabitant;
     }
 }
