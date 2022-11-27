@@ -27,6 +27,7 @@ void initPlateau(EceCity *eceCity) {
             eceCity->matricePlateau[i][j].coord.x = XDEPART + j * COTECASE;
             eceCity->matricePlateau[i][j].coord.y = YDEPART + i * COTECASE;
             eceCity->matricePlateau[i][j].num = cpt;
+            eceCity->matricePlateau[i][j].firstMaison = false;
             cpt++;
         }
     }
