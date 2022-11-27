@@ -72,6 +72,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].hauteur = 150;
     eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].clignote = true;
     eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].cliquable = true;
+    eceCity->tabBoutons[ACCEUIL][NOUVELLEPARTIE].etatParticulier = false;
 
     eceCity->tabBoutons[ACCEUIL][CHARGER].coord.x = 1100;
     eceCity->tabBoutons[ACCEUIL][CHARGER].coord.y = eceCity->display.hauteur / 2;
@@ -80,6 +81,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[ACCEUIL][CHARGER].hauteur = 150;
     eceCity->tabBoutons[ACCEUIL][CHARGER].clignote = true;
     eceCity->tabBoutons[ACCEUIL][CHARGER].cliquable = true;
+    eceCity->tabBoutons[ACCEUIL][CHARGER].etatParticulier = false;
 
     eceCity->tabBoutons[ACCEUIL][QUITTER].coord.x = 710;
     eceCity->tabBoutons[ACCEUIL][QUITTER].coord.y = 810;
@@ -88,6 +90,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[ACCEUIL][QUITTER].nom = "Quitter";
     eceCity->tabBoutons[ACCEUIL][QUITTER].clignote = true;
     eceCity->tabBoutons[ACCEUIL][QUITTER].cliquable = true;
+    eceCity->tabBoutons[ACCEUIL][QUITTER].etatParticulier = false;
 
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].coord.x = 300;
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].coord.y = eceCity->display.hauteur / 2;
@@ -96,6 +99,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].hauteur = 150;
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].clignote = true;
     eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].cliquable = true;
+    eceCity->tabBoutons[CHOIXDUMODE][COMMUNISTE].etatParticulier = false;
 
     eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].coord.x = 1100;
     eceCity->tabBoutons[CHOIXDUMODE][CAPITALISTE].coord.y = eceCity->display.hauteur / 2;
@@ -112,6 +116,7 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[JEU][BARREDOUTILS].hauteur = eceCity->display.hauteur;
     eceCity->tabBoutons[JEU][BARREDOUTILS].clignote = false;
     eceCity->tabBoutons[JEU][BARREDOUTILS].cliquable = false;
+    eceCity->tabBoutons[JEU][BARREDOUTILS].etatParticulier = true;
 
     eceCity->tabBoutons[JEU][BARREDINFOS].coord.y = 100;
     eceCity->tabBoutons[JEU][BARREDINFOS].coord.x = eceCity->display.longueur * 8 / 9 - 25;
@@ -120,38 +125,52 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[JEU][BARREDINFOS].hauteur = eceCity->display.hauteur - 400;
     eceCity->tabBoutons[JEU][BARREDINFOS].clignote = false;
     eceCity->tabBoutons[JEU][BARREDINFOS].cliquable = false;
+    eceCity->tabBoutons[JEU][BARREDINFOS].etatParticulier = false;
 
     eceCity->tabBoutons[JEU][CONSTRUIREROUTE].coord.x = 760;
     eceCity->tabBoutons[JEU][CONSTRUIREROUTE].coord.y = eceCity->display.hauteur * 8 / 9;
-    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].nom = "Route";
+    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].nom = NULL;
     eceCity->tabBoutons[JEU][CONSTRUIREROUTE].longueur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIREROUTE].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIREROUTE].clignote = true;
     eceCity->tabBoutons[JEU][CONSTRUIREROUTE].cliquable = true;
+    eceCity->tabBoutons[JEU][CONSTRUIREROUTE].etatParticulier = true;
 
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.x = 960;
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].coord.y = eceCity->display.hauteur * 8 / 9;
-    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].nom = "Batiment";
+    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].nom = NULL;
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].longueur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].clignote = true;
     eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].cliquable = true;
+    eceCity->tabBoutons[JEU][CONSTRUIREBATIMENT].etatParticulier = true;
 
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.x = 1160;
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].coord.y = eceCity->display.hauteur * 8 / 9;
-    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].nom = "Centrale";
+    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].nom = NULL;
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].longueur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].clignote = true;
     eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].cliquable = true;
+    eceCity->tabBoutons[JEU][CONSTRUIRECENTRALE].etatParticulier = true;
 
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.x = 1360;
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.y = eceCity->display.hauteur * 8 / 9;
-    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].nom = "Chateau d'eau";
+    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].nom = NULL;
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].longueur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].hauteur = 80;
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].clignote = true;
     eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].cliquable = true;
+    eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].etatParticulier = true;
+
+    eceCity->tabBoutons[JEU][OUTIL].coord.x = 600;
+    eceCity->tabBoutons[JEU][OUTIL].coord.y = eceCity->display.hauteur * 8 / 9;
+    eceCity->tabBoutons[JEU][OUTIL].nom = NULL;
+    eceCity->tabBoutons[JEU][OUTIL].longueur = 80;
+    eceCity->tabBoutons[JEU][OUTIL].hauteur = 80;
+    eceCity->tabBoutons[JEU][OUTIL].clignote = false;
+    eceCity->tabBoutons[JEU][OUTIL].cliquable = true;
+    eceCity->tabBoutons[JEU][OUTIL].etatParticulier = false;
 }
 
 void initBitmaps(EceCity *eceCity) {
@@ -167,11 +186,17 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BITMAPCHOIXDUMODE].coord.x = 0;
     eceCity->tabImages[BITMAPCHOIXDUMODE].coord.y = 0;
 
-    eceCity->tabImages[BITMAPHERBE].image = al_load_bitmap("../Images/grass.jpeg");
-    eceCity->tabImages[BITMAPHERBE].longueur = 1500;
-    eceCity->tabImages[BITMAPHERBE].hauteur = 1500;
-    eceCity->tabImages[BITMAPHERBE].coord.x = 0;
-    eceCity->tabImages[BITMAPHERBE].coord.y = 0;
+    eceCity->tabImages[BITMAPHERBE].image = al_load_bitmap("../Images/allDecor.png");
+    eceCity->tabImages[BITMAPHERBE].longueur = 41;
+    eceCity->tabImages[BITMAPHERBE].hauteur = 41;
+    eceCity->tabImages[BITMAPHERBE].coord.x = 653;
+    eceCity->tabImages[BITMAPHERBE].coord.y = 436;
+
+    eceCity->tabImages[BITMAPRUINE].image = al_load_bitmap("../Images/ruine.png");
+    eceCity->tabImages[BITMAPRUINE].longueur = 82;
+    eceCity->tabImages[BITMAPRUINE].hauteur = 97;
+    eceCity->tabImages[BITMAPRUINE].coord.x = 0;
+    eceCity->tabImages[BITMAPRUINE].coord.y = 0;
 
     eceCity->tabImages[BitmapROUTEdroite].image= al_load_bitmap("../Images/route droite.png");
     eceCity->tabImages[BitmapROUTEdroite].longueur = 76;
@@ -258,7 +283,29 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BitmapTerrainVague].coord.y = 0;
 
 
+    eceCity->tabImages[BITMAPCONSTROUTE].image = al_load_bitmap("../Images/hud_roads.png");
+    eceCity->tabImages[BITMAPCONSTROUTE].longueur = 208;
+    eceCity->tabImages[BITMAPCONSTROUTE].hauteur = 208;
+    eceCity->tabImages[BITMAPCONSTROUTE].coord.x = 0;
+    eceCity->tabImages[BITMAPCONSTROUTE].coord.y = 0;
 
+    eceCity->tabImages[BITMAPCONSTMAISON].image = al_load_bitmap("../Images/hud_residential.png");
+    eceCity->tabImages[BITMAPCONSTMAISON].longueur = 212;
+    eceCity->tabImages[BITMAPCONSTMAISON].hauteur = 212;
+    eceCity->tabImages[BITMAPCONSTMAISON].coord.x = 0;
+    eceCity->tabImages[BITMAPCONSTMAISON].coord.y = 0;
+
+    eceCity->tabImages[BITMAPCONSTCENTRALE].image = al_load_bitmap("../Images/centrale.png");
+    eceCity->tabImages[BITMAPCONSTCENTRALE].longueur = 512;
+    eceCity->tabImages[BITMAPCONSTCENTRALE].hauteur = 512;
+    eceCity->tabImages[BITMAPCONSTCENTRALE].coord.x = 0;
+    eceCity->tabImages[BITMAPCONSTCENTRALE].coord.y = 0;
+
+    eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].image = al_load_bitmap("../Images/eau.png");
+    eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].longueur = 512;
+    eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].hauteur = 512;
+    eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].coord.x = 0;
+    eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].coord.y = 0;
 }
 
 EceCity *creationEceCity() {
@@ -280,6 +327,7 @@ EceCity *creationEceCity() {
     NewEceCity->tabImages = (Image *) malloc(NBDEBITMAP * sizeof(Image));
 
     NewEceCity->tabBoutons = (Case **) malloc(NBDEMENU * sizeof(Case *));
+
     NewEceCity->tabBoutons[ACCEUIL] = (Case *) malloc(NBDEBOUTONACCEUIL * sizeof(Case));
     NewEceCity->tabBoutons[CHOIXDUMODE] = (Case *) malloc(NBDEBOUTONCHOIXDUMODE * sizeof(Case));
     NewEceCity->tabBoutons[JEU] = (Case *) malloc(NBDEBOUTONJEU * sizeof(Case));
@@ -306,7 +354,9 @@ void initJoueur(EceCity *eceCity) {
     eceCity->joueur->monnaie = MONNAIEDEPART;
     eceCity->joueur->habitant = 0;
     eceCity->joueur->capaciteEau = 0;
+    eceCity->joueur->utilisationEau = 0;
     eceCity->joueur->capaciteElec = 0;
+    eceCity->joueur->utilisationElec = 0;
     eceCity->joueur->compteurTemps = 0;
     eceCity->joueur->temps = 0;
     eceCity->compteur.batiments = 0;
@@ -316,6 +366,7 @@ void initJoueur(EceCity *eceCity) {
 
 void initBiblioAllegro() {
     al_init();
+    assert(al_init_acodec_addon());
     assert(al_install_keyboard());
     assert(al_install_mouse());
     assert(al_init_primitives_addon());
@@ -330,9 +381,9 @@ void initBiblioAllegro() {
 
 void initAllegro(EceCity *eceCity) {
     eceCity->timer = al_create_timer(1.0 / 60.0);
-    al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+    al_set_new_display_flags(ALLEGRO_FULLSCREEN);
     eceCity->display.window = al_create_display(eceCity->display.longueur, eceCity->display.hauteur);
-    al_set_window_position(eceCity->display.window, 0, 0);
+    al_set_window_position(eceCity->display.window, 1, 1);
     eceCity->queue = al_create_event_queue();
     al_start_timer(eceCity->timer);
     al_register_event_source(eceCity->queue, al_get_mouse_event_source());
@@ -350,25 +401,27 @@ void get_desktop_resolution(int adapter, EceCity *eceCity) {
 }
 
 void destroyAll(EceCity *eceCity) {
-    free(eceCity->joueur);
     free(eceCity->tabChateauEaux);
     free(eceCity->tabCentrales);
     free(eceCity->tabBatiments);
-    for (int i = 0; i < NBDEMENU; ++i) {
-        free(eceCity->tabBoutons[i]);
-    }
     free(eceCity->tabBoutons);
+    free(eceCity->matricePlateau);
     for (int i = 0; i < NBLIGNE; ++i) {
         free(eceCity->matricePlateau[i]);
     }
     free(eceCity->matricePlateau);
     al_destroy_font(eceCity->ecrire.simsCityPolicePetite);
-    al_destroy_bitmap(eceCity->tabImages);
     al_destroy_font(eceCity->ecrire.simsCityPoliceMoyen);
     al_destroy_font(eceCity->ecrire.simsCityPoliceGrand);
     al_destroy_timer(eceCity->timer);
     al_destroy_display(eceCity->display.window);
     al_destroy_event_queue(eceCity->queue);
     al_destroy_sample_instance(eceCity->song);
+    al_destroy_sample(eceCity->sample);
+    free(eceCity->joueur);
+    for (int i = 0; i < NBDEBITMAP; ++i) {
+        al_destroy_bitmap(eceCity->tabImages[i].image);
+    }
+    free(eceCity->tabImages);
     free(eceCity);
 }

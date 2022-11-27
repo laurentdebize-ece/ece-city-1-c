@@ -17,6 +17,8 @@ void dessinerBatimentAConstruire(EceCity *eceCity);
 
 void affichageInfos(EceCity *eceCity);
 
+void dessinerBordureArbres(EceCity* eceCity);
+
 void affichageBouton(EceCity *eceCity, ALLEGRO_FONT *police);
 
 void dessinerGrille(EceCity *eceCity);

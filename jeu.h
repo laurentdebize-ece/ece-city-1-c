@@ -17,7 +17,9 @@ bool verifSiEspaceBatiment(EceCity *eceCity);
 
 void construireBatiment(EceCity *eceCity);
 
-void changerCompteurConstruction(EceCity* eceCity);
+void changerCompteurConstruction(EceCity *eceCity);
+
+bool verifSiRouteACote(EceCity *eceCity);
 
 void detectionSouris(EceCity *eceCity);
 
@@ -26,5 +28,9 @@ void boutonPresse(EceCity *eceCity);
 void deplacerPlateau(EceCity *eceCity);
 
 void ajouterBatimentTab(EceCity *eceCity);
+
+void parcourBFSCentrales(EceCity *eceCity);
+
+void remonterParPredEtCompterDistance(EceCity* eceCity);
 
 #endif //ECE_CITY_1_C_JEU_H
