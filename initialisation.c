@@ -251,6 +251,12 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BitmapCentrale].coord.x = 0;
     eceCity->tabImages[BitmapCentrale].coord.y = 0;
 
+    eceCity->tabImages[BitmapTerrainVague].image= al_load_bitmap("../Images/terrainVague.png");
+    eceCity->tabImages[BitmapTerrainVague].longueur = 47;
+    eceCity->tabImages[BitmapTerrainVague].hauteur = 46;
+    eceCity->tabImages[BitmapTerrainVague].coord.x = 0;
+    eceCity->tabImages[BitmapTerrainVague].coord.y = 0;
+
 
 
 }
