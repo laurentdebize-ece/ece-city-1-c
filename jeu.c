@@ -419,18 +419,18 @@ void construireBatiment(EceCity *eceCity) {
             eceCity->changementAffichage = true;
             eceCity->joueur->monnaie -= prix;
             ajouterBatimentTab(eceCity);
-//            if (eceCity->phaseDeJeu.batimenAConstruire == CENTRALE ||
-//                eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
-//                parcourBFSCentrales(eceCity);
-//                remonterParPredEtCompterDistanceElec(eceCity);
-//                gereDepElec(eceCity);
-//            }
-//            if (eceCity->phaseDeJeu.batimenAConstruire == CHATEAUDEAU ||
-//                eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
-//                parcourBFSChateauDeau(eceCity);
-//                remonterParPredEtCompterDistanceEau(eceCity);
-//                gereDepEau(eceCity);
-//            }
+            if (eceCity->phaseDeJeu.batimenAConstruire == CENTRALE ||
+                eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
+                parcourBFSCentrales(eceCity);
+                remonterParPredEtCompterDistanceElec(eceCity);
+                gereDepElec(eceCity);
+            }
+            if (eceCity->phaseDeJeu.batimenAConstruire == CHATEAUDEAU ||
+                eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
+                parcourBFSChateauDeau(eceCity);
+                remonterParPredEtCompterDistanceEau(eceCity);
+                gereDepEau(eceCity);
+            }
         }
     }
 }
@@ -640,9 +640,8 @@ void ajouterBatimentTab(EceCity *eceCity) {
             eceCity->tabBatiments[eceCity->compteur.batiments].type = TERRAINVAGUE;
             eceCity->tabBatiments[eceCity->compteur.batiments].position.x = eceCity->phaseDeJeu.coordCaseDetecte.x;
             eceCity->tabBatiments[eceCity->compteur.batiments].position.y = eceCity->phaseDeJeu.coordCaseDetecte.y;
-            eceCity->tabBatiments[eceCity->compteur.batiments].utilisationEau = 0;
+            eceCity->tabBatiments[eceCity->compteur.batiments].utilisationEau = false;
             eceCity->tabBatiments[eceCity->compteur.batiments].elec = false;
-            eceCity->tabBatiments[eceCity->compteur.batiments].utilisationEau = 0;
             eceCity->tabBatiments[eceCity->compteur.batiments].dEau = -1;
             eceCity->tabBatiments[eceCity->compteur.batiments].dElec = -1;
             eceCity->tabBatiments[eceCity->compteur.batiments].high = false;
@@ -1031,17 +1030,28 @@ void remonterParPredEtCompterDistanceElec(EceCity *eceCity) {
 void gereDepElec(EceCity *eceCity) {
     int batimentPlusProche = -1;
     int dBatimentPlusProche = 999999;
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        eceCity->tabBatiments[i].elec = false;
+    }
+    for (int i = 0; i < eceCity->compteur.centrales; ++i) {
+        eceCity->tabCentrales[i].nbBatimentAlimente = 0;
+    }
     bool end = false;
     for (int i = 0; i < eceCity->compteur.centrales; ++i) {
+        batimentPlusProche = -1;
+        dBatimentPlusProche = 999999;
         while (eceCity->tabCentrales[i].nbBatimentAlimente < 5 && !end) {
             for (int j = 0; j < eceCity->compteur.batiments; ++j) {
-                for (int k = 0; k < 6; ++k) {
-                    for (int l = 0; l < 4; ++l) {
+                for (int k = eceCity->tabCentrales[i].position.x; k < eceCity->tabCentrales[i].position.x + 6; ++k) {
+                    for (int l = eceCity->tabCentrales[i].position.y;
+                         l < eceCity->tabCentrales[i].position.y + 4; ++l) {
                         if (k >= 0 && k < NBCOLONNE && l >= 0 && l < NBLIGNE) {
-                            if (eceCity->matricePlateau[l][k].coord.x == eceCity->tabBatiments[j].elecDep.x &&
-                                eceCity->matricePlateau[l][k].coord.y == eceCity->tabBatiments[j].elecDep.y) {
-                                if (eceCity->tabBatiments[j].dElec < dBatimentPlusProche) {
+                            if (k == eceCity->tabBatiments[j].elecDep.x &&
+                                l == eceCity->tabBatiments[j].elecDep.y) {
+                                if (eceCity->tabBatiments[j].dElec < dBatimentPlusProche &&
+                                    !eceCity->tabBatiments[j].elec) {
                                     batimentPlusProche = j;
+                                    dBatimentPlusProche = eceCity->tabBatiments[j].dElec;
                                 }
                             }
                         }
@@ -1052,6 +1062,8 @@ void gereDepElec(EceCity *eceCity) {
                 eceCity->tabCentrales[i].nbBatimentAlimente++;
                 eceCity->tabCentrales[i].utile += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
                 eceCity->tabBatiments[batimentPlusProche].elec = true;
+                batimentPlusProche = -1;
+                dBatimentPlusProche = 999999;
             } else {
                 end = true;
             }
@@ -1217,25 +1229,25 @@ void remonterParPredEtCompterDistanceEau(EceCity *eceCity) {
                             while (!end) {
                                 if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
                                     cooTemp.x < NBCOLONNE &&
-                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y + 1;
                                 } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
                                            cooTemp.x < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y - 1;
                                 } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
                                            cooTemp.x + 1 < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x + 1;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
                                 } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
                                            cooTemp.x - 1 < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x - 1;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
@@ -1258,25 +1270,25 @@ void remonterParPredEtCompterDistanceEau(EceCity *eceCity) {
                             while (!end) {
                                 if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
                                     cooTemp.x < NBCOLONNE &&
-                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y + 1;
                                 } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
                                            cooTemp.x < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y - 1;
                                 } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
                                            cooTemp.x + 1 < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x + 1;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
                                 } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
                                            cooTemp.x - 1 < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x - 1;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
@@ -1299,25 +1311,25 @@ void remonterParPredEtCompterDistanceEau(EceCity *eceCity) {
                             while (!end) {
                                 if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
                                     cooTemp.x < NBCOLONNE &&
-                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y + 1;
                                 } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
                                            cooTemp.x < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y - 1;
                                 } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
                                            cooTemp.x + 1 < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x + 1;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
                                 } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
                                            cooTemp.x - 1 < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x - 1;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
@@ -1340,25 +1352,25 @@ void remonterParPredEtCompterDistanceEau(EceCity *eceCity) {
                             while (!end) {
                                 if (cooTemp.y + 1 >= 0 && cooTemp.y + 1 < NBLIGNE && cooTemp.x >= 0 &&
                                     cooTemp.x < NBCOLONNE &&
-                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CENTRALE) {
+                                    eceCity->matricePlateau[cooTemp.y + 1][cooTemp.x].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y + 1;
                                 } else if (cooTemp.y - 1 >= 0 && cooTemp.y - 1 < NBLIGNE && cooTemp.x >= 0 &&
                                            cooTemp.x < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y - 1][cooTemp.x].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y - 1;
                                 } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x + 1 >= 0 &&
                                            cooTemp.x + 1 < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x + 1].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x + 1;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
                                 } else if (cooTemp.y >= 0 && cooTemp.y < NBLIGNE && cooTemp.x - 1 >= 0 &&
                                            cooTemp.x - 1 < NBCOLONNE &&
-                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CENTRALE) {
+                                           eceCity->matricePlateau[cooTemp.y][cooTemp.x - 1].type == CHATEAUDEAU) {
                                     end = true;
                                     eceCity->tabBatiments[i].eauDep.x = cooTemp.x - 1;
                                     eceCity->tabBatiments[i].eauDep.y = cooTemp.y;
@@ -1381,17 +1393,29 @@ void remonterParPredEtCompterDistanceEau(EceCity *eceCity) {
 void gereDepEau(EceCity *eceCity) {
     int batimentPlusProche = -1;
     int dBatimentPlusProche = 999999;
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        eceCity->tabBatiments[i].utilisationEau = false;
+    }
+    for (int i = 0; i < eceCity->compteur.chateauxDeau; ++i) {
+        eceCity->tabChateauEaux[i].nbBatimentAlimente = 0;
+    }
     bool end = false;
     for (int i = 0; i < eceCity->compteur.chateauxDeau; ++i) {
+        batimentPlusProche = -1;
+        dBatimentPlusProche = 999999;
         while (eceCity->tabChateauEaux[i].nbBatimentAlimente < 5 && !end) {
             for (int j = 0; j < eceCity->compteur.batiments; ++j) {
-                for (int k = 0; k < 6; ++k) {
-                    for (int l = 0; l < 4; ++l) {
+                for (int k = eceCity->tabChateauEaux[i].position.x;
+                     k < eceCity->tabChateauEaux[i].position.x + 6; ++k) {
+                    for (int l = eceCity->tabChateauEaux[i].position.y;
+                         l < eceCity->tabChateauEaux[i].position.y + 4; ++l) {
                         if (k >= 0 && k < NBCOLONNE && l >= 0 && l < NBLIGNE) {
-                            if (eceCity->matricePlateau[l][k].coord.x == eceCity->tabBatiments[j].eauDep.x &&
-                                eceCity->matricePlateau[l][k].coord.y == eceCity->tabBatiments[j].eauDep.y) {
-                                if (eceCity->tabBatiments[j].dEau < dBatimentPlusProche) {
+                            if (k == eceCity->tabBatiments[j].eauDep.x &&
+                                l == eceCity->tabBatiments[j].eauDep.y) {
+                                if (eceCity->tabBatiments[j].dEau < dBatimentPlusProche &&
+                                    !eceCity->tabBatiments[j].utilisationEau) {
                                     batimentPlusProche = j;
+                                    dBatimentPlusProche = eceCity->tabBatiments[j].dEau;
                                 }
                             }
                         }
@@ -1401,11 +1425,13 @@ void gereDepEau(EceCity *eceCity) {
             if (batimentPlusProche != -1) {
                 eceCity->tabChateauEaux[i].nbBatimentAlimente++;
                 eceCity->tabChateauEaux[i].utile += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
-                eceCity->tabBatiments[batimentPlusProche].utilisationEau += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
+                eceCity->tabBatiments[batimentPlusProche].utilisationEau = true;
+                batimentPlusProche = -1;
+                dBatimentPlusProche = 999999;
             } else {
                 end = true;
             }
         }
-        eceCity->joueur->utilisationEau += eceCity->tabChateauEaux[i].utile;
+        eceCity->joueur->utilisationEau += eceCity->tabCentrales[i].utile;
     }
 }

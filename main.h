@@ -152,7 +152,7 @@ typedef struct {
     Coord elecDep;
     Coord eauDep;
     bool elec;
-    int utilisationEau;
+    bool utilisationEau;
     bool high;
 } Batiment;
 

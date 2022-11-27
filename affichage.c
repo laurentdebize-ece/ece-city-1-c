@@ -352,6 +352,36 @@ void dessinerGrille(EceCity *eceCity) {
         eceCity->phaseDeJeu.coordCaseDetecte.x = -1;
         eceCity->phaseDeJeu.coordCaseDetecte.y = -1;
     }
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 0, 0),
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x,
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y,
+                      0, "%d", eceCity->tabBatiments[i].dElec);
+        if (eceCity->tabBatiments[i].elec) {
+            al_draw_text(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 0, 0),
+                         eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x -
+                         COTECASE,
+                         eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y -
+                         COTECASE,
+                         0, "elec");
+        }
+    }
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 255),
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x +
+                      COTECASE,
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y +
+                      COTECASE,
+                      0, "%d", eceCity->tabBatiments[i].dEau);
+        if (eceCity->tabBatiments[i].utilisationEau) {
+            al_draw_text(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 255),
+                         eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x +
+                         COTECASE,
+                         eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y -
+                         COTECASE,
+                         0, "eau");
+        }
+    }
 }
 
 void dessinerBordureArbres(EceCity *eceCity) {
