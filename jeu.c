@@ -678,32 +678,11 @@ void changerCompteurConstruction(EceCity *eceCity) {
     for (int i = 0; i < eceCity->compteur.batiments; ++i) {
         if (eceCity->tabBatiments[i].type != GRATTECIEL) {
             eceCity->tabBatiments[i].compteur++;
-            eceCity->tabBatiments[i].type++;
-            /*if (eceCity->tabBatiments[i].compteur == CYCLE) {
-                if (eceCity->phaseDeJeu.modeDeJeu == CAPITALISTE && eceCity->tabBatiments[i].elec == true &&
-                    eceCity->tabBatiments[i].utilisationEau == eceCity->tabBatiments[i].nbHabitant) {
-                    eceCity->tabBatiments[i].type++;
-                    if (eceCity->tabBatiments[i].type == GRATTECIEL) {
-                        eceCity->tabBatiments[i].high = true;
-                    }
-                    //gereDepElec(eceCity);
-                    //gereDepEau(eceCity);
-                } else if (eceCity->phaseDeJeu.modeDeJeu == COMMUNISTE && !eceCity->tabBatiments[i].high) {
-                    eceCity->tabBatiments[i].type++;
-                    if (eceCity->tabBatiments[i].type == GRATTECIEL) {
-                        eceCity->tabBatiments[i].high = true;
-                    }
-                    gereDepElec(eceCity);
-                    gereDepEau(eceCity);
-                } else if (eceCity->phaseDeJeu.modeDeJeu == COMMUNISTE && eceCity->tabBatiments[i].high) {
-                    if (eceCity->tabBatiments[i].elec != true &&
-                        eceCity->tabBatiments[i].utilisationEau != eceCity->tabBatiments[i].nbHabitant) {
-                        eceCity->tabBatiments[i].type--;
-                    }
-                }
+            if (eceCity->tabBatiments[i].compteur == CYCLE) {
+                eceCity->tabBatiments[i].type++;
                 eceCity->tabBatiments[i].compteur = 0;
                 eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].type = eceCity->tabBatiments[i].type;
-            }*/
+            }
         }
         switch (eceCity->tabBatiments[i].type) {
             case CABANE : {
