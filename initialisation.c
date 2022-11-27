@@ -283,7 +283,6 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BitmapTerrainVague].coord.x = 0;
     eceCity->tabImages[BitmapTerrainVague].coord.y = 0;
 
-
     eceCity->tabImages[BITMAPCONSTROUTE].image = al_load_bitmap("../Images/hud_roads.png");
     eceCity->tabImages[BITMAPCONSTROUTE].longueur = 208;
     eceCity->tabImages[BITMAPCONSTROUTE].hauteur = 208;
