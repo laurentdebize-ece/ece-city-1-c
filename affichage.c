@@ -114,7 +114,7 @@ void affichageInfos(EceCity *eceCity) {
                       500,
                       0,
                       " %.1fk/%.0fk",
-                      utiEauAffichage , capaEauAffichage);
+                      utiEauAffichage, capaEauAffichage);
     }
     al_draw_scaled_bitmap(eceCity->tabImages[BITMAPEAU].image, 0,
                           0, 208,
@@ -577,7 +577,17 @@ void affichageBouton(EceCity *eceCity, ALLEGRO_FONT *police) {
                                   eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].coord.y + 3,
                                   eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].longueur,
                                   eceCity->tabBoutons[JEU][CONSTRUIRECHATEAUDEAU].hauteur - 8, 0);
+
         }
+        al_draw_scaled_bitmap(eceCity->tabImages[BITMAPPOUB].image,
+                              eceCity->tabImages[BITMAPPOUB].coord.x,
+                              eceCity->tabImages[BITMAPPOUB].coord.y,
+                              eceCity->tabImages[BITMAPPOUB].longueur,
+                              eceCity->tabImages[BITMAPPOUB].hauteur,
+                              eceCity->tabBoutons[JEU][BOUTONPOUB].coord.x,
+                              eceCity->tabBoutons[JEU][BOUTONPOUB].coord.y,
+                              eceCity->tabBoutons[JEU][BOUTONPOUB].longueur,
+                              eceCity->tabBoutons[JEU][BOUTONPOUB].hauteur, 0);
         al_draw_scaled_bitmap(eceCity->tabImages[BITMAPOUTIL].image, eceCity->tabImages[BITMAPCONSTROUTE].coord.x,
                               eceCity->tabImages[BITMAPOUTIL].coord.y,
                               eceCity->tabImages[BITMAPOUTIL].longueur,
@@ -586,6 +596,8 @@ void affichageBouton(EceCity *eceCity, ALLEGRO_FONT *police) {
                               eceCity->tabBoutons[JEU][OUTIL].coord.y,
                               eceCity->tabBoutons[JEU][OUTIL].longueur,
                               eceCity->tabBoutons[JEU][OUTIL].hauteur, 0);
+
+
     }
 }
 

@@ -171,6 +171,18 @@ void initTabBoutons(EceCity *eceCity) {
     eceCity->tabBoutons[JEU][OUTIL].clignote = false;
     eceCity->tabBoutons[JEU][OUTIL].cliquable = true;
     eceCity->tabBoutons[JEU][OUTIL].etatParticulier = false;
+
+    eceCity->tabBoutons[JEU][BOUTONPOUB].coord.x = 400;
+    eceCity->tabBoutons[JEU][BOUTONPOUB].coord.y = eceCity->display.hauteur * 8 / 9;
+    eceCity->tabBoutons[JEU][BOUTONPOUB].nom= NULL;
+    eceCity->tabBoutons[JEU][BOUTONPOUB].longueur = 80;
+    eceCity->tabBoutons[JEU][BOUTONPOUB].hauteur = 80;
+    eceCity->tabBoutons[JEU][BOUTONPOUB].clignote = true;
+    eceCity->tabBoutons[JEU][BOUTONPOUB].cliquable = true;
+    eceCity->tabBoutons[JEU][BOUTONPOUB].etatParticulier = false;
+
+
+
 }
 
 void initBitmaps(EceCity *eceCity) {
@@ -335,6 +347,12 @@ void initBitmaps(EceCity *eceCity) {
     eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].hauteur = 512;
     eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].coord.x = 0;
     eceCity->tabImages[BITMAPCONSTCHATEAUDEAU].coord.y = 0;
+
+    eceCity->tabImages[BITMAPPOUB].image = al_load_bitmap("../Images/services_05.png");
+    eceCity->tabImages[BITMAPPOUB].longueur = 208;
+    eceCity->tabImages[BITMAPPOUB].hauteur = 208;
+    eceCity->tabImages[BITMAPPOUB].coord.x = 0;
+    eceCity->tabImages[BITMAPPOUB].coord.y = 0;
 }
 
 EceCity *creationEceCity() {
