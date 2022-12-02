@@ -26,6 +26,28 @@ void affichageJeu(EceCity *eceCity) {
         dessinerBatimentAConstruire(eceCity);
     }
     affichageInfos(eceCity);
+    /*for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 0, 0),
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x,
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y,
+                      0, "%d", eceCity->tabBatiments[i].dElec);
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 255),
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x +
+                      COTECASE,
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y,
+                      0, "%d", eceCity->tabBatiments[i].dEau);
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(255, 0, 0),
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x,
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y -
+                      COTECASE,
+                      0, "%d", eceCity->tabBatiments[i].elec);
+        al_draw_textf(eceCity->ecrire.simsCityPolicePetite, al_map_rgb(0, 0, 255),
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.x +
+                      COTECASE,
+                      eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].coord.y -
+                      COTECASE,
+                      0, "%d", eceCity->tabBatiments[i].eau);
+    }*/
 }
 
 void affichageInfos(EceCity *eceCity) {
@@ -482,7 +504,9 @@ void dessinerBordureArbres(EceCity *eceCity) {
 }
 
 void affichageParametres(EceCity *eceCity) {
-    affichageBitmapDeFond(eceCity, BITMAPCHOIXDUMODE);
+    al_draw_text(eceCity->ecrire.simsCityPoliceGrand, al_map_rgb(0, 0, 0), eceCity->display.longueur / 2,
+                 (eceCity->display.hauteur * 5 / 12) -
+                 al_get_font_line_height(eceCity->ecrire.simsCityPoliceGrand), ALLEGRO_ALIGN_CENTER, "PAUSE");
     affichageBouton(eceCity, eceCity->ecrire.simsCityPoliceMoyen);
 }
 

@@ -57,7 +57,7 @@ enum {
 };
 
 enum {
-    NBDEBOUTONPARAMETRES
+    LEAVE, REPRENDRE, NBDEBOUTONPARAMETRES
 };
 
 enum {
@@ -134,14 +134,12 @@ typedef struct {
     Coord position;
     int capacite;
     int utile;
-    int nbBatimentAlimente;
 } ChateauDeau;
 
 typedef struct {
     Coord position;
     int capacite;
     int utile;
-    int nbBatimentAlimente;
 } Centrale;
 
 typedef struct {
@@ -154,8 +152,11 @@ typedef struct {
     Coord elecDep;
     Coord eauDep;
     bool elec;
-    bool utilisationEau;
+    bool eau;
+    int utiEau;
+    int utiElec;
     bool high;
+    bool tested;
 } Batiment;
 
 typedef struct {

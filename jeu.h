@@ -19,6 +19,8 @@ void construireBatiment(EceCity *eceCity);
 
 void changerCompteurConstruction(EceCity *eceCity);
 
+void verifSiCentralePlein(EceCity *eceCity);
+
 bool verifSiRouteACote(EceCity *eceCity);
 
 void gereDepEau(EceCity *eceCity);

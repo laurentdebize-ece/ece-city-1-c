@@ -107,10 +107,10 @@ void menuJeu(EceCity *eceCity) {
             switch (eceCity->event.keyboard.keycode) {
                 case ALLEGRO_KEY_ESCAPE: {
                     eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
-                    eceCity->phaseDeJeu.ancienne = PARAMETRES;
+                    eceCity->phaseDeJeu.actuelle = PARAMETRES;
+                    eceCity->phaseDeJeu.boutonDetecteAncien = -1;
+                    eceCity->phaseDeJeu.boutonDetecteActuel = -1;
                     eceCity->changementAffichage = true;
-                    ///tempo
-                    eceCity->end = true;
                     break;
                 }
                 case ALLEGRO_KEY_S: {
@@ -245,9 +245,10 @@ void menuParametres(EceCity *eceCity) {
         case ALLEGRO_EVENT_KEY_DOWN: {
             switch (eceCity->event.keyboard.keycode) {
                 case ALLEGRO_KEY_ESCAPE: {
-                    eceCity->phaseDeJeu.actuelle = eceCity->phaseDeJeu.ancienne;
-                    eceCity->phaseDeJeu.ancienne = PARAMETRES;
+                    eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                    eceCity->phaseDeJeu.actuelle = JEU;
                     eceCity->changementAffichage = true;
+
                     break;
                 }
             }
@@ -422,14 +423,10 @@ void construireBatiment(EceCity *eceCity) {
             if (eceCity->phaseDeJeu.batimenAConstruire == CENTRALE ||
                 eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
                 parcourBFSCentrales(eceCity);
-                remonterParPredEtCompterDistanceElec(eceCity);
-                gereDepElec(eceCity);
             }
             if (eceCity->phaseDeJeu.batimenAConstruire == CHATEAUDEAU ||
                 eceCity->phaseDeJeu.batimenAConstruire == TERRAINVAGUE) {
                 parcourBFSChateauDeau(eceCity);
-                remonterParPredEtCompterDistanceEau(eceCity);
-                gereDepEau(eceCity);
             }
         }
     }
@@ -478,7 +475,6 @@ void boutonPresse(EceCity *eceCity) {
                         eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
                         eceCity->phaseDeJeu.boutonDetecteActuel = -1;
                         eceCity->phaseDeJeu.boutonDetecteAncien = -1;
-                        eceCity->phaseDeJeu.ancienne = -1;
                         eceCity->phaseDeJeu.actuelle = CHOIXDUMODE;
                         eceCity->changementAffichage = true;
                         break;
@@ -581,7 +577,18 @@ void boutonPresse(EceCity *eceCity) {
                 break;
             }
             case PARAMETRES: {
-
+                switch (eceCity->phaseDeJeu.boutonDetecteActuel) {
+                    case LEAVE: {
+                        eceCity->end = true;
+                        break;
+                    }
+                    case REPRENDRE: {
+                        eceCity->phaseDeJeu.ancienne = eceCity->phaseDeJeu.actuelle;
+                        eceCity->phaseDeJeu.actuelle = JEU;
+                        eceCity->changementAffichage = true;
+                        break;
+                    }
+                }
                 break;
             }
         }
@@ -640,11 +647,12 @@ void ajouterBatimentTab(EceCity *eceCity) {
             eceCity->tabBatiments[eceCity->compteur.batiments].type = TERRAINVAGUE;
             eceCity->tabBatiments[eceCity->compteur.batiments].position.x = eceCity->phaseDeJeu.coordCaseDetecte.x;
             eceCity->tabBatiments[eceCity->compteur.batiments].position.y = eceCity->phaseDeJeu.coordCaseDetecte.y;
-            eceCity->tabBatiments[eceCity->compteur.batiments].utilisationEau = false;
+            eceCity->tabBatiments[eceCity->compteur.batiments].eau = false;
             eceCity->tabBatiments[eceCity->compteur.batiments].elec = false;
             eceCity->tabBatiments[eceCity->compteur.batiments].dEau = -1;
             eceCity->tabBatiments[eceCity->compteur.batiments].dElec = -1;
             eceCity->tabBatiments[eceCity->compteur.batiments].high = false;
+            eceCity->tabBatiments[eceCity->compteur.batiments].tested = false;
             eceCity->tabBatiments[eceCity->compteur.batiments].nbHabitant = 0;
             eceCity->compteur.batiments++;
             break;
@@ -652,7 +660,6 @@ void ajouterBatimentTab(EceCity *eceCity) {
         case CENTRALE: {
             eceCity->tabCentrales[eceCity->compteur.centrales].capacite = 5000;
             eceCity->tabCentrales[eceCity->compteur.centrales].utile = 0;
-            eceCity->tabCentrales[eceCity->compteur.centrales].nbBatimentAlimente = 0;
             eceCity->tabCentrales[eceCity->compteur.centrales].position.x = eceCity->phaseDeJeu.coordCaseDetecte.x;
             eceCity->tabCentrales[eceCity->compteur.centrales].position.y = eceCity->phaseDeJeu.coordCaseDetecte.y;
             eceCity->joueur->capaciteElec += eceCity->tabCentrales[eceCity->compteur.centrales].capacite;
@@ -662,7 +669,6 @@ void ajouterBatimentTab(EceCity *eceCity) {
         case CHATEAUDEAU: {
             eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].capacite = 5000;
             eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].utile = 0;
-            eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].nbBatimentAlimente = 0;
             eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].position.x = eceCity->phaseDeJeu.coordCaseDetecte.x;
             eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].position.y = eceCity->phaseDeJeu.coordCaseDetecte.y;
             eceCity->joueur->capaciteEau += eceCity->tabChateauEaux[eceCity->compteur.chateauxDeau].capacite;
@@ -675,40 +681,6 @@ void ajouterBatimentTab(EceCity *eceCity) {
 void changerCompteurConstruction(EceCity *eceCity) {
     int nbHab = 0;
     for (int i = 0; i < eceCity->compteur.batiments; ++i) {
-        eceCity->tabBatiments[i].compteur++;
-        if (eceCity->tabBatiments[i].compteur == CYCLE) {
-            gereDepEau(eceCity);
-            gereDepElec(eceCity);
-            if (eceCity->phaseDeJeu.modeDeJeu == COMMUNISTE) {
-                if (!eceCity->tabBatiments[i].high) {
-                    if (eceCity->tabBatiments[i].type != GRATTECIEL) {
-                        eceCity->tabBatiments[i].type++;
-                        if (eceCity->tabBatiments[i].type == GRATTECIEL) {
-                            eceCity->tabBatiments[i].high = true;
-                        }
-                    }
-                } else {
-                    if (eceCity->tabBatiments[i].utilisationEau && eceCity->tabBatiments[i].elec) {
-                        if (eceCity->tabBatiments[i].type != GRATTECIEL) {
-                            eceCity->tabBatiments[i].type++;
-                        }
-                    }
-                    if (!eceCity->tabBatiments[i].utilisationEau || !eceCity->tabBatiments[i].elec) {
-                        if (eceCity->tabBatiments[i].type != RUINE) {
-                            eceCity->tabBatiments[i].type--;
-                        }
-                    }
-                }
-            } else {
-                if (eceCity->tabBatiments[i].utilisationEau && eceCity->tabBatiments[i].elec) {
-                    if (eceCity->tabBatiments[i].type != GRATTECIEL) {
-                        eceCity->tabBatiments[i].type++;
-                    }
-                }
-            }
-            eceCity->tabBatiments[i].compteur = 0;
-            eceCity->matricePlateau[eceCity->tabBatiments[i].position.y][eceCity->tabBatiments[i].position.x].type = eceCity->tabBatiments[i].type;
-        }
         switch (eceCity->tabBatiments[i].type) {
             case CABANE : {
                 nbHab += 10;
@@ -732,7 +704,91 @@ void changerCompteurConstruction(EceCity *eceCity) {
             }
         }
     }
+    parcourBFSChateauDeau(eceCity);
+    parcourBFSCentrales(eceCity);
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        eceCity->tabBatiments[i].compteur++;
+        if (eceCity->tabBatiments[i].compteur == CYCLE) {
+            if (eceCity->tabBatiments[i].type < GRATTECIEL) {
+                eceCity->tabBatiments[i].type++;
+                eceCity->tabBatiments[i].compteur = 0;
+                for (int j = 0; j < 3; ++j) {
+                    for (int k = 0; k < 3; ++k) {
+                        eceCity->matricePlateau[eceCity->tabBatiments[i].position.y + j][
+                                eceCity->tabBatiments[i].position.x + k].type = eceCity->tabBatiments[i].type;
+                    }
+                }
+                if (eceCity->tabBatiments[i].type == GRATTECIEL) {
+                    eceCity->tabBatiments[i].high = true;
+                }
+            }
+        }
+    }
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        switch (eceCity->tabBatiments[i].type) {
+            case CABANE : {
+                nbHab += 10;
+                eceCity->tabBatiments[i].nbHabitant = 10;
+                break;
+            }
+            case MAISON : {
+                nbHab += 50;
+                eceCity->tabBatiments[i].nbHabitant = 50;
+                break;
+            }
+            case IMMEUBLE : {
+                nbHab += 100;
+                eceCity->tabBatiments[i].nbHabitant = 100;
+                break;
+            }
+            case GRATTECIEL : {
+                nbHab += 1000;
+                eceCity->tabBatiments[i].nbHabitant = 1000;
+                break;
+            }
+        }
+    }
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        if (eceCity->tabBatiments[i].high || eceCity->phaseDeJeu.modeDeJeu == CAPITALISTE) {
+            if (!eceCity->tabBatiments[i].elec || !eceCity->tabBatiments[i].eau) {
+                if (eceCity->tabBatiments[i].type > RUINE) {
+                    eceCity->tabBatiments[i].type--;
+                    for (int j = 0; j < 3; ++j) {
+                        for (int k = 0; k < 3; ++k) {
+                            eceCity->matricePlateau[eceCity->tabBatiments[i].position.y + j][
+                                    eceCity->tabBatiments[i].position.x + k].type = eceCity->tabBatiments[i].type;
+                        }
+                    }
+                }
+            }
+            for (int m = 0; m < eceCity->compteur.batiments; ++m) {
+                switch (eceCity->tabBatiments[m].type) {
+                    case CABANE : {
+                        nbHab += 10;
+                        eceCity->tabBatiments[m].nbHabitant = 10;
+                        break;
+                    }
+                    case MAISON : {
+                        nbHab += 50;
+                        eceCity->tabBatiments[m].nbHabitant = 50;
+                        break;
+                    }
+                    case IMMEUBLE : {
+                        nbHab += 100;
+                        eceCity->tabBatiments[m].nbHabitant = 100;
+                        break;
+                    }
+                    case GRATTECIEL : {
+                        nbHab += 1000;
+                        eceCity->tabBatiments[m].nbHabitant = 1000;
+                        break;
+                    }
+                }
+            }
+        }
+    }
     eceCity->joueur->habitant = nbHab;
+    eceCity->changementAffichage = true;
 }
 
 void parcourBFSCentrales(EceCity *eceCity) {
@@ -743,6 +799,9 @@ void parcourBFSCentrales(EceCity *eceCity) {
             eceCity->matricePlateau[i][j].pred.x = -1;
             eceCity->matricePlateau[i][j].pred.y = -1;
         }
+    }
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        eceCity->tabBatiments[i].dElec = 99999999;
     }
     File f = fileVide();
     Coord cooTemp;
@@ -870,6 +929,8 @@ void parcourBFSCentrales(EceCity *eceCity) {
                 }
             }
         }
+        remonterParPredEtCompterDistanceElec(eceCity);
+        gereDepElec(eceCity);
     }
     free(f);
 }
@@ -879,7 +940,6 @@ void remonterParPredEtCompterDistanceElec(EceCity *eceCity) {
     int dTemp;
     bool end = false;
     for (int i = 0; i < eceCity->compteur.batiments; ++i) {
-        eceCity->tabBatiments[i].dElec = 99999999;
         for (int j = eceCity->tabBatiments[i].position.x; j < eceCity->tabBatiments[i].position.x + 3; ++j) {
             for (int k = eceCity->tabBatiments[i].position.y; k < eceCity->tabBatiments[i].position.y + 3; ++k) {
                 if (eceCity->matricePlateau[k][j].firstMaison) {
@@ -1056,26 +1116,29 @@ void remonterParPredEtCompterDistanceElec(EceCity *eceCity) {
 void gereDepElec(EceCity *eceCity) {
     int batimentPlusProche = -1;
     int dBatimentPlusProche = 999999;
+    eceCity->joueur->utilisationElec = 0;
     for (int i = 0; i < eceCity->compteur.batiments; ++i) {
         eceCity->tabBatiments[i].elec = false;
+        eceCity->tabBatiments[i].tested = false;
     }
     for (int i = 0; i < eceCity->compteur.centrales; ++i) {
-        eceCity->tabCentrales[i].nbBatimentAlimente = 0;
+        eceCity->tabCentrales[i].utile = 0;
     }
     bool end = false;
     for (int i = 0; i < eceCity->compteur.centrales; ++i) {
         batimentPlusProche = -1;
         dBatimentPlusProche = 999999;
-        while (eceCity->tabCentrales[i].nbBatimentAlimente < 5 && !end) {
+        while (eceCity->tabCentrales[i].utile <= eceCity->tabCentrales[i].capacite && !end) {
             for (int j = 0; j < eceCity->compteur.batiments; ++j) {
-                for (int k = eceCity->tabCentrales[i].position.x; k < eceCity->tabCentrales[i].position.x + 6; ++k) {
+                for (int k = eceCity->tabCentrales[i].position.x;
+                     k < eceCity->tabCentrales[i].position.x + 6; ++k) {
                     for (int l = eceCity->tabCentrales[i].position.y;
                          l < eceCity->tabCentrales[i].position.y + 4; ++l) {
                         if (k >= 0 && k < NBCOLONNE && l >= 0 && l < NBLIGNE) {
                             if (k == eceCity->tabBatiments[j].elecDep.x &&
                                 l == eceCity->tabBatiments[j].elecDep.y) {
                                 if (eceCity->tabBatiments[j].dElec < dBatimentPlusProche &&
-                                    !eceCity->tabBatiments[j].elec) {
+                                    !eceCity->tabBatiments[j].tested) {
                                     batimentPlusProche = j;
                                     dBatimentPlusProche = eceCity->tabBatiments[j].dElec;
                                 }
@@ -1085,19 +1148,22 @@ void gereDepElec(EceCity *eceCity) {
                 }
             }
             if (batimentPlusProche != -1) {
-                eceCity->tabCentrales[i].nbBatimentAlimente++;
-                eceCity->tabCentrales[i].utile += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
-                eceCity->tabBatiments[batimentPlusProche].elec = true;
+                if (eceCity->tabCentrales[i].utile +=
+                            eceCity->tabBatiments[batimentPlusProche].nbHabitant <= eceCity->tabCentrales[i].capacite) {
+                    eceCity->tabCentrales[i].utile += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
+                    eceCity->joueur->utilisationElec += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
+                    eceCity->tabBatiments[batimentPlusProche].elec = true;
+                    eceCity->tabBatiments[batimentPlusProche].tested = true;
+                }
                 batimentPlusProche = -1;
                 dBatimentPlusProche = 999999;
             } else {
                 end = true;
             }
         }
-    }
-    eceCity->joueur->utilisationElec = 0;
-    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
-        eceCity->joueur->utilisationElec += eceCity->tabBatiments[i].nbHabitant;
+        for (int j = 0; j < eceCity->compteur.batiments; ++j) {
+            eceCity->tabBatiments[i].tested = false;
+        }
     }
 }
 
@@ -1109,6 +1175,9 @@ void parcourBFSChateauDeau(EceCity *eceCity) {
             eceCity->matricePlateau[i][j].pred.x = -1;
             eceCity->matricePlateau[i][j].pred.y = -1;
         }
+    }
+    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
+        eceCity->tabBatiments[i].dEau = 99999999;
     }
     File f = fileVide();
     Coord cooTemp;
@@ -1236,6 +1305,8 @@ void parcourBFSChateauDeau(EceCity *eceCity) {
                 }
             }
         }
+        remonterParPredEtCompterDistanceEau(eceCity);
+        gereDepEau(eceCity);
     }
     free(f);
 }
@@ -1245,7 +1316,6 @@ void remonterParPredEtCompterDistanceEau(EceCity *eceCity) {
     int dTemp;
     bool end = false;
     for (int i = 0; i < eceCity->compteur.batiments; ++i) {
-        eceCity->tabBatiments[i].dEau = 99999999;
         for (int j = eceCity->tabBatiments[i].position.x; j < eceCity->tabBatiments[i].position.x + 3; ++j) {
             for (int k = eceCity->tabBatiments[i].position.y; k < eceCity->tabBatiments[i].position.y + 3; ++k) {
                 if (eceCity->matricePlateau[k][j].firstMaison) {
@@ -1420,19 +1490,20 @@ void remonterParPredEtCompterDistanceEau(EceCity *eceCity) {
 }
 
 void gereDepEau(EceCity *eceCity) {
-    int batimentPlusProche = -1;
-    int dBatimentPlusProche = 999999;
+    int batimentPlusProche, dBatimentPlusProche;
+    eceCity->joueur->utilisationEau = 0;
     for (int i = 0; i < eceCity->compteur.batiments; ++i) {
-        eceCity->tabBatiments[i].utilisationEau = false;
+        eceCity->tabBatiments[i].eau = false;
+        eceCity->tabBatiments[i].tested = false;
     }
     for (int i = 0; i < eceCity->compteur.chateauxDeau; ++i) {
-        eceCity->tabChateauEaux[i].nbBatimentAlimente = 0;
+        eceCity->tabChateauEaux[i].utile = 0;
     }
     bool end = false;
     for (int i = 0; i < eceCity->compteur.chateauxDeau; ++i) {
         batimentPlusProche = -1;
         dBatimentPlusProche = 999999;
-        while (eceCity->tabChateauEaux[i].nbBatimentAlimente < 5 && !end) {
+        while (eceCity->tabChateauEaux[i].utile < eceCity->tabChateauEaux[i].capacite && !end) {
             for (int j = 0; j < eceCity->compteur.batiments; ++j) {
                 for (int k = eceCity->tabChateauEaux[i].position.x;
                      k < eceCity->tabChateauEaux[i].position.x + 6; ++k) {
@@ -1442,7 +1513,7 @@ void gereDepEau(EceCity *eceCity) {
                             if (k == eceCity->tabBatiments[j].eauDep.x &&
                                 l == eceCity->tabBatiments[j].eauDep.y) {
                                 if (eceCity->tabBatiments[j].dEau < dBatimentPlusProche &&
-                                    !eceCity->tabBatiments[j].utilisationEau) {
+                                    !eceCity->tabBatiments[j].tested) {
                                     batimentPlusProche = j;
                                     dBatimentPlusProche = eceCity->tabBatiments[j].dEau;
                                 }
@@ -1452,18 +1523,21 @@ void gereDepEau(EceCity *eceCity) {
                 }
             }
             if (batimentPlusProche != -1) {
-                eceCity->tabChateauEaux[i].nbBatimentAlimente++;
-                eceCity->tabChateauEaux[i].utile += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
-                eceCity->tabBatiments[batimentPlusProche].utilisationEau = true;
+                if (eceCity->tabChateauEaux[i].utile += eceCity->tabBatiments[batimentPlusProche].nbHabitant <=
+                                                        eceCity->tabChateauEaux[i].capacite) {
+                    eceCity->tabChateauEaux[i].utile += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
+                    eceCity->joueur->utilisationEau += eceCity->tabBatiments[batimentPlusProche].nbHabitant;
+                    eceCity->tabBatiments[batimentPlusProche].eau = true;
+                    eceCity->tabBatiments[batimentPlusProche].tested = true;
+                }
                 batimentPlusProche = -1;
                 dBatimentPlusProche = 999999;
             } else {
                 end = true;
             }
         }
-    }
-    eceCity->joueur->utilisationEau = 0;
-    for (int i = 0; i < eceCity->compteur.batiments; ++i) {
-        eceCity->joueur->utilisationEau += eceCity->tabBatiments[i].nbHabitant;
+        for (int j = 0; j < eceCity->compteur.batiments; ++j) {
+            eceCity->tabBatiments[i].tested = false;
+        }
     }
 }
